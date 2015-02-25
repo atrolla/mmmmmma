@@ -10,7 +10,6 @@ import org.atrolla.game.engine.Player;
  */
 public abstract class GameCharacter {
 
-
 	private Direction direction;
 	private Coordinates coordinates;
 	private final Player player;

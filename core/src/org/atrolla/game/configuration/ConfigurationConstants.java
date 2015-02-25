@@ -9,4 +9,12 @@ public final class ConfigurationConstants {
 	}
 
 	public final static double MOVE_STEP = 5.0d;
+
+	public final static double STAGE_WIDTH = 1280d;
+	public final static double STAGE_HEIGHT = 720d;
+
+	public final static int GAME_CHARACTERS = 40;
+
+	public final static int MAX_MOVE_COMMAND_TIME = 50;
+
 }
