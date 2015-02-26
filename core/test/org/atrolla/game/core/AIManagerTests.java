@@ -26,6 +26,5 @@ public class AIManagerTests {
 		characters.add(new Bomber(new Coordinates(250,250), Player.BOT));
 		AIManager aiManager = new AIManager(characters.size());
 		assertEquals(characters.size(), aiManager.getCommands().size());
-
 	}
 }

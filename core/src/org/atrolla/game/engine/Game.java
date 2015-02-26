@@ -44,8 +44,9 @@ public class Game {
 	}
 
 	public void initCharacters() {
+		final int endInclusive = ConfigurationConstants.GAME_CHARACTERS / 4;
 		IntStream
-				.rangeClosed(1, 10)
+				.rangeClosed(1, endInclusive)
 				.forEach(i -> {
 							characters.add(new Archer(new Coordinates(i * 50, 50), Player.BOT));
 							characters.add(new Bomber(new Coordinates(i * 50, 100), Player.BOT));
@@ -56,7 +57,8 @@ public class Game {
 	}
 
 	public void update() {
-		aiManager.updateBots(characters, time);
+		aiManager.updateBots(characters);
+		// TODO : update time and commands
 		time++;
 	}
 

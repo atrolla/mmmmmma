@@ -18,6 +18,8 @@ public class AIManager {
 
 	//TODO : AI must be smart enough to not go into walls...
 
+	//TODO : AI can pause !
+
 	private List<Command> commands;
 
 
@@ -36,7 +38,8 @@ public class AIManager {
 		return commands;
 	}
 
-	public void updateBots(final Collection<GameCharacter> characters, int time) {
+	public void updateBots(final Collection<GameCharacter> characters) {
+		//TODO : should filter on bots...
 		int i = 0;
 		for (GameCharacter character : characters) {
 			final Command command = commands.get(i);

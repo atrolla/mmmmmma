@@ -43,8 +43,9 @@ public class GameTests {
 	@Test
 	public void gameUpdateMovesEachBotWithCommands() throws Exception {
 		defaultGame.update();
-		Predicate<GameCharacter> directionIsLeft = gameCharacter -> Direction.LEFT.equals(gameCharacter.getDirection());
-		defaultGame.getCharacters().parallelStream().forEach(c -> System.out.println(c.getDirection()));
-		assertTrue(defaultGame.getCharacters().parallelStream().anyMatch(directionIsLeft));
+		// Down is default direction, so statistically, at least one should not be down after first update
+		Predicate<GameCharacter> directionIsNotDown = gameCharacter -> !Direction.DOWN.equals(gameCharacter.getDirection());
+//		defaultGame.getCharacters().parallelStream().forEach(c -> System.out.println(c.getDirection()));
+		assertTrue(defaultGame.getCharacters().parallelStream().anyMatch(directionIsNotDown));
 	}
 }
