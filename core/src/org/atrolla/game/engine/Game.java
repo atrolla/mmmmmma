@@ -77,7 +77,7 @@ public class Game {
                 final Coordinates coordinates = new Coordinates(x, y);
                 character.teleports(coordinates);
                 // TODO : bots that are prevented must choose another valid direction = command.
-                aiManager.goAwayFromWall(index,coordinates);
+                aiManager.goAwayFromWall(index, time, coordinates);
             }
             index++;
         }

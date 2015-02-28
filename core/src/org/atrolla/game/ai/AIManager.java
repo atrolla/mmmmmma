@@ -31,7 +31,7 @@ public class AIManager {
     }
 
     private void initCommands(int characterNumber) {
-        IntConsumer addRandomCommand = i -> commands.add(RandomCommand());
+        IntConsumer addRandomCommand = i -> commands.add(RandomCommand(0));
         IntStream.rangeClosed(1, characterNumber)
                 .forEachOrdered(addRandomCommand);
     }
@@ -55,12 +55,12 @@ public class AIManager {
         while (commandListIterator.hasNext()) {
             final Command command = commandListIterator.next();
             if (command.checkIsDone(time)) {
-                commandListIterator.set(RandomCommand());
+                commandListIterator.set(RandomCommand(time));
             }
         }
     }
 
-    public void goAwayFromWall(int index, Coordinates coordinates) {
-        commands.set(index,RandomCommand(coordinates));
+    public void goAwayFromWall(int index, int time, Coordinates coordinates) {
+        commands.set(index,RandomCommand(time, coordinates));
     }
 }

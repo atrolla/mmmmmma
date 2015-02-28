@@ -21,12 +21,12 @@ public class Command {
         this.timeout = timeout;
     }
 
-    public static Command RandomCommand() {
-        return new Command(getRandomDirection(), getRandomMoveTime());
+    public static Command RandomCommand(int time) {
+        return new Command(getRandomDirection(), getRandomMoveTime(time));
     }
 
-    public static Command RandomCommand(Coordinates coordinates) {
-        return new Command(getRandomDirectionFrom(coordinates), getRandomMoveTime());
+    public static Command RandomCommand(int time,Coordinates coordinates) {
+        return new Command(getRandomDirectionFrom(coordinates), getRandomMoveTime(time));
     }
 
     public Direction getDirection() {

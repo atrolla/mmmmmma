@@ -8,7 +8,7 @@ public final class ConfigurationConstants {
     private ConfigurationConstants() {
     }
 
-    public final static double MOVE_STEP = 10.0d;
+    public final static double MOVE_STEP = 1.5d;
 
     public final static double STAGE_WIDTH = 1280d;
     public final static double STAGE_HEIGHT = 720d;

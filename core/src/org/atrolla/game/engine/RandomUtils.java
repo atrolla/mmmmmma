@@ -17,8 +17,8 @@ public final class RandomUtils {
     private static final Random RANDOM = new Random();
     private static final int DIRECTIONS_NUMBER = Direction.values().length;
 
-    public static final int getRandomMoveTime() {
-        return RANDOM.nextInt(ConfigurationConstants.MAX_MOVE_COMMAND_TIME) + 1;
+    public static final int getRandomMoveTime(int time) {
+        return RANDOM.nextInt(ConfigurationConstants.MAX_MOVE_COMMAND_TIME) + 1 + time;
     }
 
     public static final Direction getRandomDirection() {
