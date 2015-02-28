@@ -10,9 +10,9 @@ import org.atrolla.game.engine.Player;
  */
 public abstract class GameCharacter {
 
-	private Direction direction;
+    private final Player player;
+    private Direction direction;
 	private Coordinates coordinates;
-	private final Player player;
 	private CharacterState state;
 
 	protected GameCharacter(Coordinates coordinates, Player player) {
@@ -29,6 +29,10 @@ public abstract class GameCharacter {
 			coordinates = direction.move(coordinates);
 		}
 	}
+
+    public void teleports(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
 
 	public Direction getDirection() {
 		return direction;

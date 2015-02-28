@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -48,4 +49,15 @@ public class GameTests {
 //		defaultGame.getCharacters().parallelStream().forEach(c -> System.out.println(c.getDirection()));
 		assertTrue(defaultGame.getCharacters().parallelStream().anyMatch(directionIsNotDown));
 	}
+
+    @Test
+    public void outOfBoundsCharStaysInBound() throws Exception {
+        final GameCharacter gameCharacter = (GameCharacter) defaultGame.getCharacters().toArray()[0];
+        for (int i = 0; i < 10000; i++) {
+            gameCharacter.moves(Direction.DOWN);
+        }
+        assertTrue(defaultGame.getStage().isOutOfBound(gameCharacter));
+        defaultGame.update();
+        assertFalse(defaultGame.getStage().isOutOfBound(gameCharacter));
+    }
 }

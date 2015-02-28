@@ -59,10 +59,26 @@ public class Game {
 	public void update() {
 		aiManager.updateBots(characters);
 		// TODO : update time and commands
-		time++;
+        preventCharacterToBeOutOfBound();
+        time++;
 	}
 
-	public AIManager getAIManager() {
-		return aiManager;
+    private void preventCharacterToBeOutOfBound() {
+        final double height = stage.getHeight();
+        final double width = stage.getWidth();
+        for (GameCharacter character : characters) {
+            // TODO : merge for perf ?
+            if (stage.isOutOfBound(character)) {
+                double x = character.getCoordinates().getX();
+                double y = character.getCoordinates().getY();
+                x = x < 0 ? 0 : x > width ? width : x;
+                y = y < 0 ? 0 : y > height ? height : y;
+                character.teleports(new Coordinates(x, y));
+            }
+        }
+    }
+
+    public AIManager getAIManager() {
+        return aiManager;
 	}
 }

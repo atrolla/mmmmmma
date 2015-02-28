@@ -16,35 +16,35 @@ import static org.atrolla.game.engine.Command.RandomCommand;
  */
 public class AIManager {
 
-	//TODO : AI must be smart enough to not go into walls...
+    //TODO : AI must be smart enough to not go into walls...
 
-	//TODO : AI can pause !
+    //TODO : AI can pause !
 
-	private List<Command> commands;
+    private List<Command> commands;
 
 
-	public AIManager(int characterNumber) {
-		commands = new ArrayList<>(characterNumber);
-		initCommands(characterNumber);
-	}
+    public AIManager(int characterNumber) {
+        commands = new ArrayList<>(characterNumber);
+        initCommands(characterNumber);
+    }
 
-	private void initCommands(int characterNumber) {
-		IntConsumer addRandomCommand = i -> commands.add(RandomCommand());
-		IntStream.rangeClosed(1, characterNumber)
-				.forEachOrdered(addRandomCommand);
-	}
+    private void initCommands(int characterNumber) {
+        IntConsumer addRandomCommand = i -> commands.add(RandomCommand());
+        IntStream.rangeClosed(1, characterNumber)
+                .forEachOrdered(addRandomCommand);
+    }
 
-	public Collection<Command> getCommands() {
-		return commands;
-	}
+    public Collection<Command> getCommands() {
+        return commands;
+    }
 
-	public void updateBots(final Collection<GameCharacter> characters) {
-		//TODO : should filter on bots...
-		int i = 0;
-		for (GameCharacter character : characters) {
-			final Command command = commands.get(i);
-			character.moves(command.getDirection());
-			i++;
-		}
-	}
+    public void updateBots(final Collection<GameCharacter> characters) {
+        //TODO : should filter on bots...
+        int i = 0;
+        for (GameCharacter character : characters) {
+            final Command command = commands.get(i);
+            character.moves(command.getDirection());
+            i++;
+        }
+    }
 }

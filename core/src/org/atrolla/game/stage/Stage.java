@@ -1,5 +1,6 @@
 package org.atrolla.game.stage;
 
+import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
 
 /**
@@ -19,6 +20,12 @@ public class Stage {
 		this.width = width;
 		this.height = height;
 	}
+
+    public boolean isOutOfBound(GameCharacter character) {
+        //TODO : stricly at the moment
+        return (character.getCoordinates().getX() < 0 || character.getCoordinates().getX() > this.width)
+                || (character.getCoordinates().getY() < 0 || character.getCoordinates().getY() > this.height);
+    }
 
 	public double getWidth() {
 		return width;
