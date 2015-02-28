@@ -16,15 +16,15 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class AIManagerTests {
 
-	@Test
-	public void commandsNumberEqualsBots() throws Exception {
-		List<GameCharacter> characters = new ArrayList<>(5);
-		characters.add(new Archer(new Coordinates(50,50), Player.BOT));
-		characters.add(new Archer(new Coordinates(500,500), new Player()));
-		characters.add(new Mage(new Coordinates(100,100), Player.BOT));
-		characters.add(new Knight(new Coordinates(150,150), Player.BOT));
-		characters.add(new Bomber(new Coordinates(250,250), Player.BOT));
-		AIManager aiManager = new AIManager(characters.size());
-		assertEquals(characters.size(), aiManager.getCommands().size());
-	}
+    @Test
+    public void commandsNumberEqualsBots() throws Exception {
+        List<GameCharacter> characters = new ArrayList<>(5);
+        characters.add(new Archer(new Coordinates(50, 50), Player.BOT));
+        characters.add(new Archer(new Coordinates(500, 500), new Player()));
+        characters.add(new Mage(new Coordinates(100, 100), Player.BOT));
+        characters.add(new Knight(new Coordinates(150, 150), Player.BOT));
+        characters.add(new Bomber(new Coordinates(250, 250), Player.BOT));
+        AIManager aiManager = new AIManager(characters.size());
+        assertEquals(characters.size(), aiManager.getCommands().size());
+    }
 }

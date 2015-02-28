@@ -12,53 +12,53 @@ public abstract class GameCharacter {
 
     private final Player player;
     private Direction direction;
-	private Coordinates coordinates;
-	private CharacterState state;
+    private Coordinates coordinates;
+    private CharacterState state;
 
-	protected GameCharacter(Coordinates coordinates, Player player) {
-		this.coordinates = coordinates;
-		this.player = player;
-		this.state = CharacterState.ALIVE;
-		direction = Direction.DOWN;
-	}
+    protected GameCharacter(Coordinates coordinates, Player player) {
+        this.coordinates = coordinates;
+        this.player = player;
+        this.state = CharacterState.ALIVE;
+        direction = Direction.DOWN;
+    }
 
-	public void moves(Direction direction) {
-		if (direction != this.direction) {
-			this.direction = direction;
-		} else {
-			coordinates = direction.move(coordinates);
-		}
-	}
+    public void moves(Direction direction) {
+        if (direction != this.direction) {
+            this.direction = direction;
+        } else {
+            coordinates = direction.move(coordinates);
+        }
+    }
 
     public void teleports(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
 
-	public Direction getDirection() {
-		return direction;
-	}
+    public Direction getDirection() {
+        return direction;
+    }
 
-	public Coordinates getCoordinates() {
-		return coordinates;
-	}
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
 
-	public boolean isPlayer() {
-		return player != Player.BOT;
-	}
+    public boolean isPlayer() {
+        return player != Player.BOT;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public CharacterState getState() {
-		return state;
-	}
+    public CharacterState getState() {
+        return state;
+    }
 
-	public void hit() {
-		state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;
-	}
+    public void hit() {
+        state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;
+    }
 
-	public void awake() {
-		state = isPlayer() ? CharacterState.DEAD : CharacterState.ALIVE;
-	}
+    public void awake() {
+        state = isPlayer() ? CharacterState.DEAD : CharacterState.ALIVE;
+    }
 }

@@ -15,8 +15,8 @@ import static org.junit.Assert.assertFalse;
  */
 public class StageTests {
 
-	public static final double STAGE_WIDTH = 720d;
-	private static final double STAGE_HEIGHT = 1280d;
+    public static final double STAGE_WIDTH = 720d;
+    private static final double STAGE_HEIGHT = 1280d;
     private final Stage stage = new Stage(STAGE_WIDTH, STAGE_HEIGHT);
 
     @Test
@@ -24,11 +24,11 @@ public class StageTests {
         assertEquals(STAGE_WIDTH, stage.getWidth());
     }
 
-	@Test
-	public void stageHasHeight() throws Exception {
-		Stage stage = new Stage(STAGE_WIDTH,STAGE_HEIGHT);
-		assertEquals(STAGE_HEIGHT, stage.getHeight());
-	}
+    @Test
+    public void stageHasHeight() throws Exception {
+        Stage stage = new Stage(STAGE_WIDTH, STAGE_HEIGHT);
+        assertEquals(STAGE_HEIGHT, stage.getHeight());
+    }
 
     @Test
     public void isOutOfBoundCharacterIsTrue() throws Exception {

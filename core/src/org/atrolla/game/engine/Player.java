@@ -5,6 +5,6 @@ package org.atrolla.game.engine;
  */
 public class Player {
 
-	public final static Player BOT = null;
+    public final static Player BOT = null;
 
 }

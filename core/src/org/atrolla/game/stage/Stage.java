@@ -8,18 +8,18 @@ import org.atrolla.game.configuration.ConfigurationConstants;
  */
 public class Stage {
 
-	private final double width;
-	private final double height;
+    private final double width;
+    private final double height;
 
-	public Stage() {
-		this.width = ConfigurationConstants.STAGE_WIDTH;
-		this.height = ConfigurationConstants.STAGE_HEIGHT;
-	}
+    public Stage() {
+        this.width = ConfigurationConstants.STAGE_WIDTH;
+        this.height = ConfigurationConstants.STAGE_HEIGHT;
+    }
 
-	public Stage(double width, double height) {
-		this.width = width;
-		this.height = height;
-	}
+    public Stage(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
 
     public boolean isOutOfBound(GameCharacter character) {
         //TODO : stricly at the moment
@@ -27,11 +27,11 @@ public class Stage {
                 || (character.getCoordinates().getY() < 0 || character.getCoordinates().getY() > this.height);
     }
 
-	public double getWidth() {
-		return width;
-	}
+    public double getWidth() {
+        return width;
+    }
 
-	public double getHeight() {
-		return height;
-	}
+    public double getHeight() {
+        return height;
+    }
 }

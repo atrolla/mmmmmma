@@ -13,18 +13,18 @@ import static org.junit.Assert.assertTrue;
  */
 public class CommandTests {
 
-	private final Command command = new Command(Direction.UP,5);
+    private final Command command = new Command(Direction.UP, 5);
 
-	@Test
-	public void commandHasDirection() throws Exception {
-		assertEquals(Direction.UP, command.getDirection());
-	}
+    @Test
+    public void commandHasDirection() throws Exception {
+        assertEquals(Direction.UP, command.getDirection());
+    }
 
-	@Test
-	public void commandHasTimeoutForTimeout() throws Exception {
-		assertFalse(command.checkIsDone(1));
-		assertFalse(command.checkIsDone(4));
-		assertFalse(command.checkIsDone(5));
-		assertTrue(command.checkIsDone(6));
-	}
+    @Test
+    public void commandHasTimeoutForTimeout() throws Exception {
+        assertFalse(command.checkIsDone(1));
+        assertFalse(command.checkIsDone(4));
+        assertFalse(command.checkIsDone(5));
+        assertTrue(command.checkIsDone(6));
+    }
 }

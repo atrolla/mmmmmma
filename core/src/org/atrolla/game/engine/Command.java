@@ -8,29 +8,27 @@ import static org.atrolla.game.engine.RandomUtils.getRandomMoveTime;
  */
 public class Command {
 
-	private final Direction direction;
-	private final int timeout;
+    private final Direction direction;
+    private final int timeout;
 
-	/**
-	 *
-	 * @param direction
-	 * @param timeout
-	 * creates a command with a direction and the timeout "timetick" when it must be evicted from AIManager
-	 */
-	public Command(Direction direction, int timeout) {
-		this.direction = direction;
-		this.timeout = timeout;
-	}
+    /**
+     * @param direction
+     * @param timeout   creates a command with a direction and the timeout "timetick" when it must be evicted from AIManager
+     */
+    public Command(Direction direction, int timeout) {
+        this.direction = direction;
+        this.timeout = timeout;
+    }
 
-	public static Command RandomCommand(){
-		return new Command(getRandomDirection(), getRandomMoveTime());
-	}
+    public static Command RandomCommand() {
+        return new Command(getRandomDirection(), getRandomMoveTime());
+    }
 
-	public Direction getDirection() {
-		return direction;
-	}
+    public Direction getDirection() {
+        return direction;
+    }
 
-	public boolean checkIsDone(int timeTick) {
-		return timeout < timeTick;
-	}
+    public boolean checkIsDone(int timeTick) {
+        return timeout < timeTick;
+    }
 }
