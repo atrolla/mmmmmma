@@ -51,4 +51,5 @@ public enum Direction {
 
     public abstract Coordinates move(Coordinates coord);
 
+
 }

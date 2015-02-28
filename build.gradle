@@ -52,6 +52,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        compile "org.apache.commons:commons-lang3:3.3.2"
 
         testCompile "junit:junit:+"
     }

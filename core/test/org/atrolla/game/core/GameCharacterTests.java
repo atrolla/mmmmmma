@@ -94,15 +94,7 @@ public class GameCharacterTests {
     }
 
     @Test
-    public void changeDirectionRotatesWithoutChangingCoordinates() throws Exception {
-        defaultBotArcher.moves(Direction.DOWN);
-        Coordinates c1 = defaultBotArcher.getCoordinates();
-        defaultBotArcher.moves(Direction.UP);
-        assertEquals(c1, defaultBotArcher.getCoordinates());
-    }
-
-    @Test
-    public void moveSameDirectionChangesCoordinates() throws Exception {
+    public void moveChangesCoordinates() throws Exception {
         defaultBotArcher.moves(Direction.UP);
         Coordinates c1 = defaultBotArcher.getCoordinates();
         defaultBotArcher.moves(Direction.UP);

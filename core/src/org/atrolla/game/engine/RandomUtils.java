@@ -1,7 +1,9 @@
 package org.atrolla.game.engine;
 
+import org.apache.commons.lang3.EnumUtils;
 import org.atrolla.game.configuration.ConfigurationConstants;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -21,6 +23,37 @@ public final class RandomUtils {
 
     public static final Direction getRandomDirection() {
         return Direction.values()[RANDOM.nextInt(DIRECTIONS_NUMBER)];
+    }
+
+    public static final Direction getRandomDirectionFrom(Coordinates coordinates) {
+        List<Direction> validDirectionList = buildValidDirectionList(coordinates);
+        int randomOrdinal =  RANDOM.nextInt(validDirectionList.size());
+        return validDirectionList.get(randomOrdinal);
+    }
+
+    private static List<Direction> buildValidDirectionList(Coordinates coordinates) {
+        final double x = coordinates.getX();
+        final double y = coordinates.getY();
+        final List<Direction> validDirectionList = EnumUtils.getEnumList(Direction.class);
+        if (x == 0) {
+            validDirectionList.remove(Direction.LEFT);
+            validDirectionList.remove(Direction.DOWN_LEFT);
+            validDirectionList.remove(Direction.UP_LEFT);
+        } else if (x == ConfigurationConstants.STAGE_WIDTH) {
+            validDirectionList.remove(Direction.RIGHT);
+            validDirectionList.remove(Direction.DOWN_RIGHT);
+            validDirectionList.remove(Direction.UP_RIGHT);
+        }
+        if (y == 0) {
+            validDirectionList.remove(Direction.UP);
+            validDirectionList.remove(Direction.UP_RIGHT);
+            validDirectionList.remove(Direction.UP_LEFT);
+        } else if (y == ConfigurationConstants.STAGE_HEIGHT) {
+            validDirectionList.remove(Direction.DOWN);
+            validDirectionList.remove(Direction.DOWN_RIGHT);
+            validDirectionList.remove(Direction.DOWN_LEFT);
+        }
+        return validDirectionList;
     }
 
 }

@@ -57,16 +57,16 @@ public class Game {
     }
 
     public void update() {
-        aiManager.updateBots(characters);
-        // TODO : update time and commands
-        preventCharacterToBeOutOfBound();
         time++;
+        aiManager.updateBots(characters);
+        preventCharacterToBeOutOfBound();
         aiManager.updateCommands(time);
     }
 
     private void preventCharacterToBeOutOfBound() {
         final double height = stage.getHeight();
         final double width = stage.getWidth();
+        int index = 0;
         for (GameCharacter character : characters) {
             // TODO : merge for perf ?
             if (stage.isOutOfBound(character)) {
@@ -74,8 +74,12 @@ public class Game {
                 double y = character.getCoordinates().getY();
                 x = x < 0 ? 0 : x > width ? width : x;
                 y = y < 0 ? 0 : y > height ? height : y;
-                character.teleports(new Coordinates(x, y));
+                final Coordinates coordinates = new Coordinates(x, y);
+                character.teleports(coordinates);
+                // TODO : bots that are prevented must choose another valid direction = command.
+                aiManager.goAwayFromWall(index,coordinates);
             }
+            index++;
         }
     }
 

@@ -22,13 +22,9 @@ public abstract class GameCharacter {
         direction = Direction.DOWN;
     }
 
-    // GG pense que cela n'a pas de sens de changer de direction et ensuite se déplacer nah !!
     public void moves(Direction direction) {
-        if (direction != this.direction) {
-            this.direction = direction;
-        } else {
-            coordinates = direction.move(coordinates);
-        }
+        this.direction = direction;
+        coordinates = direction.move(coordinates);
     }
 
     public void teleports(Coordinates coordinates) {

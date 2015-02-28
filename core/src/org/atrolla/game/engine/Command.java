@@ -1,6 +1,7 @@
 package org.atrolla.game.engine;
 
 import static org.atrolla.game.engine.RandomUtils.getRandomDirection;
+import static org.atrolla.game.engine.RandomUtils.getRandomDirectionFrom;
 import static org.atrolla.game.engine.RandomUtils.getRandomMoveTime;
 
 /**
@@ -22,6 +23,10 @@ public class Command {
 
     public static Command RandomCommand() {
         return new Command(getRandomDirection(), getRandomMoveTime());
+    }
+
+    public static Command RandomCommand(Coordinates coordinates) {
+        return new Command(getRandomDirectionFrom(coordinates), getRandomMoveTime());
     }
 
     public Direction getDirection() {

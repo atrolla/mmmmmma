@@ -63,7 +63,7 @@ public class GameTests {
         assertFalse(defaultGame.getStage().isOutOfBound(gameCharacter));
     }
 
-    //@Test
+    @Test
     public void anotherCommandIsDoneWhenACommandIsComplete() throws Exception {
         Command command = new Command(Direction.RIGHT,2);
         defaultGame.getAIManager().getCommands().set(0,command);
@@ -75,9 +75,24 @@ public class GameTests {
         assertEquals(command, defaultGame.getAIManager().getCommands().get(0));
         // t = 2
         defaultGame.update();
-        assertEquals(command, defaultGame.getAIManager().getCommands().get(0));
-        // t = 3
-        defaultGame.update();
         assertNotEquals(command, defaultGame.getAIManager().getCommands().get(0));
+    }
+
+    @Test
+    public void botIsNotStuckOnBounds() throws Exception {
+        final GameCharacter gameCharacter = (GameCharacter) defaultGame.getCharacters().toArray()[0];
+        // put char out of bound
+        for (int i = 0; i < 10000; i++) {
+            gameCharacter.moves(Direction.DOWN);
+        }
+        // put direction that makes it still out of bound
+        Command command = new Command(Direction.DOWN_RIGHT,500);
+        defaultGame.getAIManager().getCommands().set(0,command);
+        defaultGame.update();
+        assertFalse(defaultGame.getStage().isOutOfBound(gameCharacter));
+        final Command generatedCommand = defaultGame.getAIManager().getCommands().get(0);
+        assertNotEquals(Direction.DOWN, generatedCommand.getDirection());
+        assertNotEquals(Direction.DOWN_RIGHT, generatedCommand.getDirection());
+        assertNotEquals(Direction.DOWN_LEFT, generatedCommand.getDirection());
     }
 }

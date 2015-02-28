@@ -2,10 +2,12 @@ package org.atrolla.game.ai;
 
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.engine.Command;
+import org.atrolla.game.engine.Coordinates;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
@@ -49,6 +51,16 @@ public class AIManager {
     }
 
     public void updateCommands(int time) {
+        final ListIterator<Command> commandListIterator = commands.listIterator();
+        while (commandListIterator.hasNext()) {
+            final Command command = commandListIterator.next();
+            if (command.checkIsDone(time)) {
+                commandListIterator.set(RandomCommand());
+            }
+        }
+    }
 
+    public void goAwayFromWall(int index, Coordinates coordinates) {
+        commands.set(index,RandomCommand(coordinates));
     }
 }
