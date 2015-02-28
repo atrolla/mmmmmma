@@ -2,6 +2,7 @@ package org.atrolla.game.core;
 
 import org.atrolla.game.ai.AIManager;
 import org.atrolla.game.characters.*;
+import org.atrolla.game.engine.Command;
 import org.atrolla.game.engine.Direction;
 import org.atrolla.game.engine.Game;
 import org.atrolla.game.stage.Stage;
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -59,5 +61,23 @@ public class GameTests {
         assertTrue(defaultGame.getStage().isOutOfBound(gameCharacter));
         defaultGame.update();
         assertFalse(defaultGame.getStage().isOutOfBound(gameCharacter));
+    }
+
+    //@Test
+    public void anotherCommandIsDoneWhenACommandIsComplete() throws Exception {
+        Command command = new Command(Direction.RIGHT,2);
+        defaultGame.getAIManager().getCommands().set(0,command);
+        // t = 0
+        defaultGame.update();
+        assertEquals(command, defaultGame.getAIManager().getCommands().get(0));
+        // t = 1
+        defaultGame.update();
+        assertEquals(command, defaultGame.getAIManager().getCommands().get(0));
+        // t = 2
+        defaultGame.update();
+        assertEquals(command, defaultGame.getAIManager().getCommands().get(0));
+        // t = 3
+        defaultGame.update();
+        assertNotEquals(command, defaultGame.getAIManager().getCommands().get(0));
     }
 }

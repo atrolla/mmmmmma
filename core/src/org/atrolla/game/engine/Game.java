@@ -61,6 +61,7 @@ public class Game {
         // TODO : update time and commands
         preventCharacterToBeOutOfBound();
         time++;
+        aiManager.updateCommands(time);
     }
 
     private void preventCharacterToBeOutOfBound() {

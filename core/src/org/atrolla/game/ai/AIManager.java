@@ -22,7 +22,7 @@ public class AIManager {
 
     private List<Command> commands;
 
-
+    //TODO : replace characterNumber with  botNumber...
     public AIManager(int characterNumber) {
         commands = new ArrayList<>(characterNumber);
         initCommands(characterNumber);
@@ -34,7 +34,7 @@ public class AIManager {
                 .forEachOrdered(addRandomCommand);
     }
 
-    public Collection<Command> getCommands() {
+    public List<Command> getCommands() {
         return commands;
     }
 
@@ -46,5 +46,9 @@ public class AIManager {
             character.moves(command.getDirection());
             i++;
         }
+    }
+
+    public void updateCommands(int time) {
+
     }
 }
