@@ -95,4 +95,5 @@ public class GameTests {
         assertNotEquals(Direction.DOWN_RIGHT, generatedCommand.getDirection());
         assertNotEquals(Direction.DOWN_LEFT, generatedCommand.getDirection());
     }
+
 }

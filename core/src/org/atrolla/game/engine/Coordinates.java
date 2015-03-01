@@ -5,6 +5,8 @@ package org.atrolla.game.engine;
  */
 public final class Coordinates {
 
+    public static final Coordinates NULL = null;
+
     private final double x;
     private final double y;
 

@@ -47,6 +47,11 @@ public enum Direction {
         public Coordinates move(Coordinates coord) {
             return coord.translateXandY(ConfigurationConstants.MOVE_STEP, ConfigurationConstants.MOVE_STEP);
         }
+    }, STOP {
+        @Override
+        public Coordinates move(Coordinates coord) {
+            return coord;
+        }
     };
 
     public abstract Coordinates move(Coordinates coord);

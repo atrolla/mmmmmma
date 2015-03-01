@@ -23,7 +23,9 @@ public abstract class GameCharacter {
     }
 
     public void moves(Direction direction) {
-        this.direction = direction;
+        if(!Direction.STOP.equals(direction)) {
+            this.direction = direction;
+        }
         coordinates = direction.move(coordinates);
     }
 

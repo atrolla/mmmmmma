@@ -1,8 +1,8 @@
 package org.atrolla.game.engine;
 
-import static org.atrolla.game.engine.RandomUtils.getRandomDirection;
 import static org.atrolla.game.engine.RandomUtils.getRandomDirectionFrom;
 import static org.atrolla.game.engine.RandomUtils.getRandomMoveTime;
+import static org.atrolla.game.engine.RandomUtils.getRandomStopTime;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -21,11 +21,10 @@ public class Command {
         this.timeout = timeout;
     }
 
-    public static Command RandomCommand(int time) {
-        return new Command(getRandomDirection(), getRandomMoveTime(time));
-    }
-
     public static Command RandomCommand(int time,Coordinates coordinates) {
+        if(RandomUtils.stopRandomChance()){
+            return new Command(Direction.STOP, getRandomStopTime(time));
+        }
         return new Command(getRandomDirectionFrom(coordinates), getRandomMoveTime(time));
     }
 

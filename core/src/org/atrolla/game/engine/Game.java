@@ -45,13 +45,15 @@ public class Game {
 
     public void initCharacters() {
         final int endInclusive = ConfigurationConstants.GAME_CHARACTERS / 4;
+        final double xStep = ConfigurationConstants.STAGE_WIDTH / 5;
+        final double yStep = ConfigurationConstants.STAGE_HEIGHT / (endInclusive + 1);
         IntStream
                 .rangeClosed(1, endInclusive)
                 .forEach(i -> {
-                            characters.add(new Archer(new Coordinates(i * 50, 50), Player.BOT));
-                            characters.add(new Bomber(new Coordinates(i * 50, 100), Player.BOT));
-                            characters.add(new Knight(new Coordinates(i * 50, 150), Player.BOT));
-                            characters.add(new Mage(new Coordinates(i * 50, 200), Player.BOT));
+                            characters.add(new Archer(new Coordinates(xStep, yStep * i), Player.BOT));
+                            characters.add(new Bomber(new Coordinates(2 * xStep, yStep * i), Player.BOT));
+                            characters.add(new Knight(new Coordinates(3* xStep, yStep * i), Player.BOT));
+                            characters.add(new Mage(new Coordinates(4* xStep, yStep * i), Player.BOT));
                         }
                 );
     }

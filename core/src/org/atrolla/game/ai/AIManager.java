@@ -31,7 +31,7 @@ public class AIManager {
     }
 
     private void initCommands(int characterNumber) {
-        IntConsumer addRandomCommand = i -> commands.add(RandomCommand(0));
+        IntConsumer addRandomCommand = i -> commands.add(RandomCommand(0, Coordinates.NULL));
         IntStream.rangeClosed(1, characterNumber)
                 .forEachOrdered(addRandomCommand);
     }
@@ -55,7 +55,7 @@ public class AIManager {
         while (commandListIterator.hasNext()) {
             final Command command = commandListIterator.next();
             if (command.checkIsDone(time)) {
-                commandListIterator.set(RandomCommand(time));
+                commandListIterator.set(RandomCommand(time, Coordinates.NULL));
             }
         }
     }
