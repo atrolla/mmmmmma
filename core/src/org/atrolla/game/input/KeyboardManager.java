@@ -7,9 +7,9 @@ import org.atrolla.game.engine.Direction;
 /**
  * Created by yeamanan on 28/02/15.
  */
-public class InputManager {
+public class KeyboardManager {
 
-    public InputManager() {
+    public KeyboardManager() {
     }
 
     public void moveCharacter(GameCharacter character, int keyPressed) {

@@ -1,13 +1,11 @@
 package org.atrolla.game.ai;
 
 import org.atrolla.game.characters.GameCharacter;
+import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.engine.Command;
 import org.atrolla.game.engine.Coordinates;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
@@ -18,15 +16,18 @@ import static org.atrolla.game.engine.Command.RandomCommand;
  */
 public class AIManager {
 
-    //TODO : AI must be smart enough to not go into walls...
-
-    //TODO : AI can pause !
+    /**
+     * AI are smart enough to not go into walls
+     * AI can stop walking
+     */
 
     private List<Command> commands;
+    private Map<GameCharacter, Integer> knockOutBotsAwakeTime;
 
     //TODO : replace characterNumber with  botNumber...
     public AIManager(int characterNumber) {
         commands = new ArrayList<>(characterNumber);
+        knockOutBotsAwakeTime = new HashMap<>();
         initCommands(characterNumber);
     }
 
@@ -40,13 +41,14 @@ public class AIManager {
         return commands;
     }
 
-    public void updateBots(final Collection<GameCharacter> characters) {
-        //TODO : should filter on bots...
+    public void updateBotsMove(final Collection<GameCharacter> characters) {
         int i = 0;
         for (GameCharacter character : characters) {
-            final Command command = commands.get(i);
-            character.moves(command.getDirection());
-            i++;
+            if (!character.isPlayer()) {
+                final Command command = commands.get(i);
+                character.moves(command.getDirection());
+                i++;
+            }
         }
     }
 
@@ -61,6 +63,19 @@ public class AIManager {
     }
 
     public void goAwayFromWall(int index, int time, Coordinates coordinates) {
-        commands.set(index,RandomCommand(time, coordinates));
+        commands.set(index, RandomCommand(time, coordinates));
+    }
+
+    public void updateBotsState(final Collection<GameCharacter> characters,final int time) {
+        characters.stream().filter(character -> character.isKnockOut()).forEach(character -> {
+            if (knockOutBotsAwakeTime.containsKey(character)) {
+                if (time >= knockOutBotsAwakeTime.get(character)) {
+                    knockOutBotsAwakeTime.remove(character);
+                    character.awake();
+                }
+            } else {
+                knockOutBotsAwakeTime.put(character, time + ConfigurationConstants.BOT_KNOCK_OUT_DURATION);
+            }
+        });
     }
 }

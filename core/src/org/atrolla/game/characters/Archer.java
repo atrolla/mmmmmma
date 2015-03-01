@@ -1,6 +1,5 @@
 package org.atrolla.game.characters;
 
-import org.atrolla.game.engine.Coordinates;
 import org.atrolla.game.engine.Player;
 
 /**
@@ -8,7 +7,7 @@ import org.atrolla.game.engine.Player;
  */
 public class Archer extends GameCharacter {
 
-    public Archer(Coordinates coordinates, Player player) {
-        super(coordinates, player);
+    public Archer(Player player) {
+        super(player);
     }
 }

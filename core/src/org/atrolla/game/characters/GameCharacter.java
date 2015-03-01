@@ -10,23 +10,28 @@ import org.atrolla.game.engine.Player;
  */
 public abstract class GameCharacter {
 
+    private static int counter = 0;
+
+    private final int id;
     private final Player player;
     private Direction direction;
     private Coordinates coordinates;
     private CharacterState state;
 
-    protected GameCharacter(Coordinates coordinates, Player player) {
-        this.coordinates = coordinates;
+    protected GameCharacter(Player player) {
         this.player = player;
         this.state = CharacterState.ALIVE;
         direction = Direction.DOWN;
+        this.id = counter++;
     }
 
     public void moves(Direction direction) {
-        if(!Direction.STOP.equals(direction)) {
-            this.direction = direction;
+        if(canMove()) {
+            if (!Direction.STOP.equals(direction)) {
+                this.direction = direction;
+            }
+            coordinates = direction.move(coordinates);
         }
-        coordinates = direction.move(coordinates);
     }
 
     public void teleports(Coordinates coordinates) {
@@ -43,10 +48,6 @@ public abstract class GameCharacter {
 
     public Coordinates getCoordinates() {
         return coordinates;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
     }
 
     public boolean isPlayer() {
@@ -67,5 +68,30 @@ public abstract class GameCharacter {
 
     public void awake() {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.ALIVE;
+    }
+
+    public boolean canMove() {
+        return CharacterState.ALIVE.equals(state);
+    }
+
+    public boolean isKnockOut() {
+        return CharacterState.KNOCK_OUT.equals(state);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GameCharacter that = (GameCharacter) o;
+
+        if (id != that.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

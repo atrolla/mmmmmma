@@ -2,6 +2,7 @@ package org.atrolla.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,6 +22,7 @@ public class MmmmmmaGame extends ApplicationAdapter {
     private Game game;
     private ShapeRenderer shapeRenderer;
 
+
     @Override
 	public void create () {
 //		img = new Texture("badlogic.jpg");
@@ -30,8 +32,8 @@ public class MmmmmmaGame extends ApplicationAdapter {
         camera.setToOrtho(false, (float)ConfigurationConstants.STAGE_WIDTH, (float)ConfigurationConstants.STAGE_HEIGHT);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-
         game = new Game();
+        game.setControllers(Controllers.getControllers());
     }
 
 	@Override
@@ -40,7 +42,8 @@ public class MmmmmmaGame extends ApplicationAdapter {
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
         // of the color to be used to clear the screen.
-		Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+
+        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
@@ -54,7 +57,6 @@ public class MmmmmmaGame extends ApplicationAdapter {
         // all drops
         batch.begin();
 
-        // process user input
         game.update();
 
         //draw objects...
@@ -63,7 +65,12 @@ public class MmmmmmaGame extends ApplicationAdapter {
             final Coordinates coordinates = gameCharacter.getCoordinates();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.circle((float) coordinates.getX(), (float)coordinates.getY(), 5);
-            shapeRenderer.setColor(Color.BLACK);
+            // TODO : why is it not me ???
+            if(gameCharacter.isPlayer()){
+                shapeRenderer.setColor(Color.GREEN);
+            }else {
+                shapeRenderer.setColor(Color.BLACK);
+            }
             shapeRenderer.end();
         }
 

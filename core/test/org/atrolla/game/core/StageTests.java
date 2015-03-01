@@ -32,13 +32,15 @@ public class StageTests {
 
     @Test
     public void isOutOfBoundCharacterIsTrue() throws Exception {
-        final Archer archer = new Archer(new Coordinates(-1, -1), Player.BOT);
+        final Archer archer = new Archer(Player.BOT);
+        archer.teleports(new Coordinates(-1, -1));
         assertTrue(stage.isOutOfBound(archer));
     }
 
     @Test
     public void isOutOfBoundCharacterIsFalse() throws Exception {
-        final Archer archer = new Archer(new Coordinates(1, 1), Player.BOT);
+        final Archer archer = new Archer(Player.BOT);
+        archer.teleports(new Coordinates(1, 1));
         assertFalse(stage.isOutOfBound(archer));
     }
 }

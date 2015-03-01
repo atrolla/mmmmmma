@@ -2,6 +2,7 @@ package org.atrolla.game.core;
 
 import org.atrolla.game.engine.Command;
 import org.atrolla.game.engine.Direction;
+import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -13,7 +14,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class CommandTests {
 
-    private final Command command = new Command(Direction.UP, 5);
+    private Command command;
+
+    @Before
+    public void setUp() throws Exception {
+        command = new Command(Direction.UP, 5);
+    }
 
     @Test
     public void commandHasDirection() throws Exception {

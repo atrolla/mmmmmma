@@ -5,6 +5,7 @@ import org.atrolla.game.engine.CharacterState;
 import org.atrolla.game.engine.Coordinates;
 import org.atrolla.game.engine.Direction;
 import org.atrolla.game.engine.Player;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,7 +16,13 @@ import static org.junit.Assert.*;
 public class GameCharacterTests {
 
 
-    private Archer defaultBotArcher = new Archer(new Coordinates(1.0d, 1.0d), Player.BOT);
+    private Archer defaultBotArcher;
+
+    @Before
+    public void setUp() throws Exception {
+        defaultBotArcher = new Archer(Player.BOT);
+        defaultBotArcher.teleports(new Coordinates(1.0d, 1.0d));
+    }
 
     @Test
     public void thisAlwaysPasses() {
@@ -29,19 +36,19 @@ public class GameCharacterTests {
 
     @Test
     public void bomberIsAGameCharacter() throws Exception {
-        Bomber bomber = new Bomber(new Coordinates(1.0d, 1.0d), Player.BOT);
+        Bomber bomber = new Bomber(Player.BOT);
         assertTrue(bomber instanceof GameCharacter);
     }
 
     @Test
     public void knightIsAGameCharacter() throws Exception {
-        Knight knight = new Knight(new Coordinates(1.0d, 1.0d), Player.BOT);
+        Knight knight = new Knight(Player.BOT);
         assertTrue(knight instanceof GameCharacter);
     }
 
     @Test
     public void mageIsAGameCharacter() throws Exception {
-        Mage mage = new Mage(new Coordinates(1.0d, 1.0d), Player.BOT);
+        Mage mage = new Mage(Player.BOT);
         assertTrue(mage instanceof GameCharacter);
     }
 
@@ -109,7 +116,7 @@ public class GameCharacterTests {
     @Test
     public void characterIsPlayedByPlayer() throws Exception {
         Player player = new Player();
-        Archer archer = new Archer(new Coordinates(1.0d, 1.0d), player);
+        Archer archer = new Archer(player);
         assertTrue(archer.isPlayer());
         assertEquals(player, archer.getPlayer());
     }
@@ -122,7 +129,7 @@ public class GameCharacterTests {
     @Test
     public void playedCharacterAfterHitIsDead() throws Exception {
         Player player = new Player();
-        Archer archer = new Archer(new Coordinates(1.0d, 1.0d), player);
+        Archer archer = new Archer(player);
         archer.hit();
         assertEquals(CharacterState.DEAD, archer.getState());
     }
@@ -144,10 +151,25 @@ public class GameCharacterTests {
     @Test
     public void deadCharacterAfterAwakeIsStillDead() throws Exception {
         Player player = new Player();
-        Archer archer = new Archer(new Coordinates(1.0d, 1.0d), player);
+        Archer archer = new Archer(player);
         archer.hit();
         assertEquals(CharacterState.DEAD, archer.getState());
         archer.awake();
         assertEquals(CharacterState.DEAD, archer.getState());
     }
+
+    @Test
+    public void onlyAliveCharacterCanMove() throws Exception {
+        assertTrue(defaultBotArcher.canMove());
+        defaultBotArcher.hit();
+        assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
+        assertFalse(defaultBotArcher.canMove());
+        Player player = new Player();
+        Archer archer = new Archer(player);
+        assertTrue(archer.canMove());
+        archer.hit();
+        assertEquals(CharacterState.DEAD, archer.getState());
+        assertFalse(archer.canMove());
+    }
+
 }
