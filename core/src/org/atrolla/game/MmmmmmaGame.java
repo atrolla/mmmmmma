@@ -64,13 +64,13 @@ public class MmmmmmaGame extends ApplicationAdapter {
         for (GameCharacter gameCharacter : gameCharacters) {
             final Coordinates coordinates = gameCharacter.getCoordinates();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.circle((float) coordinates.getX(), (float)coordinates.getY(), 5);
-            // TODO : why is it not me ???
+
             if(gameCharacter.isPlayer()){
                 shapeRenderer.setColor(Color.GREEN);
             }else {
                 shapeRenderer.setColor(Color.BLACK);
             }
+            shapeRenderer.circle((float) coordinates.getX(), (float)coordinates.getY(), 5);
             shapeRenderer.end();
         }
 
