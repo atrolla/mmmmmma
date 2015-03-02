@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.engine.Coordinates;
@@ -63,14 +64,17 @@ public class MmmmmmaGame extends ApplicationAdapter {
         final Collection<GameCharacter> gameCharacters = game.getCharacters();
         for (GameCharacter gameCharacter : gameCharacters) {
             final Coordinates coordinates = gameCharacter.getCoordinates();
+            final Rectangle hitbox = gameCharacter.getHitbox();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
             if(gameCharacter.isPlayer()){
                 shapeRenderer.setColor(Color.GREEN);
             }else {
                 shapeRenderer.setColor(Color.BLACK);
             }
-            shapeRenderer.circle((float) coordinates.getX(), (float)coordinates.getY(), 5);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
+            shapeRenderer.end();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.rect(hitbox.getX(),hitbox.getY(),hitbox.getWidth(),hitbox.getHeight());
             shapeRenderer.end();
         }
 

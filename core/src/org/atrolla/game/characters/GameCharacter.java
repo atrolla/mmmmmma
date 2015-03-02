@@ -1,5 +1,6 @@
 package org.atrolla.game.characters;
 
+import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.game.engine.CharacterState;
 import org.atrolla.game.engine.Coordinates;
 import org.atrolla.game.engine.Direction;
@@ -12,17 +13,20 @@ public abstract class GameCharacter {
 
     private static int counter = 0;
 
+
     private final int id;
     private final Player player;
     private Direction direction;
     private Coordinates coordinates;
     private CharacterState state;
+    private Rectangle hitbox;
 
     protected GameCharacter(Player player) {
         this.player = player;
         this.state = CharacterState.ALIVE;
         direction = Direction.DOWN;
         this.id = counter++;
+        this.hitbox = new Rectangle();
     }
 
     public void moves(Direction direction) {
@@ -31,11 +35,17 @@ public abstract class GameCharacter {
                 this.direction = direction;
             }
             coordinates = direction.move(coordinates);
+            updateHitbox();
         }
+    }
+
+    public void updateHitbox() {
+        this.hitbox.set((float)(coordinates.getX()-10),(float)(coordinates.getY()-10),20,20);
     }
 
     public void teleports(Coordinates coordinates) {
         this.coordinates = coordinates;
+        updateHitbox();
     }
 
     public Direction getDirection() {
@@ -61,6 +71,8 @@ public abstract class GameCharacter {
     public CharacterState getState() {
         return state;
     }
+
+    public Rectangle getHitbox() { return hitbox; }
 
     public void hit() {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;

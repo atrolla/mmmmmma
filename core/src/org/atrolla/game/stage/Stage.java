@@ -1,5 +1,6 @@
 package org.atrolla.game.stage;
 
+import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
 
@@ -22,9 +23,10 @@ public class Stage {
     }
 
     public boolean isOutOfBound(GameCharacter character) {
+        final Rectangle characterHitbox = character.getHitbox();
         //TODO : stricly at the moment
-        return (character.getCoordinates().getX() < 0 || character.getCoordinates().getX() > this.width)
-                || (character.getCoordinates().getY() < 0 || character.getCoordinates().getY() > this.height);
+        return (characterHitbox.getX() < 0 || characterHitbox.getX()+characterHitbox.getWidth() > this.width)
+                || (characterHitbox.getY() < 0 || characterHitbox.getY()+characterHitbox.getHeight() > this.height);
     }
 
     public double getWidth() {

@@ -1,6 +1,7 @@
 package org.atrolla.game.engine;
 
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.ai.AIManager;
 import org.atrolla.game.characters.*;
@@ -113,10 +114,13 @@ public class Game {
         for (GameCharacter character : characters) {
             // TODO : merge for perf ?
             if (stage.isOutOfBound(character)) {
+                Rectangle hitbox = character.getHitbox();
                 double x = character.getCoordinates().getX();
                 double y = character.getCoordinates().getY();
-                x = x < 0 ? 0 : x > width ? width : x;
-                y = y < 0 ? 0 : y > height ? height : y;
+                x = hitbox.getX() < 0 ? hitbox.getWidth() / 2 :
+                    hitbox.getX() + hitbox.getWidth() > width ? width - (hitbox.getWidth()/2) : x;
+                y = hitbox.getY() < 0 ? hitbox.getHeight()/2 :
+                    hitbox.getY() + hitbox.getHeight() > height ? height - (hitbox.getHeight()/2) : y;
                 final Coordinates coordinates = new Coordinates(x, y);
                 character.teleports(coordinates);
                 // bots that are prevented must choose another valid direction = command.
