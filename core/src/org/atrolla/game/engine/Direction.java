@@ -10,12 +10,12 @@ public enum Direction {
     UP {
         @Override
         public Coordinates move(Coordinates coord) {
-            return coord.translateY(-ConfigurationConstants.MOVE_STEP);
+            return coord.translateY(ConfigurationConstants.MOVE_STEP);
         }
     }, DOWN {
         @Override
         public Coordinates move(Coordinates coord) {
-            return coord.translateY(ConfigurationConstants.MOVE_STEP);
+            return coord.translateY(-ConfigurationConstants.MOVE_STEP);
         }
     }, LEFT {
         @Override

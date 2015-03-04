@@ -1,5 +1,6 @@
 package org.atrolla.game.engine;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -7,6 +8,7 @@ import org.atrolla.game.ai.AIManager;
 import org.atrolla.game.characters.*;
 import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.input.ControllerManager;
+import org.atrolla.game.input.KeyboardManager;
 import org.atrolla.game.stage.Stage;
 
 import java.util.ArrayList;
@@ -23,8 +25,8 @@ public class Game {
     private final List<GameCharacter> characters;
     private final AIManager aiManager;
     private ControllerManager controllerManager;
+    private KeyboardManager keyboardManager;
     private int time;
-
 
     public Game(Stage stage) {
         this.stage = stage;
@@ -35,13 +37,8 @@ public class Game {
     }
 
     public Game() {
-        this.stage = new Stage();
-        this.characters = new ArrayList<>(ConfigurationConstants.GAME_CHARACTERS);
-        this.aiManager = new AIManager(ConfigurationConstants.GAME_CHARACTERS);
-        this.time = 0;
-        initCharacters();
+        this(new Stage());
     }
-
 
     public Stage getStage() {
         return stage;
@@ -101,7 +98,9 @@ public class Game {
         aiManager.updateBotsState(characters, time);
         aiManager.updateBotsMove(characters);
         // TODO : update Players - only pass playerList
-        controllerManager.updatePlayers(characters.stream().filter(c -> c.isPlayer()).collect(Collectors.toList()));
+        List<GameCharacter> playedCharacters = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
+        controllerManager.updatePlayers(playedCharacters);
+        keyboardManager.updatePlayers(playedCharacters);
         preventCharactersFromBeingOutOfBound();
         time++;
         aiManager.updateCommands(time);
@@ -134,8 +133,11 @@ public class Game {
         return aiManager;
     }
 
-
     public void setControllers(Array<Controller> controllers) {
         controllerManager = new ControllerManager(controllers);
+    }
+
+    public void setKeyboards(Array<Input> keyboards) {
+        keyboardManager = new KeyboardManager(keyboards);
     }
 }

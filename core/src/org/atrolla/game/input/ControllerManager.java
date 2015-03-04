@@ -37,30 +37,29 @@ public class ControllerManager {
                     gameCharacter.moves(Direction.RIGHT);
                     break;
                 case north:
-                    gameCharacter.moves(Direction.DOWN);
+                    gameCharacter.moves(Direction.UP);
                     break;
                 case south:
-                    gameCharacter.moves(Direction.UP);
+                    gameCharacter.moves(Direction.DOWN);
                     break;
                 case west:
                     gameCharacter.moves(Direction.LEFT);
                     break;
                 case northWest:
-                    gameCharacter.moves(Direction.UP_RIGHT);
-                    break;
-                case southWest:
                     gameCharacter.moves(Direction.UP_LEFT);
                     break;
+                case southWest:
+                    gameCharacter.moves(Direction.DOWN_LEFT);
+                    break;
                 case northEast:
-                    gameCharacter.moves(Direction.DOWN_RIGHT);
+                    gameCharacter.moves(Direction.UP_RIGHT);
                     break;
                 case southEast:
-                    gameCharacter.moves(Direction.DOWN_LEFT);
+                    gameCharacter.moves(Direction.DOWN_RIGHT);
                     break;
                 default:
                     break;
             }
         }
     }
-
 }

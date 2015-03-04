@@ -2,6 +2,7 @@ package org.atrolla.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.engine.Coordinates;
@@ -23,11 +25,9 @@ public class MmmmmmaGame extends ApplicationAdapter {
     private Game game;
     private ShapeRenderer shapeRenderer;
 
-
     @Override
-	public void create () {
-//		img = new Texture("badlogic.jpg");
-
+    public void create () {
+//        img = new Texture("badlogic.jpg");
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
         camera.setToOrtho(false, (float)ConfigurationConstants.STAGE_WIDTH, (float)ConfigurationConstants.STAGE_HEIGHT);
@@ -35,17 +35,20 @@ public class MmmmmmaGame extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         game = new Game();
         game.setControllers(Controllers.getControllers());
+        Array<Input> keyboards = new Array<>(1);
+        keyboards.add(Gdx.input);
+        game.setKeyboards(keyboards);
     }
 
-	@Override
-	public void render () {
+    @Override
+    public void render () {
         // clear the screen with a dark blue color. The
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
         // of the color to be used to clear the screen.
 
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
         camera.update();
@@ -81,9 +84,7 @@ public class MmmmmmaGame extends ApplicationAdapter {
         batch.end();
 
         // process user input
-
-
-	}
+    }
 
     @Override
     public void dispose() {

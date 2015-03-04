@@ -32,6 +32,7 @@ public class GameTests {
     public void setUp() throws Exception {
         defaultGame = new Game();
         defaultGame.setControllers(new Array<>());
+        defaultGame.setKeyboards(new Array<>());
         firstBot = defaultGame.getCharacters().stream().filter(c -> !c.isPlayer()).findFirst().get();
     }
 
@@ -94,23 +95,23 @@ public class GameTests {
     public void botIsNotStuckOnBounds() throws Exception {
         // put char out of bound
         for (int i = 0; i < 10000; i++) {
-            firstBot.moves(Direction.DOWN);
+            firstBot.moves(Direction.UP);
         }
         // put direction that makes it still out of bound
-        Command command = new Command(Direction.DOWN_RIGHT,500);
+        Command command = new Command(Direction.UP_RIGHT,500);
         defaultGame.getAIManager().getCommands().set(0,command);
         defaultGame.update();
         assertFalse(defaultGame.getStage().isOutOfBound(firstBot));
         final Command generatedCommand = defaultGame.getAIManager().getCommands().get(0);
-        assertNotEquals(Direction.DOWN, generatedCommand.getDirection());
-        assertNotEquals(Direction.DOWN_RIGHT, generatedCommand.getDirection());
-        assertNotEquals(Direction.DOWN_LEFT, generatedCommand.getDirection());
+        assertNotEquals(Direction.UP, generatedCommand.getDirection());
+        assertNotEquals(Direction.UP_RIGHT, generatedCommand.getDirection());
+        assertNotEquals(Direction.UP_LEFT, generatedCommand.getDirection());
     }
 
     @Test
     public void characterHitStopMove() throws Exception {
         final Coordinates baseCoordinates = firstBot.getCoordinates();
-        Command command = new Command(Direction.DOWN_RIGHT,500);
+        Command command = new Command(Direction.UP_RIGHT,500);
         defaultGame.getAIManager().getCommands().set(0, command);
         defaultGame.update();
         final Coordinates coordinates2 = firstBot.getCoordinates();
