@@ -113,13 +113,13 @@ public class Game {
         for (GameCharacter character : characters) {
             // TODO : merge for perf ?
             if (stage.isOutOfBound(character)) {
-
+                Rectangle hitbox = character.getHitbox();
                 double x = character.getCoordinates().getX();
                 double y = character.getCoordinates().getY();
-                x = x < 0 ? 0 :
-                    x + ConfigurationConstants.PLAYER_WIDTH > width ? width - ConfigurationConstants.PLAYER_WIDTH : x;
-                y = y < 0 ? 0 :
-                    y + ConfigurationConstants.PLAYER_HEIGHT > height ? height - ConfigurationConstants.PLAYER_HEIGHT : y;
+                x = hitbox.getX() < 0 ? 0 :
+                    hitbox.getX() + hitbox.getWidth() > width ? width - hitbox.getWidth() : x;
+                y = hitbox.getY() < 0 ? 0 :
+                    hitbox.getY() + hitbox.getHeight() > height ? height - hitbox.getHeight() : y;
                 final Coordinates coordinates = new Coordinates(x, y);
                 character.teleports(coordinates);
                 // bots that are prevented must choose another valid direction = command.
