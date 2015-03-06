@@ -1,6 +1,7 @@
 package org.atrolla.game.characters;
 
 import com.badlogic.gdx.math.Rectangle;
+import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.engine.CharacterState;
 import org.atrolla.game.engine.Coordinates;
 import org.atrolla.game.engine.Direction;
@@ -40,7 +41,8 @@ public abstract class GameCharacter {
     }
 
     public void updateHitbox() {
-        this.hitbox.set((float)(coordinates.getX()-10),(float)(coordinates.getY()-10),20,20);
+        this.hitbox.set((float)coordinates.getX(),(float)coordinates.getY(),
+                ConfigurationConstants.PLAYER_WIDTH,ConfigurationConstants.PLAYER_HEIGHT);
     }
 
     public void teleports(Coordinates coordinates) {

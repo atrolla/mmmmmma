@@ -6,8 +6,7 @@ import org.atrolla.game.configuration.ConfigurationConstants;
 import java.util.List;
 import java.util.Random;
 
-import static org.atrolla.game.configuration.ConfigurationConstants.BOT_STOP_PROBABILITY;
-import static org.atrolla.game.configuration.ConfigurationConstants.RANDOM_UTILS_MAX_PROBABILITY;
+import static org.atrolla.game.configuration.ConfigurationConstants.*;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -53,7 +52,7 @@ public final class RandomUtils {
             validDirectionList.remove(Direction.LEFT);
             validDirectionList.remove(Direction.DOWN_LEFT);
             validDirectionList.remove(Direction.UP_LEFT);
-        } else if (x == ConfigurationConstants.STAGE_WIDTH) {
+        } else if (x == ConfigurationConstants.STAGE_WIDTH-PLAYER_WIDTH) {
             validDirectionList.remove(Direction.RIGHT);
             validDirectionList.remove(Direction.DOWN_RIGHT);
             validDirectionList.remove(Direction.UP_RIGHT);
@@ -62,7 +61,7 @@ public final class RandomUtils {
             validDirectionList.remove(Direction.UP);
             validDirectionList.remove(Direction.UP_RIGHT);
             validDirectionList.remove(Direction.UP_LEFT);
-        } else if (y == ConfigurationConstants.STAGE_HEIGHT) {
+        } else if (y == ConfigurationConstants.STAGE_HEIGHT-PLAYER_HEIGHT) {
             validDirectionList.remove(Direction.DOWN);
             validDirectionList.remove(Direction.DOWN_RIGHT);
             validDirectionList.remove(Direction.DOWN_LEFT);

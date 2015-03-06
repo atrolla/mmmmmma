@@ -13,6 +13,9 @@ public final class ConfigurationConstants {
     public static final double STAGE_WIDTH = 1280d;
     public static final double STAGE_HEIGHT = 720d;
 
+    public static final int PLAYER_WIDTH = 30;
+    public static final int PLAYER_HEIGHT = 40;
+
     public static final int GAME_CHARACTERS = 40; // must be multiple of game character classes number
 
     public static final int RANDOM_UTILS_MAX_PROBABILITY = 100;
