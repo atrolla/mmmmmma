@@ -143,7 +143,9 @@ public class Round {
             final Item item = iterator.next();
             if (item.checkIsDone(time)) {
                 iterator.remove();
-                soundManager.register(item);
+                if(soundManager!=null) {
+                    soundManager.register(item);
+                }
             }
         }
     }
