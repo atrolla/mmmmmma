@@ -13,9 +13,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
+import org.atrolla.game.items.Item;
 import org.atrolla.game.system.Coordinates;
 
 import java.util.Collection;
+import java.util.List;
 
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
@@ -63,6 +65,23 @@ public class Game extends ApplicationAdapter {
         round.update();
 
         //draw objects...
+        renderCharacters();
+        //render bombs...
+        final List<Item> gameObjects = round.getGameItems();
+        for (Item item : gameObjects) {
+            final Coordinates coordinates = item.getCoordinates();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
+            shapeRenderer.end();
+        }
+
+        batch.end();
+
+        // process user input
+    }
+
+    private void renderCharacters() {
         final Collection<GameCharacter> gameCharacters = round.getCharacters();
         for (GameCharacter gameCharacter : gameCharacters) {
             final Coordinates coordinates = gameCharacter.getCoordinates();
@@ -79,10 +98,6 @@ public class Game extends ApplicationAdapter {
             shapeRenderer.rect(hitbox.getX(),hitbox.getY(),hitbox.getWidth(),hitbox.getHeight());
             shapeRenderer.end();
         }
-
-        batch.end();
-
-        // process user input
     }
 
     @Override

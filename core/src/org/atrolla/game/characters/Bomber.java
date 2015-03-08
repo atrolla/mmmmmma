@@ -1,30 +1,32 @@
 package org.atrolla.game.characters;
 
+import org.atrolla.game.configuration.ConfigurationConstants;
+import org.atrolla.game.items.weapons.Bomb;
 import org.atrolla.game.system.Player;
-import org.atrolla.game.weapons.Bomb;
 
 /**
  * Created by MicroOnde on 24/02/2015.
  */
 public class Bomber extends GameCharacter {
 
-    boolean abilityIsCoolingDown;
+    public static final int BOMBER_INITIAL_READY_TIME = -1;
+    int abilityReadyTime;
 
     public Bomber(Player player) {
         super(player);
-        abilityIsCoolingDown = false;
+        abilityReadyTime = BOMBER_INITIAL_READY_TIME;
     }
 
-    public Bomb useAbility() {
-        if(!isPlayer() || abilityIsCoolingDown){
+    @Override
+    public Bomb useAbility(int time) {
+        if (!isPlayer() || abilityIsCoolingDown(time)) {
             return null;
         }
-        abilityIsCoolingDown = true;
-        return new Bomb(getCoordinates());
+        abilityReadyTime = time + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION;
+        return new Bomb(getCoordinates(), time);
     }
 
-
-    public void setReadyToUseAbility() {
-        abilityIsCoolingDown = false;
+    private boolean abilityIsCoolingDown(int time){
+        return abilityReadyTime >= time;
     }
 }

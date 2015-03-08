@@ -7,14 +7,16 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.ai.AIManager;
 import org.atrolla.game.characters.*;
 import org.atrolla.game.configuration.ConfigurationConstants;
-import org.atrolla.game.system.Coordinates;
-import org.atrolla.game.system.Player;
 import org.atrolla.game.input.ControllerManager;
 import org.atrolla.game.input.KeyboardManager;
+import org.atrolla.game.items.Item;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Player;
 import org.atrolla.game.world.Stage;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,6 +31,7 @@ public class Round {
     private ControllerManager controllerManager;
     private KeyboardManager keyboardManager;
     private int time;
+    private List<Item> gameItems;
 
     public Round(Stage stage) {
         this.stage = stage;
@@ -36,6 +39,7 @@ public class Round {
         this.aiManager = new AIManager(ConfigurationConstants.GAME_CHARACTERS);
         this.time = 0;
         initCharacters();
+        this.gameItems = new ArrayList<>();
     }
 
     public Round() {
@@ -55,9 +59,9 @@ public class Round {
          TODO : create char from players classes & bots
          and then shuffle the list before putting them on stage
           */
-        characters.add(new Archer(new Player()));
+        characters.add(new Bomber(new Player()));
         characters.add(new Knight(Player.BOT));
-        characters.add(new Bomber(Player.BOT));
+        characters.add(new Archer(Player.BOT));
         characters.add(new Mage(Player.BOT));
 
         for (int i = 0; i < ConfigurationConstants.GAME_CHARACTERS - 4; i++) {
@@ -77,7 +81,7 @@ public class Round {
                                 IntStream
                                         .rangeClosed(1, 4)
                                         .forEach(j -> {
-                                                    final GameCharacter gameCharacter = characters.get((i-1)*4+j-1);
+                                                    final GameCharacter gameCharacter = characters.get((i - 1) * 4 + j - 1);
                                                     gameCharacter.teleports(new Coordinates(xStep * j, yStep * i));
                                                 }
                                         )
@@ -97,15 +101,29 @@ public class Round {
     }
 
     public void update() {
+        removeUsedItems();
         aiManager.updateBotsState(characters, time);
         aiManager.updateBotsMove(characters);
         // TODO : update Players - only pass playerList
         List<GameCharacter> playedCharacters = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
-        controllerManager.updatePlayers(playedCharacters);
+        final Item item = controllerManager.updatePlayers(time, playedCharacters);
+        if (item != null) {
+            gameItems.add(item);
+        }
         keyboardManager.updatePlayers(playedCharacters);
         preventCharactersFromBeingOutOfBound();
         time++;
         aiManager.updateCommands(time);
+    }
+
+    private void removeUsedItems() {
+        final Iterator<Item> iterator = gameItems.iterator();
+        while (iterator.hasNext()) {
+            final Item item = iterator.next();
+            if (item.checkIsDone(time)) {
+                iterator.remove();
+            }
+        }
     }
 
     private void preventCharactersFromBeingOutOfBound() {
@@ -119,9 +137,9 @@ public class Round {
                 double x = character.getCoordinates().getX();
                 double y = character.getCoordinates().getY();
                 x = hitbox.getX() < 0 ? 0 :
-                    hitbox.getX() + hitbox.getWidth() > width ? width - hitbox.getWidth() : x;
+                        hitbox.getX() + hitbox.getWidth() > width ? width - hitbox.getWidth() : x;
                 y = hitbox.getY() < 0 ? 0 :
-                    hitbox.getY() + hitbox.getHeight() > height ? height - hitbox.getHeight() : y;
+                        hitbox.getY() + hitbox.getHeight() > height ? height - hitbox.getHeight() : y;
                 final Coordinates coordinates = new Coordinates(x, y);
                 character.teleports(coordinates);
                 // bots that are prevented must choose another valid direction = command.
@@ -141,5 +159,9 @@ public class Round {
 
     public void setKeyboards(Array<Input> keyboards) {
         keyboardManager = new KeyboardManager(keyboards);
+    }
+
+    public List<Item> getGameItems() {
+        return gameItems;
     }
 }

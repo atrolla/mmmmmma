@@ -1,9 +1,10 @@
 package org.atrolla.game.core;
 
 import org.atrolla.game.characters.Bomber;
+import org.atrolla.game.configuration.ConfigurationConstants;
+import org.atrolla.game.items.weapons.Bomb;
 import org.atrolla.game.system.Coordinates;
 import org.atrolla.game.system.Player;
-import org.atrolla.game.weapons.Bomb;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class BomberTests {
 
+    public static final int ABILITY_USE_TIME = 0;
     private Bomber bomberPlayer;
 
     @Before
@@ -26,33 +28,32 @@ public class BomberTests {
     @Test
     public void bomberBotCannotUseHisAbility() throws Exception {
         Bomber bomberBot = new Bomber(Player.BOT);
-        assertNull(bomberBot.useAbility());
+        assertNull(bomberBot.useAbility(ABILITY_USE_TIME));
     }
 
     @Test
     public void bomberAbilityIsToCreateBomb() throws Exception {
-        assertTrue(bomberPlayer.useAbility() instanceof Bomb);
+        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME) instanceof Bomb);
     }
 
     @Test
     public void bombIsCreatedAtCurrentBomberCoordinates() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         bomberPlayer.teleports(coordinates);
-        final Bomb bomb = bomberPlayer.useAbility();
+        final Bomb bomb = bomberPlayer.useAbility(ABILITY_USE_TIME);
         assertEquals(coordinates, bomb.getCoordinates());
     }
 
     @Test
     public void bomberCanOnlyPlaceOneBomb() throws Exception {
-        assertTrue(bomberPlayer.useAbility() instanceof Bomb);
-        assertNull(bomberPlayer.useAbility());
+        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME) instanceof Bomb);
+        assertNull(bomberPlayer.useAbility(ABILITY_USE_TIME));
     }
 
     @Test
-    public void bomberCanReplaceBombOnceHeIsReady() throws Exception {
-        assertTrue(bomberPlayer.useAbility() instanceof Bomb);
-        assertNull(bomberPlayer.useAbility());
-        bomberPlayer.setReadyToUseAbility();
-        assertTrue(bomberPlayer.useAbility() instanceof Bomb);
+    public void bomberCanReplaceBombOnlyAfterItsCooldownTime() throws Exception {
+        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME) instanceof Bomb);
+        assertNull(bomberPlayer.useAbility(ABILITY_USE_TIME + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION));
+        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME +1 + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION) instanceof Bomb);
     }
 }

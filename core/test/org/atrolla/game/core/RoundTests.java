@@ -1,13 +1,16 @@
 package org.atrolla.game.core;
 
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.ai.AIManager;
+import org.atrolla.game.ai.Command;
 import org.atrolla.game.characters.*;
 import org.atrolla.game.configuration.ConfigurationConstants;
-import org.atrolla.game.ai.Command;
+import org.atrolla.game.core.mocks.MockController;
+import org.atrolla.game.game.Round;
 import org.atrolla.game.system.Coordinates;
 import org.atrolla.game.system.Direction;
-import org.atrolla.game.game.Round;
+import org.atrolla.game.items.weapons.Bomb;
 import org.atrolla.game.world.Stage;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +34,9 @@ public class RoundTests {
     @Before
     public void setUp() throws Exception {
         defaultRound = new Round();
-        defaultRound.setControllers(new Array<>());
+        final Array<Controller> controllers = new Array<>();
+        controllers.add(new MockController());
+        defaultRound.setControllers(controllers);
         defaultRound.setKeyboards(new Array<>());
         firstBot = defaultRound.getCharacters().stream().filter(c -> !c.isPlayer()).findFirst().get();
     }
@@ -139,5 +144,13 @@ public class RoundTests {
         defaultRound.update();
         assertTrue(firstBot.canMove());
         assertNotEquals(baseCoordinates, firstBot.getCoordinates());
+    }
+
+    @Test
+    public void gameObjectsContainsBombWhenBomberUsesHisAbility() throws Exception {
+        // considering There is a Bomber player...
+        defaultRound.update();
+        Assert.assertTrue(defaultRound.getGameItems().size() > 0);
+        Assert.assertTrue(defaultRound.getGameItems().get(0) instanceof Bomb);
     }
 }

@@ -2,6 +2,7 @@ package org.atrolla.game.characters;
 
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.game.configuration.ConfigurationConstants;
+import org.atrolla.game.items.Item;
 import org.atrolla.game.system.Coordinates;
 import org.atrolla.game.system.Direction;
 import org.atrolla.game.system.Player;
@@ -40,8 +41,8 @@ public abstract class GameCharacter {
     }
 
     public void updateHitbox() {
-        this.hitbox.set((float)coordinates.getX(),(float)coordinates.getY(),
-                ConfigurationConstants.PLAYER_WIDTH,ConfigurationConstants.PLAYER_HEIGHT);
+        this.hitbox.set((float) coordinates.getX(), (float) coordinates.getY(),
+                ConfigurationConstants.PLAYER_WIDTH, ConfigurationConstants.PLAYER_HEIGHT);
     }
 
     public void teleports(Coordinates coordinates) {
@@ -51,10 +52,6 @@ public abstract class GameCharacter {
 
     public Direction getDirection() {
         return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
     }
 
     public Coordinates getCoordinates() {
@@ -106,5 +103,9 @@ public abstract class GameCharacter {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public Item useAbility(int time) {
+        return null;
     }
 }
