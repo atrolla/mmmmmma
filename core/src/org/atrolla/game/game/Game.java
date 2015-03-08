@@ -3,6 +3,7 @@ package org.atrolla.game.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.items.Item;
+import org.atrolla.game.sounds.SoundManager;
 import org.atrolla.game.system.Coordinates;
 
 import java.util.Collection;
@@ -25,6 +27,7 @@ public class Game extends ApplicationAdapter {
     private OrthographicCamera camera;
     private Round round;
     private ShapeRenderer shapeRenderer;
+    private Sound sound;
 
     @Override
     public void create () {
@@ -39,6 +42,7 @@ public class Game extends ApplicationAdapter {
         Array<Input> keyboards = new Array<>(1);
         keyboards.add(Gdx.input);
         round.setKeyboards(keyboards);
+        round.setSoundManager(new SoundManager());
     }
 
     @Override
@@ -77,8 +81,6 @@ public class Game extends ApplicationAdapter {
         }
 
         batch.end();
-
-        // process user input
     }
 
     private void renderCharacters() {
@@ -105,5 +107,6 @@ public class Game extends ApplicationAdapter {
         // dispose of all the native resources
         batch.dispose();
         shapeRenderer.dispose();
+        sound.dispose();
     }
 }

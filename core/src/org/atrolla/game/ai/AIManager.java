@@ -46,8 +46,8 @@ public class AIManager {
             if (!character.isPlayer()) {
                 final Command command = commands.get(i);
                 character.moves(command.getDirection());
-                i++;
             }
+            i++;
         }
     }
 

@@ -10,6 +10,7 @@ import org.atrolla.game.configuration.ConfigurationConstants;
 import org.atrolla.game.input.ControllerManager;
 import org.atrolla.game.input.KeyboardManager;
 import org.atrolla.game.items.Item;
+import org.atrolla.game.sounds.SoundManager;
 import org.atrolla.game.system.Coordinates;
 import org.atrolla.game.system.Player;
 import org.atrolla.game.world.Stage;
@@ -32,6 +33,7 @@ public class Round {
     private KeyboardManager keyboardManager;
     private int time;
     private List<Item> gameItems;
+    private SoundManager soundManager;
 
     public Round(Stage stage) {
         this.stage = stage;
@@ -101,9 +103,15 @@ public class Round {
     }
 
     public void update() {
-        removeUsedItems();
-        aiManager.updateBotsState(characters, time);
-        aiManager.updateBotsMove(characters);
+        manageItems();
+        manageBots();
+        managePlayers();
+        preventCharactersFromBeingOutOfBound();
+        playSounds();
+        postUpdate();
+    }
+
+    private void managePlayers() {
         // TODO : update Players - only pass playerList
         List<GameCharacter> playedCharacters = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
         final Item item = controllerManager.updatePlayers(time, playedCharacters);
@@ -111,17 +119,31 @@ public class Round {
             gameItems.add(item);
         }
         keyboardManager.updatePlayers(playedCharacters);
-        preventCharactersFromBeingOutOfBound();
+    }
+
+    private void manageBots() {
+        aiManager.updateBotsState(characters, time);
+        aiManager.updateBotsMove(characters);
+    }
+
+    private void postUpdate() {
         time++;
         aiManager.updateCommands(time);
     }
 
-    private void removeUsedItems() {
+    private void playSounds() {
+        if(soundManager!=null) {
+            soundManager.playAllSounds();
+        }
+    }
+
+    private void manageItems() {
         final Iterator<Item> iterator = gameItems.iterator();
         while (iterator.hasNext()) {
             final Item item = iterator.next();
             if (item.checkIsDone(time)) {
                 iterator.remove();
+                soundManager.register(item);
             }
         }
     }
@@ -164,4 +186,9 @@ public class Round {
     public List<Item> getGameItems() {
         return gameItems;
     }
+
+    public void setSoundManager(SoundManager soundManager) {
+        this.soundManager = soundManager;
+    }
+
 }
