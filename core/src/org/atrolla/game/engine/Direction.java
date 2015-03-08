@@ -30,22 +30,22 @@ public enum Direction {
     }, UP_LEFT {
         @Override
         public Coordinates move(Coordinates coord) {
-            return coord.translateXandY(-ConfigurationConstants.MOVE_STEP, -ConfigurationConstants.MOVE_STEP);
+            return coord.translateXandY(-ConfigurationConstants.MOVE_STEP, ConfigurationConstants.MOVE_STEP);
         }
     }, UP_RIGHT {
         @Override
         public Coordinates move(Coordinates coord) {
-            return coord.translateXandY(-ConfigurationConstants.MOVE_STEP, ConfigurationConstants.MOVE_STEP);
+            return coord.translateXandY(ConfigurationConstants.MOVE_STEP, ConfigurationConstants.MOVE_STEP);
         }
     }, DOWN_LEFT {
         @Override
         public Coordinates move(Coordinates coord) {
-            return coord.translateXandY(ConfigurationConstants.MOVE_STEP, -ConfigurationConstants.MOVE_STEP);
+            return coord.translateXandY(-ConfigurationConstants.MOVE_STEP, -ConfigurationConstants.MOVE_STEP);
         }
     }, DOWN_RIGHT {
         @Override
         public Coordinates move(Coordinates coord) {
-            return coord.translateXandY(ConfigurationConstants.MOVE_STEP, ConfigurationConstants.MOVE_STEP);
+            return coord.translateXandY(ConfigurationConstants.MOVE_STEP, -ConfigurationConstants.MOVE_STEP);
         }
     }, STOP {
         @Override
