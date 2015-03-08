@@ -1,9 +1,9 @@
 package org.atrolla.game.core;
 
 import org.atrolla.game.characters.Archer;
-import org.atrolla.game.engine.Coordinates;
-import org.atrolla.game.engine.Player;
-import org.atrolla.game.stage.Stage;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Player;
+import org.atrolla.game.world.Stage;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;

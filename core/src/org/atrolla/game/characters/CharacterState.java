@@ -1,4 +1,4 @@
-package org.atrolla.game.engine;
+package org.atrolla.game.characters;
 
 /**
  * Created by MicroOnde on 25/02/2015.

@@ -4,7 +4,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.characters.GameCharacter;
-import org.atrolla.game.engine.Direction;
+import org.atrolla.game.system.Direction;
 
 import java.util.List;
 

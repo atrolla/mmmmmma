@@ -1,7 +1,9 @@
-package org.atrolla.game.engine;
+package org.atrolla.game.utils;
 
 import org.apache.commons.lang3.EnumUtils;
 import org.atrolla.game.configuration.ConfigurationConstants;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Direction;
 
 import java.util.List;
 import java.util.Random;

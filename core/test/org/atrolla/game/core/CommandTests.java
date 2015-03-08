@@ -1,7 +1,7 @@
 package org.atrolla.game.core;
 
-import org.atrolla.game.engine.Command;
-import org.atrolla.game.engine.Direction;
+import org.atrolla.game.ai.Command;
+import org.atrolla.game.system.Direction;
 import org.junit.Before;
 import org.junit.Test;
 

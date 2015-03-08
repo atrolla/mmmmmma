@@ -1,4 +1,4 @@
-package org.atrolla.game.engine;
+package org.atrolla.game.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
@@ -7,9 +7,11 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.ai.AIManager;
 import org.atrolla.game.characters.*;
 import org.atrolla.game.configuration.ConfigurationConstants;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Player;
 import org.atrolla.game.input.ControllerManager;
 import org.atrolla.game.input.KeyboardManager;
-import org.atrolla.game.stage.Stage;
+import org.atrolla.game.world.Stage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +22,7 @@ import java.util.stream.IntStream;
 /**
  * Created by MicroOnde on 25/02/2015.
  */
-public class Game {
+public class Round {
     private final Stage stage;
     private final List<GameCharacter> characters;
     private final AIManager aiManager;
@@ -28,7 +30,7 @@ public class Game {
     private KeyboardManager keyboardManager;
     private int time;
 
-    public Game(Stage stage) {
+    public Round(Stage stage) {
         this.stage = stage;
         this.characters = new ArrayList<>(ConfigurationConstants.GAME_CHARACTERS);
         this.aiManager = new AIManager(ConfigurationConstants.GAME_CHARACTERS);
@@ -36,7 +38,7 @@ public class Game {
         initCharacters();
     }
 
-    public Game() {
+    public Round() {
         this(new Stage());
     }
 

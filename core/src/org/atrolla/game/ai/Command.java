@@ -1,8 +1,12 @@
-package org.atrolla.game.engine;
+package org.atrolla.game.ai;
 
-import static org.atrolla.game.engine.RandomUtils.getRandomDirectionFrom;
-import static org.atrolla.game.engine.RandomUtils.getRandomMoveTime;
-import static org.atrolla.game.engine.RandomUtils.getRandomStopTime;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Direction;
+import org.atrolla.game.utils.RandomUtils;
+
+import static org.atrolla.game.utils.RandomUtils.getRandomDirectionFrom;
+import static org.atrolla.game.utils.RandomUtils.getRandomMoveTime;
+import static org.atrolla.game.utils.RandomUtils.getRandomStopTime;
 
 /**
  * Created by MicroOnde on 25/02/2015.

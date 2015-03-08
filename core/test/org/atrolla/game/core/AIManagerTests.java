@@ -2,7 +2,7 @@ package org.atrolla.game.core;
 
 import org.atrolla.game.ai.AIManager;
 import org.atrolla.game.characters.*;
-import org.atrolla.game.engine.Player;
+import org.atrolla.game.system.Player;
 import org.junit.Test;
 
 import java.util.ArrayList;

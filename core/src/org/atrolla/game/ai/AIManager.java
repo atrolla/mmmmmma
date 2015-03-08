@@ -2,14 +2,13 @@ package org.atrolla.game.ai;
 
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
-import org.atrolla.game.engine.Command;
-import org.atrolla.game.engine.Coordinates;
+import org.atrolla.game.system.Coordinates;
 
 import java.util.*;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
-import static org.atrolla.game.engine.Command.RandomCommand;
+import static org.atrolla.game.ai.Command.RandomCommand;
 
 /**
  * Created by MicroOnde on 25/02/2015.

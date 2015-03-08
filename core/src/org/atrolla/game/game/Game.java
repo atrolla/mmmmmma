@@ -1,4 +1,4 @@
-package org.atrolla.game;
+package org.atrolla.game.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,16 +13,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.game.characters.GameCharacter;
 import org.atrolla.game.configuration.ConfigurationConstants;
-import org.atrolla.game.engine.Coordinates;
-import org.atrolla.game.engine.Game;
+import org.atrolla.game.system.Coordinates;
 
 import java.util.Collection;
 
-public class MmmmmmaGame extends ApplicationAdapter {
+public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
 //    private Texture img;
     private OrthographicCamera camera;
-    private Game game;
+    private Round round;
     private ShapeRenderer shapeRenderer;
 
     @Override
@@ -33,11 +32,11 @@ public class MmmmmmaGame extends ApplicationAdapter {
         camera.setToOrtho(false, (float)ConfigurationConstants.STAGE_WIDTH, (float)ConfigurationConstants.STAGE_HEIGHT);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        game = new Game();
-        game.setControllers(Controllers.getControllers());
+        round = new Round();
+        round.setControllers(Controllers.getControllers());
         Array<Input> keyboards = new Array<>(1);
         keyboards.add(Gdx.input);
-        game.setKeyboards(keyboards);
+        round.setKeyboards(keyboards);
     }
 
     @Override
@@ -61,10 +60,10 @@ public class MmmmmmaGame extends ApplicationAdapter {
         // all drops
         batch.begin();
 
-        game.update();
+        round.update();
 
         //draw objects...
-        final Collection<GameCharacter> gameCharacters = game.getCharacters();
+        final Collection<GameCharacter> gameCharacters = round.getCharacters();
         for (GameCharacter gameCharacter : gameCharacters) {
             final Coordinates coordinates = gameCharacter.getCoordinates();
             final Rectangle hitbox = gameCharacter.getHitbox();

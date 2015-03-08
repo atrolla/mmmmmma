@@ -2,10 +2,9 @@ package org.atrolla.game.characters;
 
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.game.configuration.ConfigurationConstants;
-import org.atrolla.game.engine.CharacterState;
-import org.atrolla.game.engine.Coordinates;
-import org.atrolla.game.engine.Direction;
-import org.atrolla.game.engine.Player;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Direction;
+import org.atrolla.game.system.Player;
 
 /**
  * Created by MicroOnde on 24/02/2015.

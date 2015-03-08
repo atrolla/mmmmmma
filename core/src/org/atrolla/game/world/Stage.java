@@ -1,4 +1,4 @@
-package org.atrolla.game.stage;
+package org.atrolla.game.world;
 
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.game.characters.GameCharacter;

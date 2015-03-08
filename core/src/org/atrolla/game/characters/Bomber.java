@@ -1,6 +1,6 @@
 package org.atrolla.game.characters;
 
-import org.atrolla.game.engine.Player;
+import org.atrolla.game.system.Player;
 import org.atrolla.game.weapons.Bomb;
 
 /**

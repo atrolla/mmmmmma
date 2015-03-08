@@ -1,4 +1,4 @@
-package org.atrolla.game.engine;
+package org.atrolla.game.system;
 
 import org.atrolla.game.configuration.ConfigurationConstants;
 

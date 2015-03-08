@@ -1,8 +1,8 @@
 package org.atrolla.game.core;
 
 import org.atrolla.game.characters.Bomber;
-import org.atrolla.game.engine.Coordinates;
-import org.atrolla.game.engine.Player;
+import org.atrolla.game.system.Coordinates;
+import org.atrolla.game.system.Player;
 import org.atrolla.game.weapons.Bomb;
 import org.junit.Before;
 import org.junit.Test;
