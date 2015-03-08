@@ -23,15 +23,24 @@ public class KeyboardManager {
             final GameCharacter gameCharacter = characters.get(0);
             final Input keyboard = keyboards.get(0);
             if (keyboard.isKeyPressed(Keys.UP)) {
-                gameCharacter.moves(Direction.UP);
-            }
-            if (keyboard.isKeyPressed(Keys.RIGHT)) {
+                if (keyboard.isKeyPressed(Keys.LEFT)) {
+                    gameCharacter.moves(Direction.UP_LEFT);
+                } else if (keyboard.isKeyPressed(Keys.RIGHT)) {
+                    gameCharacter.moves(Direction.UP_RIGHT);
+                } else {
+                    gameCharacter.moves(Direction.UP);
+                }
+            } else if (keyboard.isKeyPressed(Keys.DOWN)) {
+                if (keyboard.isKeyPressed(Keys.LEFT)) {
+                    gameCharacter.moves(Direction.DOWN_LEFT);
+                } else if (keyboard.isKeyPressed(Keys.RIGHT)) {
+                    gameCharacter.moves(Direction.DOWN_RIGHT);
+                } else {
+                    gameCharacter.moves(Direction.DOWN);
+                }
+            } else if (keyboard.isKeyPressed(Keys.RIGHT)) {
                 gameCharacter.moves(Direction.RIGHT);
-            }
-            if (keyboard.isKeyPressed(Keys.DOWN)) {
-                gameCharacter.moves(Direction.DOWN);
-            }
-            if (keyboard.isKeyPressed(Keys.LEFT)) {
+            } else if (keyboard.isKeyPressed(Keys.LEFT)) {
                 gameCharacter.moves(Direction.LEFT);
             }
         }
