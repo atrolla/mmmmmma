@@ -122,8 +122,9 @@ public class Round {
     }
 
     private void manageBots() {
-        aiManager.updateBotsState(characters, time);
-        aiManager.updateBotsMove(characters);
+        List<GameCharacter> bots = characters.stream().filter(c -> !c.isPlayer()).collect(Collectors.toList());
+        aiManager.updateBotsState(bots, time);
+        aiManager.updateBotsMove(bots);
     }
 
     private void postUpdate() {
