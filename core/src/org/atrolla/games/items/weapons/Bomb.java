@@ -10,7 +10,7 @@ import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_BOMB_C
  */
 public class Bomb extends Item {
 
-    public Bomb(Coordinates coordinates, int timeout) {
-        super(coordinates, timeout + ITEM_BOMB_COUNTDOWN_DURATION);
+    public Bomb(Coordinates coordinates, int spawnTime) {
+        super(coordinates, spawnTime + ITEM_BOMB_COUNTDOWN_DURATION);
     }
 }

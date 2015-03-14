@@ -47,4 +47,9 @@ public class SoundManager {
                 })
                 .matches(object);
     }
+
+    public void disposeSounds() {
+        //place all sounds here
+        explosion.dispose();
+    }
 }

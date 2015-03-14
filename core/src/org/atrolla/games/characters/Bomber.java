@@ -18,12 +18,12 @@ public class Bomber extends GameCharacter {
     }
 
     @Override
-    public Bomb useAbility(int time) {
-        if (!isPlayer() || abilityIsCoolingDown(time)) {
+    public Bomb useAbility(int currentTime) {
+        if (!isPlayer() || abilityIsCoolingDown(currentTime)) {
             return null;
         }
-        abilityReadyTime = time + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION;
-        return new Bomb(getCoordinates(), time);
+        abilityReadyTime = currentTime + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION;
+        return new Bomb(getCoordinates(), currentTime);
     }
 
     private boolean abilityIsCoolingDown(int time){

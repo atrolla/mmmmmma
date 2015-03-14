@@ -1,4 +1,4 @@
-package org.atrolla.games.core;
+package org.atrolla.games.game;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.utils.Array;
@@ -6,11 +6,10 @@ import org.atrolla.games.ai.AIManager;
 import org.atrolla.games.ai.Command;
 import org.atrolla.games.characters.*;
 import org.atrolla.games.configuration.ConfigurationConstants;
-import org.atrolla.games.core.mocks.MockController;
-import org.atrolla.games.game.Round;
+import org.atrolla.games.items.weapons.Bomb;
+import org.atrolla.games.mocks.MockController;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
-import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.world.Stage;
 import org.junit.Assert;
 import org.junit.Before;

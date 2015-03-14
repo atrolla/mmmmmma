@@ -1,7 +1,5 @@
-package org.atrolla.games.core;
+package org.atrolla.games.characters;
 
-import org.atrolla.games.characters.*;
-import org.atrolla.games.characters.CharacterState;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;

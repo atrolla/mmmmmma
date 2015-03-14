@@ -1,6 +1,5 @@
-package org.atrolla.games.core;
+package org.atrolla.games.characters;
 
-import org.atrolla.games.characters.Bomber;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.system.Coordinates;

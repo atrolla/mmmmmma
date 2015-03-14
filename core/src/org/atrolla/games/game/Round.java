@@ -62,6 +62,7 @@ public class Round {
          and then shuffle the list before putting them on stage
           */
         characters.add(new Bomber(new Player()));
+//        characters.add(new Archer(new Player()));
         characters.add(new Knight(Player.BOT));
         characters.add(new Archer(Player.BOT));
         characters.add(new Mage(Player.BOT));
@@ -142,7 +143,7 @@ public class Round {
         final Iterator<Item> iterator = gameItems.iterator();
         while (iterator.hasNext()) {
             final Item item = iterator.next();
-            if (item.checkIsDone(time)) {
+            if (item.update(time)) {
                 iterator.remove();
                 if(soundManager!=null) {
                     soundManager.register(item);

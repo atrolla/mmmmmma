@@ -6,7 +6,7 @@ import org.atrolla.games.system.Coordinates;
  * Created by MicroOnde on 08/03/2015.
  */
 public class Item {
-    private final Coordinates coordinates;
+    private Coordinates coordinates;
     private final int timeout;
 
     public Item(Coordinates coordinates, int timeout) {
@@ -14,11 +14,20 @@ public class Item {
         this.timeout = timeout;
     }
 
-    public boolean checkIsDone(int timeTick) {
+    public boolean update(int timeTick) {
+        //does nothing
+        return isDone(timeTick);
+    }
+
+    private boolean isDone(int timeTick) {
         return timeout < timeTick;
     }
 
     public Coordinates getCoordinates() {
         return coordinates;
+    }
+
+    protected void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 }

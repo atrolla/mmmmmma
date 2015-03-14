@@ -1,6 +1,5 @@
-package org.atrolla.games.core;
+package org.atrolla.games.ai;
 
-import org.atrolla.games.ai.Command;
 import org.atrolla.games.system.Direction;
 import org.junit.Before;
 import org.junit.Test;

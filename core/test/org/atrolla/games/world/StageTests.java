@@ -1,4 +1,4 @@
-package org.atrolla.games.core;
+package org.atrolla.games.world;
 
 import org.atrolla.games.characters.Archer;
 import org.atrolla.games.system.Coordinates;

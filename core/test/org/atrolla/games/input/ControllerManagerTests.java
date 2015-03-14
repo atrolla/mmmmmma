@@ -1,11 +1,11 @@
-package org.atrolla.games.core;
+package org.atrolla.games.input;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.characters.Archer;
 import org.atrolla.games.characters.GameCharacter;
-import org.atrolla.games.core.mocks.MockController;
 import org.atrolla.games.input.ControllerManager;
+import org.atrolla.games.mocks.MockController;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package org.atrolla.games.core;
+package org.atrolla.games;
 
 import org.atrolla.games.sounds.SoundManager;
 import org.junit.Test;

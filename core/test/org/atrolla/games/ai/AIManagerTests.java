@@ -1,6 +1,5 @@
-package org.atrolla.games.core;
+package org.atrolla.games.ai;
 
-import org.atrolla.games.ai.AIManager;
 import org.atrolla.games.characters.*;
 import org.atrolla.games.system.Player;
 import org.junit.Test;

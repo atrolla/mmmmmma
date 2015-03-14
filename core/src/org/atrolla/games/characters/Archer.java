@@ -1,5 +1,7 @@
 package org.atrolla.games.characters;
 
+import org.atrolla.games.items.Item;
+import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.system.Player;
 
 /**
@@ -9,5 +11,13 @@ public class Archer extends GameCharacter {
 
     public Archer(Player player) {
         super(player);
+    }
+
+    @Override
+    public Item useAbility(int time) {
+        if (!isPlayer()) {
+            return null;
+        }
+        return new Arrow(getCoordinates(), time, getDirection());
     }
 }

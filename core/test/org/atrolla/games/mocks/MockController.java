@@ -1,4 +1,4 @@
-package org.atrolla.games.core.mocks;
+package org.atrolla.games.mocks;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;

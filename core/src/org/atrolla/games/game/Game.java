@@ -3,7 +3,6 @@ package org.atrolla.games.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.sounds.SoundManager;
 import org.atrolla.games.system.Coordinates;
 
@@ -27,7 +27,7 @@ public class Game extends ApplicationAdapter {
     private OrthographicCamera camera;
     private Round round;
     private ShapeRenderer shapeRenderer;
-    private Sound sound;
+    private SoundManager soundManager;
 
     @Override
     public void create () {
@@ -42,7 +42,8 @@ public class Game extends ApplicationAdapter {
         Array<Input> keyboards = new Array<>(1);
         keyboards.add(Gdx.input);
         round.setKeyboards(keyboards);
-        round.setSoundManager(new SoundManager());
+        soundManager = new SoundManager();
+        round.setSoundManager(soundManager);
     }
 
     @Override
@@ -75,8 +76,14 @@ public class Game extends ApplicationAdapter {
         for (Item item : gameObjects) {
             final Coordinates coordinates = item.getCoordinates();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
+            if(item instanceof Bomb){
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
+            } else {
+                // Arrow
+                shapeRenderer.setColor(Color.PINK);
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+            }
             shapeRenderer.end();
         }
 
@@ -90,9 +97,9 @@ public class Game extends ApplicationAdapter {
             final Rectangle hitbox = gameCharacter.getHitbox();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             if(gameCharacter.isPlayer()){
-                shapeRenderer.setColor(Color.GREEN);
-            }else {
                 shapeRenderer.setColor(Color.BLACK);
+            }else {
+                shapeRenderer.setColor(Color.LIGHT_GRAY);
             }
             shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
             shapeRenderer.end();
@@ -107,6 +114,6 @@ public class Game extends ApplicationAdapter {
         // dispose of all the native resources
         batch.dispose();
         shapeRenderer.dispose();
-        sound.dispose();
+        soundManager.disposeSounds();
     }
 }
