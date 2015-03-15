@@ -1,5 +1,6 @@
 package org.atrolla.games.ai;
 
+import oracle.jrockit.jfr.jdkevents.ThrowableTracer;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.system.Coordinates;
@@ -23,16 +24,16 @@ public class AIManager {
     private List<Command> commands;
     private Map<GameCharacter, Integer> knockOutBotsAwakeTime;
 
-    //TODO : replace characterNumber with  botNumber...
-    public AIManager(int characterNumber) {
-        commands = new ArrayList<>(characterNumber);
+
+    public AIManager(int botNumber) {
+        commands = new ArrayList<>(botNumber);
         knockOutBotsAwakeTime = new HashMap<>();
-        initCommands(characterNumber);
+        initCommands(botNumber);
     }
 
-    private void initCommands(int characterNumber) {
+    private void initCommands(int botNumber) {
         IntConsumer addRandomCommand = i -> commands.add(RandomCommand(0, Coordinates.NULL));
-        IntStream.rangeClosed(1, characterNumber)
+        IntStream.rangeClosed(1, botNumber)
                 .forEachOrdered(addRandomCommand);
     }
 
@@ -40,14 +41,17 @@ public class AIManager {
         return commands;
     }
 
-    public void updateBotsMove(final Collection<GameCharacter> characters) {
+    public void updateBotsMove(final Collection<GameCharacter> bots) {
         int i = 0;
-        for (GameCharacter character : characters) {
+        for (GameCharacter character : bots) {
             if (!character.isPlayer()) {
                 final Command command = commands.get(i);
                 character.moves(command.getDirection());
+                i++;
+            } else {
+                System.err.println("Found a player in bot list for updateBotsMove, please remove in code");
             }
-            i++;
+
         }
     }
 

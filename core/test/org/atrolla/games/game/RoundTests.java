@@ -39,7 +39,7 @@ public class RoundTests {
         defaultRound.setControllers(controllers);
         defaultRound.setKeyboards(new Array<>());
         firstBot = defaultRound.getCharacters().stream().filter(c -> !c.isPlayer()).findFirst().get();
-        firstBotIndex = defaultRound.getCharacters().indexOf(firstBot);
+        firstBotIndex = 0;
     }
 
     @Test
