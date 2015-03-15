@@ -2,6 +2,7 @@ package org.atrolla.games.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.ai.AIManager;
@@ -17,7 +18,10 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,6 +31,8 @@ import java.util.stream.IntStream;
 public class Round {
     private final Stage stage;
     private final List<GameCharacter> characters;
+    private final List<GameCharacter> players;
+    private final List<GameCharacter> bots;
     private final AIManager aiManager;
     private ControllerManager controllerManager;
     private KeyboardManager keyboardManager;
@@ -40,7 +46,9 @@ public class Round {
         this.characters = new ArrayList<>(ConfigurationConstants.GAME_CHARACTERS);
         this.time = 0;
         initCharacters();
-        this.aiManager = new AIManager(characters.stream().filter(c -> !c.isPlayer()).toArray().length);
+        this.bots = characters.stream().filter(c -> !c.isPlayer()).collect(Collectors.toList());
+        this.players = characters.stream().filter(c -> c.isPlayer()).collect(Collectors.toList());
+        this.aiManager = new AIManager(bots.size());
         this.gameItems = new ArrayList<>();
         this.neutralItemManager = new NeutralItemManager();
     }
@@ -109,33 +117,9 @@ public class Round {
         manageItems();
         manageBots();
         managePlayers();
-        preventCharactersFromBeingOutOfBound();
+        manageHitBoxes();
         playSounds();
         postUpdate();
-    }
-
-    private void managePlayers() {
-        // TODO : update Players - only pass playerList
-        List<GameCharacter> playedCharacters = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
-        gameItems.addAll(controllerManager.updatePlayers(time, playedCharacters));
-        keyboardManager.updatePlayers(playedCharacters);
-    }
-
-    private void manageBots() {
-        List<GameCharacter> bots = characters.stream().filter(c -> !c.isPlayer()).collect(Collectors.toList());
-        aiManager.updateBotsState(bots, time);
-        aiManager.updateBotsMove(bots);
-    }
-
-    private void postUpdate() {
-        time++;
-        aiManager.updateCommands(time);
-    }
-
-    private void playSounds() {
-        if(soundManager!=null) {
-            soundManager.playAllSounds();
-        }
     }
 
     private void manageItems() {
@@ -146,11 +130,47 @@ public class Round {
             final Item item = iterator.next();
             if (item.update(time)) {
                 iterator.remove();
-                if(soundManager!=null) {
+                if (soundManager != null) {
                     soundManager.register(item);
                 }
             }
         }
+    }
+
+    private void manageBots() {
+        aiManager.updateBotsState(bots, time);
+        aiManager.updateBotsMove(bots);
+    }
+
+    private void managePlayers() {
+        // TODO : update Players - only pass playerList
+        gameItems.addAll(controllerManager.updatePlayers(time, players));
+        keyboardManager.updatePlayers(players);
+    }
+
+    private void manageHitBoxes() {
+        neutralItemsPick();
+        preventCharactersFromBeingOutOfBound();
+    }
+
+    private void playSounds() {
+        if (soundManager != null) {
+            soundManager.playAllSounds();
+        }
+    }
+
+    private void postUpdate() {
+        time++;
+        aiManager.updateCommands(time);
+    }
+
+    private void neutralItemsPick() {
+        gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(
+                item -> players.stream()
+                        .filter(player -> Intersector.overlaps(item.getHitbox(), player.getHitbox()))
+                        .findFirst()
+                        .ifPresent(player -> item.isPicked(player))
+        );
     }
 
     private void preventCharactersFromBeingOutOfBound() {
@@ -178,7 +198,6 @@ public class Round {
             if (!character.isPlayer()) {
                 botIndex++;
             }
-
         }
     }
 

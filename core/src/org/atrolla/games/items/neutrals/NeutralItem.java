@@ -1,6 +1,8 @@
 package org.atrolla.games.items.neutrals;
 
+import com.badlogic.gdx.math.Circle;
 import org.atrolla.games.characters.GameCharacter;
+import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.system.Coordinates;
@@ -14,10 +16,12 @@ public abstract class NeutralItem extends Item {
 
     private Optional<GameCharacter> picker;
     private int usedTime;
+    private Circle hitbox;
 
     public NeutralItem(Coordinates coordinates, int timeout) {
         super(coordinates, timeout);
         picker = Optional.empty();
+        hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
     }
 
     public NeutralItem isUsed(int time) {
@@ -37,12 +41,16 @@ public abstract class NeutralItem extends Item {
         return picker;
     }
 
-    protected int getUsedTime(){
+    protected int getUsedTime() {
         return usedTime;
     }
 
     @Override
     public boolean update(int timeTick) {
         return picker.isPresent();
+    }
+
+    public Circle getHitbox() {
+        return hitbox;
     }
 }

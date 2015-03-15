@@ -14,8 +14,10 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.items.neutrals.NeutralItem;
 import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.items.weapons.Bomb;
+import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.sounds.SoundManager;
 import org.atrolla.games.system.Coordinates;
 
@@ -24,18 +26,18 @@ import java.util.List;
 
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
-//    private Texture img;
+    //    private Texture img;
     private OrthographicCamera camera;
     private Round round;
     private ShapeRenderer shapeRenderer;
     private SoundManager soundManager;
 
     @Override
-    public void create () {
+    public void create() {
 //        img = new Texture("badlogic.jpg");
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, (float)ConfigurationConstants.STAGE_WIDTH, (float)ConfigurationConstants.STAGE_HEIGHT);
+        camera.setToOrtho(false, (float) ConfigurationConstants.STAGE_WIDTH, (float) ConfigurationConstants.STAGE_HEIGHT);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         round = new Round();
@@ -48,7 +50,7 @@ public class Game extends ApplicationAdapter {
     }
 
     @Override
-    public void render () {
+    public void render() {
         // clear the screen with a dark blue color. The
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
@@ -77,17 +79,20 @@ public class Game extends ApplicationAdapter {
         for (Item item : gameObjects) {
             final Coordinates coordinates = item.getCoordinates();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            if(item instanceof Bomb){
+            if (item instanceof Bomb) {
                 shapeRenderer.setColor(Color.RED);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
-            }else if(item instanceof Arrow){
+            } else if (item instanceof Arrow) {
                 // Arrow
                 shapeRenderer.setColor(Color.PINK);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
-            }else {//if(item instanceof Sword){
+            } else if (item instanceof Sword) {
                 // Arrow
                 shapeRenderer.setColor(Color.TEAL);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 4);
+            } else if (item instanceof NeutralItem) {
+                shapeRenderer.setColor(Color.MAGENTA);
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
             }
             shapeRenderer.end();
         }
@@ -101,15 +106,15 @@ public class Game extends ApplicationAdapter {
             final Coordinates coordinates = gameCharacter.getCoordinates();
             final Rectangle hitbox = gameCharacter.getHitbox();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            if(gameCharacter.isPlayer()){
+            if (gameCharacter.isPlayer()) {
                 shapeRenderer.setColor(Color.BLACK);
-            }else {
+            } else {
                 shapeRenderer.setColor(Color.LIGHT_GRAY);
             }
             shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
             shapeRenderer.end();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.rect(hitbox.getX(),hitbox.getY(),hitbox.getWidth(),hitbox.getHeight());
+            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
             shapeRenderer.end();
         }
     }
