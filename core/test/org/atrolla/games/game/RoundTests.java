@@ -152,6 +152,6 @@ public class RoundTests {
         // considering There is a Bomber player...
         defaultRound.update();
         Assert.assertTrue(defaultRound.getGameItems().size() > 0);
-        Assert.assertTrue(defaultRound.getGameItems().get(0) instanceof Bomb);
+        Assert.assertTrue(defaultRound.getGameItems().stream().anyMatch(Bomb.class::isInstance));
     }
 }

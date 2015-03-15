@@ -30,4 +30,5 @@ public class Item {
     protected void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
+
 }

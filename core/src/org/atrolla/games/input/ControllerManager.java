@@ -7,6 +7,7 @@ import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.system.Direction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,17 +30,20 @@ public class ControllerManager {
         if (controllers.size == 0) System.out.println("No controllers attached");
     }
 
-    public Item updatePlayers(int time, List<GameCharacter> characters) {
-        Item gameObject = null;
+    public List<Item> updatePlayers(int time, List<GameCharacter> characters) {
+        List<Item> items = new ArrayList<>();
         if (controllers != null && controllers.size > 0) {
             final GameCharacter gameCharacter = characters.get(0);
             final Controller controller = controllers.get(0);
             moveGameCharacter(gameCharacter, controller);
             if (controller.getButton(Xbox360PadInput.BUTTON_A)) {
-                gameObject = gameCharacter.useAbility(time);
+                gameCharacter.useAbility(time).ifPresent(items::add);
+            }
+            if (controller.getButton(Xbox360PadInput.BUTTON_X)) {
+                gameCharacter.useNeutralItem(time).ifPresent(items::add);
             }
         }
-        return gameObject;
+        return items;
     }
 
     private void moveGameCharacter(GameCharacter gameCharacter, Controller controller) {

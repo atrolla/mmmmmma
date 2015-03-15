@@ -25,7 +25,7 @@ public class ArrowTests {
     public void setUp() throws Exception {
         archer = new Archer(new Player());
         archer.teleports(new Coordinates(42, 1337));
-        arrow = (Arrow) archer.useAbility(0);
+        arrow = (Arrow) archer.useAbility(0).get();
     }
 
     @Test

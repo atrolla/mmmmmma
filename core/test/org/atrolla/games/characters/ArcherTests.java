@@ -32,14 +32,14 @@ public class ArcherTests {
 
     @Test
     public void archerAbilityIsToThrowArrow() throws Exception {
-        assertTrue(archerPlayer.useAbility(ABILITY_USE_TIME) instanceof Arrow);
+        assertTrue(archerPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Arrow);
     }
 
     @Test
     public void arrowSpanwsAtPlayerCoordinates() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         archerPlayer.teleports(coordinates);
-        final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME);
+        final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME).get();
         assertEquals(coordinates,arrow.getCoordinates());
     }
 }

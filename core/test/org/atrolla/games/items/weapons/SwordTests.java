@@ -24,7 +24,7 @@ public class SwordTests {
     public void setUp() throws Exception {
         this.knight = new Knight(new Player());
         this.knight.teleports(new Coordinates(42,1337));
-        this.sword = (Sword) knight.useAbility(0);
+        this.sword = (Sword) knight.useAbility(0).get();
     }
 
     @Test
@@ -37,7 +37,7 @@ public class SwordTests {
     @Test
     public void swordIsRightToKnightWhenWalkingToTheRight() throws Exception {
         knight.moves(Direction.RIGHT);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
     }
@@ -45,7 +45,7 @@ public class SwordTests {
     @Test
     public void swordIsLeftToKnightWhenWalkingToTheLeft() throws Exception {
         knight.moves(Direction.LEFT);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() == sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
     }
@@ -53,7 +53,7 @@ public class SwordTests {
     @Test
     public void swordIsOnTopOfKnightWhenWalkingToTheTop() throws Exception {
         knight.moves(Direction.UP);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
     }
@@ -61,7 +61,7 @@ public class SwordTests {
     @Test
     public void swordIsUnderKnightWhenWalkingDown() throws Exception {
         knight.moves(Direction.DOWN);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() == sword.getCoordinates().getY());
     }
@@ -69,7 +69,7 @@ public class SwordTests {
     @Test
     public void swordIsUpRightToKnightWhenWalkingToTheUpRight() throws Exception {
         knight.moves(Direction.UP_RIGHT);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
     }
@@ -77,7 +77,7 @@ public class SwordTests {
     @Test
     public void swordIsUpLeftToKnightWhenWalkingToTheUpLeft() throws Exception {
         knight.moves(Direction.UP_LEFT);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() == sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
     }
@@ -85,7 +85,7 @@ public class SwordTests {
     @Test
     public void swordIsDownLeftToKnightWhenWalkingToTheDownLeft() throws Exception {
         knight.moves(Direction.DOWN_LEFT);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() == sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() == sword.getCoordinates().getY());
     }
@@ -93,7 +93,7 @@ public class SwordTests {
     @Test
     public void swordIsDownRightToKnightWhenWalkingDownRight() throws Exception {
         knight.moves(Direction.DOWN_RIGHT);
-        sword = (Sword) knight.useAbility(0);
+        sword = (Sword) knight.useAbility(0).get();
         Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
         Assert.assertTrue(knight.getCoordinates().getY() == sword.getCoordinates().getY());
     }

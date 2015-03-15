@@ -41,6 +41,10 @@ public final class RandomUtils {
         return validDirectionList.get(RANDOM.nextInt(validDirectionList.size()));
     }
 
+    public static final Coordinates getRandomCoordinates(int objectWidth, int objectHeight) {
+        return new Coordinates(RANDOM.nextInt(ConfigurationConstants.STAGE_WIDTH - objectWidth),RANDOM.nextInt(ConfigurationConstants.STAGE_HEIGHT - objectHeight));
+    }
+
     private static final Direction getRandomDirection() {
         return Direction.values()[RANDOM.nextInt(DIRECTIONS_NUMBER)];
     }

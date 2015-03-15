@@ -3,9 +3,12 @@ package org.atrolla.games.characters;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.items.neutrals.NeutralItem;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
+
+import java.util.Optional;
 
 /**
  * Created by MicroOnde on 24/02/2015.
@@ -21,6 +24,7 @@ public abstract class GameCharacter {
     private Coordinates coordinates;
     private CharacterState state;
     private Rectangle hitbox;
+    private Optional<NeutralItem> neutralItem;
 
     protected GameCharacter(Player player) {
         this.player = player;
@@ -28,10 +32,11 @@ public abstract class GameCharacter {
         direction = Direction.DOWN;
         this.id = counter++;
         this.hitbox = new Rectangle();
+        neutralItem = Optional.empty();
     }
 
     public final void moves(Direction direction) {
-        if(canMove()) {
+        if (canMove()) {
             if (!Direction.STOP.equals(direction)) {
                 this.direction = direction;
             }
@@ -70,7 +75,9 @@ public abstract class GameCharacter {
         return state;
     }
 
-    public final Rectangle getHitbox() { return hitbox; }
+    public final Rectangle getHitbox() {
+        return hitbox;
+    }
 
     public final void hit() {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;
@@ -105,7 +112,17 @@ public abstract class GameCharacter {
         return id;
     }
 
-    public Item useAbility(int time) {
-        return null;
+    public Optional<Item> useAbility(int time) {
+        return Optional.empty();
+    }
+
+    public void pick(NeutralItem item) {
+        neutralItem = Optional.ofNullable(item);
+    }
+
+    public Optional<NeutralItem> useNeutralItem(int time) {
+        Optional<NeutralItem> usedItem = neutralItem;
+        neutralItem = Optional.empty();
+        return usedItem.map( nItem -> nItem.isUsed(time));
     }
 }

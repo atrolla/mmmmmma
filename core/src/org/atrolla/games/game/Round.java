@@ -10,15 +10,14 @@ import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.input.ControllerManager;
 import org.atrolla.games.input.KeyboardManager;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.items.neutrals.NeutralItem;
+import org.atrolla.games.items.neutrals.NeutralItemManager;
 import org.atrolla.games.sounds.SoundManager;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,6 +33,7 @@ public class Round {
     private int time;
     private List<Item> gameItems;
     private SoundManager soundManager;
+    private NeutralItemManager neutralItemManager;
 
     public Round(Stage stage) {
         this.stage = stage;
@@ -42,6 +42,7 @@ public class Round {
         initCharacters();
         this.aiManager = new AIManager(characters.stream().filter(c -> !c.isPlayer()).toArray().length);
         this.gameItems = new ArrayList<>();
+        this.neutralItemManager = new NeutralItemManager();
     }
 
     public Round() {
@@ -116,10 +117,7 @@ public class Round {
     private void managePlayers() {
         // TODO : update Players - only pass playerList
         List<GameCharacter> playedCharacters = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
-        final Item item = controllerManager.updatePlayers(time, playedCharacters);
-        if (item != null) {
-            gameItems.add(item);
-        }
+        gameItems.addAll(controllerManager.updatePlayers(time, playedCharacters));
         keyboardManager.updatePlayers(playedCharacters);
     }
 
@@ -141,6 +139,8 @@ public class Round {
     }
 
     private void manageItems() {
+        neutralItemManager.addItem(time).ifPresent(gameItems::add);
+        gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(ni -> ni.applyEffect(this));
         final Iterator<Item> iterator = gameItems.iterator();
         while (iterator.hasNext()) {
             final Item item = iterator.next();

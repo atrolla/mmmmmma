@@ -6,7 +6,7 @@ import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNull;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -26,11 +26,11 @@ public class KnightTests {
     @Test
     public void knightBotCannotUseHisAbility() throws Exception {
         Knight knightBot = new Knight(Player.BOT);
-        assertNull(knightBot.useAbility(ABILITY_USE_TIME));
+        assertFalse(knightBot.useAbility(ABILITY_USE_TIME).isPresent());
     }
 
     @Test
     public void knightAbilityIsToUseHisSword() throws Exception {
-        assertTrue(knightPlayer.useAbility(ABILITY_USE_TIME) instanceof Sword);
+        assertTrue(knightPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Sword);
     }
 }

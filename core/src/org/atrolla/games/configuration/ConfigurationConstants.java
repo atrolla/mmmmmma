@@ -9,10 +9,11 @@ public final class ConfigurationConstants {
     }
 
     public static final double MOVE_STEP = 1.5d;
+
     public static final double DIAGONAL_COEFFICIENT_COMPENSATION = 0.7d;
 
-    public static final double STAGE_WIDTH = 1280d;
-    public static final double STAGE_HEIGHT = 720d;
+    public static final int STAGE_WIDTH = 1280;
+    public static final int STAGE_HEIGHT = 720;
 
     public static final int GAME_CHARACTER_WIDTH = 30;
     public static final int GAME_CHARACTER_HEIGHT = 40;
@@ -34,4 +35,6 @@ public final class ConfigurationConstants {
     public static final double ITEM_ARROW_MOVE_STEP = 3d;
     public static final int ITEM_ARROW_RANGE_TIME_OUT = 30;
     public static final int ITEM_SWORD_ACTION_TIME_OUT = 5;
+    public static final int ITEM_NEUTRAL_SPAWN_FREQUENCY_TIME = 300;
+    public static final int ITEM_NEUTRAL_SIZE = 5;
 }
