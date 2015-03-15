@@ -63,6 +63,7 @@ public class Round {
           */
         characters.add(new Bomber(new Player()));
 //        characters.add(new Archer(new Player()));
+//        characters.add(new Knight(new Player()));
         characters.add(new Knight(Player.BOT));
         characters.add(new Archer(Player.BOT));
         characters.add(new Mage(Player.BOT));

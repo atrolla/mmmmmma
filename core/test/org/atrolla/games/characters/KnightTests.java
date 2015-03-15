@@ -1,6 +1,7 @@
 package org.atrolla.games.characters;
 
 import org.atrolla.games.items.weapons.Sword;
+import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class KnightTests {
     @Before
     public void setUp() throws Exception {
         this.knightPlayer = new Knight(new Player());
+        knightPlayer.teleports(new Coordinates(42,1337));
     }
 
     @Test
