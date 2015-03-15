@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.sounds.SoundManager;
 import org.atrolla.games.system.Coordinates;
@@ -79,10 +80,14 @@ public class Game extends ApplicationAdapter {
             if(item instanceof Bomb){
                 shapeRenderer.setColor(Color.RED);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
-            } else {
+            }else if(item instanceof Arrow){
                 // Arrow
                 shapeRenderer.setColor(Color.PINK);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+            }else {//if(item instanceof Sword){
+                // Arrow
+                shapeRenderer.setColor(Color.TEAL);
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 4);
             }
             shapeRenderer.end();
         }

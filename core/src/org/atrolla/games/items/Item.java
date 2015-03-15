@@ -23,7 +23,7 @@ public class Item {
         return timeout < timeTick;
     }
 
-    public Coordinates getCoordinates() {
+    public final Coordinates getCoordinates() {
         return coordinates;
     }
 

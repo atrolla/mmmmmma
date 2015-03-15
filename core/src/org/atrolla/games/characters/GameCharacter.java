@@ -30,7 +30,7 @@ public abstract class GameCharacter {
         this.hitbox = new Rectangle();
     }
 
-    public void moves(Direction direction) {
+    public final void moves(Direction direction) {
         if(canMove()) {
             if (!Direction.STOP.equals(direction)) {
                 this.direction = direction;
@@ -40,51 +40,51 @@ public abstract class GameCharacter {
         }
     }
 
-    public void updateHitbox() {
+    public final void updateHitbox() {
         this.hitbox.set((float) coordinates.getX(), (float) coordinates.getY(),
-                ConfigurationConstants.PLAYER_WIDTH, ConfigurationConstants.PLAYER_HEIGHT);
+                ConfigurationConstants.GAME_CHARACTER_WIDTH, ConfigurationConstants.GAME_CHARACTER_HEIGHT);
     }
 
-    public void teleports(Coordinates coordinates) {
+    public final void teleports(Coordinates coordinates) {
         this.coordinates = coordinates;
         updateHitbox();
     }
 
-    public Direction getDirection() {
+    public final Direction getDirection() {
         return direction;
     }
 
-    public Coordinates getCoordinates() {
+    public final Coordinates getCoordinates() {
         return coordinates;
     }
 
-    public boolean isPlayer() {
+    public final boolean isPlayer() {
         return player != Player.BOT;
     }
 
-    public Player getPlayer() {
+    public final Player getPlayer() {
         return player;
     }
 
-    public CharacterState getState() {
+    public final CharacterState getState() {
         return state;
     }
 
-    public Rectangle getHitbox() { return hitbox; }
+    public final Rectangle getHitbox() { return hitbox; }
 
-    public void hit() {
+    public final void hit() {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;
     }
 
-    public void awake() {
+    public final void awake() {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.ALIVE;
     }
 
-    public boolean canMove() {
+    public final boolean canMove() {
         return CharacterState.ALIVE.equals(state);
     }
 
-    public boolean isKnockOut() {
+    public final boolean isKnockOut() {
         return CharacterState.KNOCK_OUT.equals(state);
     }
 

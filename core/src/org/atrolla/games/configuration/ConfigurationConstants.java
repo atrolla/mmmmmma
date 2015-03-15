@@ -14,8 +14,8 @@ public final class ConfigurationConstants {
     public static final double STAGE_WIDTH = 1280d;
     public static final double STAGE_HEIGHT = 720d;
 
-    public static final int PLAYER_WIDTH = 30;
-    public static final int PLAYER_HEIGHT = 40;
+    public static final int GAME_CHARACTER_WIDTH = 30;
+    public static final int GAME_CHARACTER_HEIGHT = 40;
 
     public static final int GAME_CHARACTERS = 40; // must be multiple of games character classes number
 
@@ -33,4 +33,5 @@ public final class ConfigurationConstants {
     public static final int ITEM_BOMB_COUNTDOWN_DURATION = 60;
     public static final double ITEM_ARROW_MOVE_STEP = 3d;
     public static final int ITEM_ARROW_RANGE_TIME_OUT = 30;
+    public static final int ITEM_SWORD_ACTION_TIME_OUT = 5;
 }

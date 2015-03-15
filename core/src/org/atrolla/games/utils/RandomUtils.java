@@ -54,7 +54,7 @@ public final class RandomUtils {
             validDirectionList.remove(Direction.LEFT);
             validDirectionList.remove(Direction.DOWN_LEFT);
             validDirectionList.remove(Direction.UP_LEFT);
-        } else if (x == ConfigurationConstants.STAGE_WIDTH-PLAYER_WIDTH) {
+        } else if (x == ConfigurationConstants.STAGE_WIDTH- GAME_CHARACTER_WIDTH) {
             validDirectionList.remove(Direction.RIGHT);
             validDirectionList.remove(Direction.DOWN_RIGHT);
             validDirectionList.remove(Direction.UP_RIGHT);
@@ -63,7 +63,7 @@ public final class RandomUtils {
             validDirectionList.remove(Direction.UP);
             validDirectionList.remove(Direction.UP_RIGHT);
             validDirectionList.remove(Direction.UP_LEFT);
-        } else if (y == ConfigurationConstants.STAGE_HEIGHT-PLAYER_HEIGHT) {
+        } else if (y == ConfigurationConstants.STAGE_HEIGHT- GAME_CHARACTER_HEIGHT) {
             validDirectionList.remove(Direction.DOWN);
             validDirectionList.remove(Direction.DOWN_RIGHT);
             validDirectionList.remove(Direction.DOWN_LEFT);
