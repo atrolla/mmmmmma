@@ -38,9 +38,9 @@ public class Round {
     public Round(Stage stage) {
         this.stage = stage;
         this.characters = new ArrayList<>(ConfigurationConstants.GAME_CHARACTERS);
-        this.aiManager = new AIManager(ConfigurationConstants.GAME_CHARACTERS);
         this.time = 0;
         initCharacters();
+        this.aiManager = new AIManager(characters.stream().filter(c -> !c.isPlayer()).toArray().length);
         this.gameItems = new ArrayList<>();
     }
 
@@ -155,7 +155,7 @@ public class Round {
     private void preventCharactersFromBeingOutOfBound() {
         final double height = stage.getHeight();
         final double width = stage.getWidth();
-        int index = 0;
+        int botIndex = 0;
         for (GameCharacter character : characters) {
             // TODO : merge for perf ?
             if (stage.isOutOfBound(character)) {
@@ -169,9 +169,15 @@ public class Round {
                 final Coordinates coordinates = new Coordinates(x, y);
                 character.teleports(coordinates);
                 // bots that are prevented must choose another valid direction = command.
-                aiManager.goAwayFromWall(index, time, coordinates);
+                if (!character.isPlayer()) {
+                    aiManager.goAwayFromWall(botIndex, time, coordinates);
+
+                }
             }
-            index++;
+            if (!character.isPlayer()) {
+                botIndex++;
+            }
+
         }
     }
 

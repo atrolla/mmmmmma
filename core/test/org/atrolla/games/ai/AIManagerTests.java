@@ -22,7 +22,8 @@ public class AIManagerTests {
         characters.add(new Mage(Player.BOT));
         characters.add(new Knight(Player.BOT));
         characters.add(new Bomber(Player.BOT));
-        AIManager aiManager = new AIManager(characters.size());
-        assertEquals(characters.size(), aiManager.getCommands().size());
+        AIManager aiManager = new AIManager(characters.stream().filter(c -> !c.isPlayer()).toArray().length);
+        assertEquals(characters.stream().filter(c -> !c.isPlayer()).toArray().length,
+                aiManager.getCommands().size());
     }
 }
