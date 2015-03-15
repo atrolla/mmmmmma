@@ -9,6 +9,7 @@ public final class ConfigurationConstants {
     }
 
     public static final double MOVE_STEP = 1.5d;
+    public static final double DIAGONAL_COEFFICIENT_COMPENSATION = 0.7d;
 
     public static final double STAGE_WIDTH = 1280d;
     public static final double STAGE_HEIGHT = 720d;
