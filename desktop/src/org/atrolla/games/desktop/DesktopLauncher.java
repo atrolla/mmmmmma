@@ -2,7 +2,7 @@ package org.atrolla.games.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.atrolla.games.game.Game;
+import org.atrolla.games.game.Mmmmmma;
 
 public class DesktopLauncher {
 
@@ -13,6 +13,6 @@ public class DesktopLauncher {
 		config.title = GAME_TITLE;
 		config.width = 1280;
 		config.height = 720;
-		new LwjglApplication(new Game(), config);
+		new LwjglApplication(new Mmmmmma(), config);
 	}
 }
