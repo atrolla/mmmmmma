@@ -143,7 +143,6 @@ public class Round {
     }
 
     private void managePlayers() {
-        // TODO : update Players - only pass playerList
         gameItems.addAll(controllerManager.updatePlayers(time, players));
         keyboardManager.updatePlayers(players);
     }
@@ -221,4 +220,11 @@ public class Round {
         this.soundManager = soundManager;
     }
 
+    public int getTime() {
+        return time;
+    }
+
+    public List<GameCharacter> getPlayers() {
+        return players;
+    }
 }

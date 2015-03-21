@@ -1,7 +1,6 @@
 package org.atrolla.games.characters;
 
 import com.badlogic.gdx.math.Rectangle;
-import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.neutrals.NeutralItem;
 import org.atrolla.games.system.Coordinates;
@@ -9,6 +8,8 @@ import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
 
 import java.util.Optional;
+
+import static org.atrolla.games.configuration.ConfigurationConstants.*;
 
 /**
  * Created by MicroOnde on 24/02/2015.
@@ -25,6 +26,7 @@ public abstract class GameCharacter {
     private CharacterState state;
     private Rectangle hitbox;
     private Optional<NeutralItem> neutralItem;
+    protected int abilityReadyTime;
 
     protected GameCharacter(Player player) {
         this.player = player;
@@ -33,6 +35,7 @@ public abstract class GameCharacter {
         this.id = counter++;
         this.hitbox = new Rectangle();
         neutralItem = Optional.empty();
+        abilityReadyTime = GAME_CHARACTER_INITIAL_READY_TIME;
     }
 
     public final void moves(Direction direction) {
@@ -46,8 +49,7 @@ public abstract class GameCharacter {
     }
 
     public final void updateHitbox() {
-        this.hitbox.set((float) coordinates.getX(), (float) coordinates.getY(),
-                ConfigurationConstants.GAME_CHARACTER_WIDTH, ConfigurationConstants.GAME_CHARACTER_HEIGHT);
+        this.hitbox.set((float) coordinates.getX(), (float) coordinates.getY(), GAME_CHARACTER_WIDTH, GAME_CHARACTER_HEIGHT);
     }
 
     public final void teleports(Coordinates coordinates) {
@@ -95,6 +97,8 @@ public abstract class GameCharacter {
         return CharacterState.KNOCK_OUT.equals(state);
     }
 
+    public abstract void coolDownAbility(int time);
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,6 +127,6 @@ public abstract class GameCharacter {
     public Optional<NeutralItem> useNeutralItem(int time) {
         Optional<NeutralItem> usedItem = neutralItem;
         neutralItem = Optional.empty();
-        return usedItem.map( nItem -> nItem.isUsed(time));
+        return usedItem.map(nItem -> nItem.isUsed(time));
     }
 }

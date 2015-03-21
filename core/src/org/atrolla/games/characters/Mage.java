@@ -9,4 +9,9 @@ public class Mage extends GameCharacter {
     public Mage(Player player) {
         super(player);
     }
+
+    @Override
+    public void coolDownAbility(int time) {
+
+    }
 }

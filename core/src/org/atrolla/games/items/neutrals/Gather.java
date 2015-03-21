@@ -20,6 +20,8 @@ public class Gather extends NeutralItem {
         if (getUsedTime() > 0 && getPicker().isPresent()) {
             final Class<? extends GameCharacter> pickerClass = getPicker().get().getClass();
             final Coordinates randomCoordinates = RandomUtils.getRandomCoordinates(ConfigurationConstants.GAME_CHARACTER_WIDTH, ConfigurationConstants.GAME_CHARACTER_HEIGHT);
+            //reset abilities so players don't shoot
+            round.getPlayers().stream().forEach(c -> c.coolDownAbility(round.getTime()));
             round.getCharacters().stream().filter(pickerClass::isInstance).forEach(c -> c.teleports(randomCoordinates));
         }
     }

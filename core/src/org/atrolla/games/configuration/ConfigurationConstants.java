@@ -18,6 +18,8 @@ public final class ConfigurationConstants {
     public static final int GAME_CHARACTER_WIDTH = 30;
     public static final int GAME_CHARACTER_HEIGHT = 40;
 
+    public static final int GAME_CHARACTER_INITIAL_READY_TIME = -1;
+
     public static final int GAME_CHARACTERS = 40; // must be multiple of games character classes number
 
     public static final int RANDOM_UTILS_MAX_PROBABILITY = 100;

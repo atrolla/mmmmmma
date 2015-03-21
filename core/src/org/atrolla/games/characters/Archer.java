@@ -16,6 +16,11 @@ public class Archer extends GameCharacter {
     }
 
     @Override
+    public void coolDownAbility(int time) {
+
+    }
+
+    @Override
     public Optional<Item> useAbility(int time) {
         if (!isPlayer()) {
             return null;

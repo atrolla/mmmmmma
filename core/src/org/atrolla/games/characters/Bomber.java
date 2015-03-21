@@ -12,12 +12,13 @@ import java.util.Optional;
  */
 public class Bomber extends GameCharacter {
 
-    public static final int BOMBER_INITIAL_READY_TIME = -1;
-    int abilityReadyTime;
-
     public Bomber(Player player) {
         super(player);
-        abilityReadyTime = BOMBER_INITIAL_READY_TIME;
+    }
+
+    @Override
+    public void coolDownAbility(int time) {
+        abilityReadyTime = time + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class Bomber extends GameCharacter {
         if (!isPlayer() || abilityIsCoolingDown(currentTime)) {
             return Optional.empty();
         }
-        abilityReadyTime = currentTime + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION;
+        coolDownAbility(currentTime);
         return Optional.of(new Bomb(getCoordinates(), currentTime));
     }
 
