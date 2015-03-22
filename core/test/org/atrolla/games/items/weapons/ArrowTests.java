@@ -8,6 +8,8 @@ import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
@@ -23,7 +25,7 @@ public class ArrowTests {
 
     @Before
     public void setUp() throws Exception {
-        archer = new Archer(new Player());
+        archer = new Archer(new Player(Optional.empty(), Optional.empty()));
         archer.teleports(new Coordinates(42, 1337));
         arrow = (Arrow) archer.useAbility(0).get();
     }

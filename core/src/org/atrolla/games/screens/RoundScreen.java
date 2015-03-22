@@ -1,14 +1,11 @@
 package org.atrolla.games.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
@@ -35,12 +32,7 @@ public class RoundScreen implements Screen {
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
-        round = new Round();
-        round.setControllers(Controllers.getControllers());
-        Array<Input> keyboards = new Array<>(1);
-        keyboards.add(Gdx.input);
-        round.setKeyboards(keyboards);
-        round.setSoundManager(game.getSoundManager());
+        round = new Round(game.getInputManager(),game.getSoundManager());
         shapeRenderer = new ShapeRenderer();
     }
 

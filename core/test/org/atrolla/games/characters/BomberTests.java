@@ -7,6 +7,8 @@ import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +23,7 @@ public class BomberTests {
 
     @Before
     public void setUp() throws Exception {
-        bomberPlayer = new Bomber(new Player());
+        bomberPlayer = new Bomber(new Player(Optional.empty(), Optional.empty()));
     }
 
     @Test

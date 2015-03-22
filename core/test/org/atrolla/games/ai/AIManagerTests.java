@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -18,7 +19,7 @@ public class AIManagerTests {
     public void commandsNumberEqualsBots() throws Exception {
         List<GameCharacter> characters = new ArrayList<>(5);
         characters.add(new Archer(Player.BOT));
-        characters.add(new Archer(new Player()));
+        characters.add(new Archer(new Player(Optional.empty(), Optional.empty())));
         characters.add(new Mage(Player.BOT));
         characters.add(new Knight(Player.BOT));
         characters.add(new Bomber(Player.BOT));

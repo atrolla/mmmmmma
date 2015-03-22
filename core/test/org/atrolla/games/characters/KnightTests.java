@@ -6,6 +6,8 @@ import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +21,7 @@ public class KnightTests {
 
     @Before
     public void setUp() throws Exception {
-        this.knightPlayer = new Knight(new Player());
+        this.knightPlayer = new Knight(new Player(Optional.empty(), Optional.empty()));
         knightPlayer.teleports(new Coordinates(42,1337));
     }
 

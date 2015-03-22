@@ -9,6 +9,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -22,7 +24,7 @@ public class SwordTests {
 
     @Before
     public void setUp() throws Exception {
-        this.knight = new Knight(new Player());
+        this.knight = new Knight(new Player(Optional.empty(), Optional.empty()));
         this.knight.teleports(new Coordinates(42,1337));
         this.sword = (Sword) knight.useAbility(0).get();
     }

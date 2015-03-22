@@ -6,6 +6,8 @@ import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 /**
@@ -113,7 +115,7 @@ public class GameCharacterTests {
 
     @Test
     public void characterIsPlayedByPlayer() throws Exception {
-        Player player = new Player();
+        Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         assertTrue(archer.isPlayer());
         assertEquals(player, archer.getPlayer());
@@ -126,7 +128,7 @@ public class GameCharacterTests {
 
     @Test
     public void playedCharacterAfterHitIsDead() throws Exception {
-        Player player = new Player();
+        Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         archer.hit();
         assertEquals(CharacterState.DEAD, archer.getState());
@@ -148,7 +150,7 @@ public class GameCharacterTests {
 
     @Test
     public void deadCharacterAfterAwakeIsStillDead() throws Exception {
-        Player player = new Player();
+        Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         archer.hit();
         assertEquals(CharacterState.DEAD, archer.getState());
@@ -162,7 +164,7 @@ public class GameCharacterTests {
         defaultBotArcher.hit();
         assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
         assertFalse(defaultBotArcher.canMove());
-        Player player = new Player();
+        Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         assertTrue(archer.canMove());
         archer.hit();

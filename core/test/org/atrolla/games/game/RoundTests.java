@@ -6,6 +6,7 @@ import org.atrolla.games.ai.AIManager;
 import org.atrolla.games.ai.Command;
 import org.atrolla.games.characters.*;
 import org.atrolla.games.configuration.ConfigurationConstants;
+import org.atrolla.games.input.InputManager;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.mocks.MockController;
 import org.atrolla.games.system.Coordinates;
@@ -30,14 +31,15 @@ public class RoundTests {
     private Round defaultRound;
     private GameCharacter firstBot;
     private int firstBotIndex;
+    private InputManager inputManager;
 
     @Before
     public void setUp() throws Exception {
-        defaultRound = new Round();
         final Array<Controller> controllers = new Array<>();
         controllers.add(new MockController());
-        defaultRound.setControllers(controllers);
-        defaultRound.setKeyboards(new Array<>());
+        inputManager = new InputManager(controllers, null);
+        inputManager.assignPlayers();
+        defaultRound = new Round(inputManager, null);
         firstBot = defaultRound.getCharacters().stream().filter(c -> !c.isPlayer()).findFirst().get();
         firstBotIndex = 0;
     }
@@ -45,18 +47,18 @@ public class RoundTests {
     @Test
     public void gameHasStage() throws Exception {
         Stage stage = new Stage();
-        Round round = new Round(stage);
+        Round round = new Round(stage, inputManager, null);
         assertEquals(stage, round.getStage());
     }
 
-    @Test
+    /*@Test // NO MORE TRUE
     public void gameHasEveryCharacters() throws Exception {
         //defaultGame.initCharacters();
         assertTrue(defaultRound.getCharacters().parallelStream().anyMatch(c -> c instanceof Mage));
         assertTrue(defaultRound.getCharacters().parallelStream().anyMatch(c -> c instanceof Archer));
         assertTrue(defaultRound.getCharacters().parallelStream().anyMatch(c -> c instanceof Knight));
         assertTrue(defaultRound.getCharacters().parallelStream().anyMatch(c -> c instanceof Bomber));
-    }
+    }*/
 
     @Test
     public void gameHasAIManager() throws Exception {
@@ -84,8 +86,8 @@ public class RoundTests {
 
     @Test
     public void anotherCommandIsDoneWhenACommandIsComplete() throws Exception {
-        Command command = new Command(Direction.RIGHT,2);
-        defaultRound.getAIManager().getCommands().set(firstBotIndex,command);
+        Command command = new Command(Direction.RIGHT, 2);
+        defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
         // t = 0
         defaultRound.update();
         assertEquals(command, defaultRound.getAIManager().getCommands().get(firstBotIndex));
@@ -99,25 +101,29 @@ public class RoundTests {
 
     @Test
     public void botIsNotStuckOnBounds() throws Exception {
-        // put char out of bound
-        for (int i = 0; i < 10000; i++) {
-            firstBot.moves(Direction.UP);
+        final Coordinates resetCoord = firstBot.getCoordinates();
+        for (int j = 0; j < 250; j++) {
+            firstBot.teleports(resetCoord);
+            // put char out of bound
+            for (int i = 0; i < 10000; i++) {
+                firstBot.moves(Direction.UP);
+            }
+            // put direction that makes it still out of bound
+            Command command = new Command(Direction.UP_RIGHT, 500);
+            defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
+            defaultRound.update();
+            assertFalse(defaultRound.getStage().isOutOfBound(firstBot));
+            final Command generatedCommand = defaultRound.getAIManager().getCommands().get(firstBotIndex);
+            assertNotEquals("bad direction found during iteration " + j, Direction.UP, generatedCommand.getDirection());
+            assertNotEquals("bad direction found during iteration " + j, Direction.UP_RIGHT, generatedCommand.getDirection());
+            assertNotEquals("bad direction found during iteration " + j, Direction.UP_LEFT, generatedCommand.getDirection());
         }
-        // put direction that makes it still out of bound
-        Command command = new Command(Direction.UP_RIGHT,500);
-        defaultRound.getAIManager().getCommands().set(firstBotIndex,command);
-        defaultRound.update();
-        assertFalse(defaultRound.getStage().isOutOfBound(firstBot));
-        final Command generatedCommand = defaultRound.getAIManager().getCommands().get(firstBotIndex);
-        assertNotEquals(Direction.UP, generatedCommand.getDirection());
-        assertNotEquals(Direction.UP_RIGHT, generatedCommand.getDirection());
-        assertNotEquals(Direction.UP_LEFT, generatedCommand.getDirection());
     }
 
     @Test
     public void characterHitStopMove() throws Exception {
         final Coordinates baseCoordinates = firstBot.getCoordinates();
-        Command command = new Command(Direction.UP_RIGHT,500);
+        Command command = new Command(Direction.UP_RIGHT, 500);
         defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
         defaultRound.update();
         final Coordinates coordinates2 = firstBot.getCoordinates();
@@ -129,8 +135,8 @@ public class RoundTests {
 
     @Test
     public void knockOutBotMovesAfterSomeTime() throws Exception {
-        Command command = new Command(Direction.DOWN_RIGHT,500);
-        defaultRound.getAIManager().getCommands().set(firstBotIndex,command);
+        Command command = new Command(Direction.DOWN_RIGHT, 500);
+        defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
         defaultRound.update();
         final Coordinates baseCoordinates = firstBot.getCoordinates();
         Assert.assertTrue(firstBot.canMove());

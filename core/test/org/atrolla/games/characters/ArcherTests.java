@@ -7,6 +7,8 @@ import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +23,7 @@ public class ArcherTests {
 
     @Before
     public void setUp() throws Exception {
-        this.archerPlayer = new Archer(new Player());
+        this.archerPlayer = new Archer(new Player(Optional.empty(), Optional.empty()));
     }
 
     @Test

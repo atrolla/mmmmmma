@@ -42,7 +42,7 @@ public final class RandomUtils {
     }
 
     public static final Coordinates getRandomCoordinates(int objectWidth, int objectHeight) {
-        return new Coordinates(RANDOM.nextInt(ConfigurationConstants.STAGE_WIDTH - objectWidth),RANDOM.nextInt(ConfigurationConstants.STAGE_HEIGHT - objectHeight));
+        return new Coordinates(RANDOM.nextInt(ConfigurationConstants.STAGE_WIDTH - objectWidth), RANDOM.nextInt(ConfigurationConstants.STAGE_HEIGHT - objectHeight));
     }
 
     private static final Direction getRandomDirection() {
@@ -58,16 +58,16 @@ public final class RandomUtils {
             validDirectionList.remove(Direction.LEFT);
             validDirectionList.remove(Direction.DOWN_LEFT);
             validDirectionList.remove(Direction.UP_LEFT);
-        } else if (x == ConfigurationConstants.STAGE_WIDTH- GAME_CHARACTER_WIDTH) {
+        } else if (x == ConfigurationConstants.STAGE_WIDTH - GAME_CHARACTER_WIDTH) {
             validDirectionList.remove(Direction.RIGHT);
             validDirectionList.remove(Direction.DOWN_RIGHT);
             validDirectionList.remove(Direction.UP_RIGHT);
         }
-        if (y == 0) {
+        if (y == ConfigurationConstants.STAGE_HEIGHT - GAME_CHARACTER_HEIGHT) {
             validDirectionList.remove(Direction.UP);
             validDirectionList.remove(Direction.UP_RIGHT);
             validDirectionList.remove(Direction.UP_LEFT);
-        } else if (y == ConfigurationConstants.STAGE_HEIGHT- GAME_CHARACTER_HEIGHT) {
+        } else if (y == 0) {
             validDirectionList.remove(Direction.DOWN);
             validDirectionList.remove(Direction.DOWN_RIGHT);
             validDirectionList.remove(Direction.DOWN_LEFT);

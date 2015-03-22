@@ -1,8 +1,11 @@
 package org.atrolla.games.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import org.atrolla.games.configuration.ConfigurationConstants;
+import org.atrolla.games.input.InputManager;
 import org.atrolla.games.screens.MainMenuScreen;
 import org.atrolla.games.sounds.SoundManager;
 
@@ -10,21 +13,17 @@ public class Mmmmmma extends Game {
     //    private Texture img;
     private OrthographicCamera camera;
     private SoundManager soundManager;
-    private MainMenuScreen mainMenuScreen;
-    private float stageWidth;
-    private float stageHeight;
+    private InputManager inputManager;
 
     @Override
     public void create() {
 //        img = new Texture("badlogic.jpg");
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
-        stageWidth = (float) ConfigurationConstants.STAGE_WIDTH;
-        stageHeight = (float) ConfigurationConstants.STAGE_HEIGHT;
-        camera.setToOrtho(false, stageWidth, stageHeight);
+        camera.setToOrtho(false, (float) ConfigurationConstants.STAGE_WIDTH, (float) ConfigurationConstants.STAGE_HEIGHT);
         soundManager = new SoundManager();
-        mainMenuScreen = new MainMenuScreen(this);
-        setScreen(mainMenuScreen);
+        inputManager = new InputManager(Controllers.getControllers(), Gdx.input);
+        setScreen(new MainMenuScreen(this));
     }
 
     /*@Override
@@ -47,20 +46,11 @@ public class Mmmmmma extends Game {
         soundManager.disposeSounds();
     }
 
-
-    public MainMenuScreen getMainMenuScreen() {
-        return mainMenuScreen;
-    }
-
     public SoundManager getSoundManager() {
         return soundManager;
     }
 
-    public float getStageWidth() {
-        return stageWidth;
-    }
-
-    public float getStageHeight() {
-        return stageHeight;
+    public InputManager getInputManager() {
+        return inputManager;
     }
 }

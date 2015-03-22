@@ -5,11 +5,14 @@ import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.characters.Archer;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.game.Round;
+import org.atrolla.games.input.InputManager;
 import org.atrolla.games.mocks.MockController;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_NEUTRAL_SIZE;
@@ -32,23 +35,23 @@ public class GatherTests {
     @Test
     public void gatherCanOnlyBePickedByAPlayer() throws Exception {
         assertFalse(gather.isPicked(new Archer(Player.BOT)));
-        assertTrue(gather.isPicked(new Archer(new Player())));
+        assertTrue(gather.isPicked(new Archer(new Player(Optional.empty(), Optional.empty()))));
     }
 
     @Test
     public void pickerPlayerCanUseGather() throws Exception {
-        final Archer player = new Archer(new Player());
+        final Archer player = new Archer(new Player(Optional.empty(), Optional.empty()));
         gather.isPicked(player);
         assertTrue(player.useNeutralItem(42).get() instanceof Gather);
     }
 
     @Test
     public void usedGatherTeleportsAllSamePickerClassAtTheSameArea() throws Exception {
-        Round defaultRound = new Round();
         final Array<Controller> controllers = new Array<>();
         controllers.add(new MockController());
-        defaultRound.setControllers(controllers);
-        defaultRound.setKeyboards(new Array<>());
+        final InputManager inputManager = new InputManager(controllers, null);
+        inputManager.assignPlayers();
+        Round defaultRound = new Round(inputManager, null);
         GameCharacter firstPlayer = defaultRound.getCharacters().stream().filter(c -> c.isPlayer()).findFirst().get();
         defaultRound.update();
         final NeutralItem item = (NeutralItem) defaultRound.getGameItems().stream().filter(Gather.class::isInstance).findFirst().get();
