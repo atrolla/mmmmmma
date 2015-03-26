@@ -26,9 +26,9 @@ import java.util.List;
 public class RoundScreen implements Screen {
 
     private final Mmmmmma game;
-    private Round round;
+    private final Round round;
 
-    private ShapeRenderer shapeRenderer;
+    private final ShapeRenderer shapeRenderer;
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;

@@ -52,7 +52,7 @@ public class GatherTests {
         final InputManager inputManager = new InputManager(controllers, null);
         inputManager.assignPlayers();
         Round defaultRound = new Round(inputManager, null);
-        GameCharacter firstPlayer = defaultRound.getCharacters().stream().filter(c -> c.isPlayer()).findFirst().get();
+        GameCharacter firstPlayer = defaultRound.getCharacters().stream().filter(GameCharacter::isPlayer).findFirst().get();
         defaultRound.update();
         final NeutralItem item = (NeutralItem) defaultRound.getGameItems().stream().filter(Gather.class::isInstance).findFirst().get();
         item.isPicked(firstPlayer);

@@ -21,11 +21,11 @@ public final class RandomUtils {
     private static final Random RANDOM = new Random();
     private static final int DIRECTIONS_NUMBER = Direction.values().length - 1;
 
-    public static final int getRandomMoveTime(int time) {
+    public static int getRandomMoveTime(int time) {
         return RANDOM.nextInt(ConfigurationConstants.BOT_MAX_MOVE_COMMAND_TIME) + 1 + time;
     }
 
-    public static final int getRandomStopTime(int time) {
+    public static int getRandomStopTime(int time) {
         return RANDOM.nextInt(ConfigurationConstants.BOT_MAX_STOP_COMMAND_TIME) + 1 + time;
     }
 
@@ -33,7 +33,7 @@ public final class RandomUtils {
         return RANDOM.nextInt(RANDOM_UTILS_MAX_PROBABILITY) < BOT_STOP_PROBABILITY;
     }
 
-    public static final Direction getRandomDirectionFrom(Coordinates coordinates) {
+    public static Direction getRandomDirectionFrom(Coordinates coordinates) {
         if (Coordinates.NULL == coordinates) {
             return getRandomDirection();
         }
@@ -41,11 +41,11 @@ public final class RandomUtils {
         return validDirectionList.get(RANDOM.nextInt(validDirectionList.size()));
     }
 
-    public static final Coordinates getRandomCoordinates(int objectWidth, int objectHeight) {
+    public static Coordinates getRandomCoordinates(int objectWidth, int objectHeight) {
         return new Coordinates(RANDOM.nextInt(ConfigurationConstants.STAGE_WIDTH - objectWidth), RANDOM.nextInt(ConfigurationConstants.STAGE_HEIGHT - objectHeight));
     }
 
-    private static final Direction getRandomDirection() {
+    private static Direction getRandomDirection() {
         return Direction.values()[RANDOM.nextInt(DIRECTIONS_NUMBER)];
     }
 

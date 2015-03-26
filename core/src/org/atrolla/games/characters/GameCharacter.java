@@ -24,7 +24,7 @@ public abstract class GameCharacter {
     private Direction direction;
     private Coordinates coordinates;
     private CharacterState state;
-    private Rectangle hitbox;
+    private final Rectangle hitbox;
     private Optional<NeutralItem> neutralItem;
     protected int abilityReadyTime;
 
@@ -55,6 +55,11 @@ public abstract class GameCharacter {
     public final void teleports(Coordinates coordinates) {
         this.coordinates = coordinates;
         updateHitbox();
+    }
+
+    protected final void teleports(Coordinates coordinates, Direction direction) {
+        this.direction = direction;
+        teleports(coordinates);
     }
 
     public final Direction getDirection() {
@@ -106,9 +111,8 @@ public abstract class GameCharacter {
 
         GameCharacter that = (GameCharacter) o;
 
-        if (id != that.id) return false;
+        return id == that.id;
 
-        return true;
     }
 
     @Override

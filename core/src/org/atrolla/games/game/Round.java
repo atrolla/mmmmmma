@@ -33,9 +33,9 @@ public class Round {
     private final AIManager aiManager;
     private final InputManager inputManager;
     private int time;
-    private List<Item> gameItems;
-    private SoundManager soundManager;
-    private NeutralItemManager neutralItemManager;
+    private final List<Item> gameItems;
+    private final SoundManager soundManager;
+    private final NeutralItemManager neutralItemManager;
 
     public Round(Stage stage, InputManager inputManager, SoundManager soundManager) {
         this.stage = stage;
@@ -45,7 +45,7 @@ public class Round {
         this.time = 0;
         initCharacters();
         this.bots = characters.stream().filter(c -> !c.isPlayer()).collect(Collectors.toList());
-        this.players = characters.stream().filter(c -> c.isPlayer()).collect(Collectors.toList());
+        this.players = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
         this.aiManager = new AIManager(bots.size());
         this.gameItems = new ArrayList<>();
         this.neutralItemManager = new NeutralItemManager();
@@ -145,7 +145,7 @@ public class Round {
                 item -> players.stream()
                         .filter(player -> Intersector.overlaps(item.getHitbox(), player.getHitbox()))
                         .findFirst()
-                        .ifPresent(player -> item.isPicked(player))
+                        .ifPresent(item::isPicked)
         );
     }
 

@@ -16,7 +16,7 @@ public abstract class NeutralItem extends Item {
 
     private Optional<GameCharacter> picker;
     private int usedTime;
-    private Circle hitbox;
+    private final Circle hitbox;
 
     public NeutralItem(Coordinates coordinates, int timeout) {
         super(coordinates, timeout);

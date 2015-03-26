@@ -1,6 +1,5 @@
 package org.atrolla.games.ai;
 
-import oracle.jrockit.jfr.jdkevents.ThrowableTracer;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.system.Coordinates;
@@ -21,8 +20,8 @@ public class AIManager {
      * AI can stop walking
      */
 
-    private List<Command> commands;
-    private Map<GameCharacter, Integer> knockOutBotsAwakeTime;
+    private final List<Command> commands;
+    private final Map<GameCharacter, Integer> knockOutBotsAwakeTime;
 
 
     public AIManager(int botNumber) {
@@ -70,7 +69,7 @@ public class AIManager {
     }
 
     public void updateBotsState(final Collection<GameCharacter> characters,final int time) {
-        characters.stream().filter(character -> character.isKnockOut()).forEach(character -> {
+        characters.stream().filter(GameCharacter::isKnockOut).forEach(character -> {
             if (knockOutBotsAwakeTime.containsKey(character)) {
                 if (time >= knockOutBotsAwakeTime.get(character)) {
                     knockOutBotsAwakeTime.remove(character);

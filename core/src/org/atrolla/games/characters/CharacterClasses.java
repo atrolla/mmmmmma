@@ -12,24 +12,45 @@ public enum CharacterClasses {
         public GameCharacter createCharacter(Player player) {
             return new Archer(player);
         }
+
+        @Override
+        public Class getClazz() {
+            return Archer.class;
+        }
     }, BOMBER {
         @Override
         public GameCharacter createCharacter(Player player) {
             return new Bomber(player);
+        }
+
+        @Override
+        public Class getClazz() {
+            return Bomber.class;
         }
     }, KNIGHT {
         @Override
         public GameCharacter createCharacter(Player player) {
             return new Knight(player);
         }
+
+        @Override
+        public Class getClazz() {
+            return Knight.class;
+        }
     }, MAGE {
         @Override
         public GameCharacter createCharacter(Player player) {
             return new Mage(player);
         }
+
+        @Override
+        public Class getClazz() {
+            return Mage.class;
+        }
     };
 
     public abstract GameCharacter createCharacter(Player player);
+    public abstract Class getClazz();
 
     public static CharacterClasses next(CharacterClasses current) {
         final CharacterClasses[] values = CharacterClasses.values();

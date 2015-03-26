@@ -38,7 +38,7 @@ public class ArcherTests {
     }
 
     @Test
-    public void arrowSpanwsAtPlayerCoordinates() throws Exception {
+    public void arrowSpawnsAtPlayerCoordinates() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         archerPlayer.teleports(coordinates);
         final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME).get();
