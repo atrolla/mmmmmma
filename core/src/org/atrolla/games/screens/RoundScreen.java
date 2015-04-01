@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import org.atrolla.games.characters.GameCharacter;
+import org.atrolla.games.characters.*;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
 import org.atrolla.games.game.Round;
@@ -32,7 +32,7 @@ public class RoundScreen implements Screen {
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
-        round = new Round(game.getInputManager(),game.getSoundManager());
+        round = new Round(game.getInputManager(), game.getSoundManager());
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -85,7 +85,17 @@ public class RoundScreen implements Screen {
             } else {
                 shapeRenderer.setColor(Color.LIGHT_GRAY);
             }
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
+            if (gameCharacter instanceof Archer) {
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
+            } else if (gameCharacter instanceof Bomber) {
+                shapeRenderer.rect((float) coordinates.getX(), (float) coordinates.getY(), 10, 10);
+            } else if (gameCharacter instanceof Knight) {
+                shapeRenderer.triangle((float) coordinates.getX(), (float) coordinates.getY(),
+                        (float) coordinates.getX() + 10, (float) coordinates.getY(),
+                        (float) coordinates.getX() + 5, (float) coordinates.getY() + 10);
+            } else if (gameCharacter instanceof Mage) {
+                shapeRenderer.line((float) coordinates.getX(), (float) coordinates.getY(), (float) coordinates.getX() + hitbox.getWidth(), (float) coordinates.getY() + hitbox.getHeight());
+            }
             shapeRenderer.end();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());

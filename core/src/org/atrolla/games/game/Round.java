@@ -3,7 +3,6 @@ package org.atrolla.games.game;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.ai.AIManager;
-import org.atrolla.games.characters.Bomber;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.input.InputManager;
@@ -15,10 +14,8 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -64,15 +61,25 @@ public class Round {
     }
 
     public void initCharacters() {
+        final int playerNumber = inputManager.getPlayers().size();
         inputManager.getPlayers()
                 .stream()
-                .map(p -> p.getGameCharacterClass().createCharacter(p))
-                .collect(Collectors.toCollection(() -> characters));
-        for (int i = 0; i < ConfigurationConstants.GAME_CHARACTERS - inputManager.getPlayers().size(); i++) {
-            characters.add(new Bomber(Player.BOT));
-        }
+                .map(mapPlayerToBotAndPlayerCharactersCollection(playerNumber))
+                .forEach(characters::addAll);
         Collections.shuffle(characters);
         placeCharactersOnStage();
+    }
+
+    private Function<Player, Collection<GameCharacter>> mapPlayerToBotAndPlayerCharactersCollection(int playerNumber) {
+        return p -> {
+            Collection<GameCharacter> characters = new ArrayList<>();
+            characters.add(p.getGameCharacterClass().createCharacter(p));
+            final int sameCharNumber = ConfigurationConstants.GAME_CHARACTERS / playerNumber;
+            for (int i = 1; i < sameCharNumber; i++) {
+                characters.add(p.getGameCharacterClass().createCharacter(Player.BOT));
+            }
+            return characters;
+        };
     }
 
     private void placeCharactersOnStage() {
