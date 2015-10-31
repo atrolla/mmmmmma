@@ -1,19 +1,24 @@
 package org.atrolla.games.items;
 
+import com.badlogic.gdx.math.Shape2D;
+import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.system.Coordinates;
 
 /**
  * Created by MicroOnde on 08/03/2015.
  */
-public class Item {
+public abstract class Item {
     private Coordinates coordinates;
     private final int timeout;
+    private final GameCharacter user;
 
-    public Item(Coordinates coordinates, int timeout) {
+    public Item(Coordinates coordinates, int timeout, GameCharacter user) {
         this.coordinates = coordinates;
         this.timeout = timeout;
+        this.user = user;
     }
 
+    // each item has a lifetime and if reached, return true
     public boolean update(int timeTick) {
         //does nothing
         return isDone(timeTick);
@@ -31,4 +36,9 @@ public class Item {
         this.coordinates = coordinates;
     }
 
+    public GameCharacter getUser() {
+        return user;
+    }
+
+    public abstract Shape2D getHitbox();
 }

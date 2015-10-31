@@ -1,8 +1,9 @@
 package org.atrolla.games.items.weapons;
 
+import com.badlogic.gdx.math.Shape2D;
+import org.atrolla.games.characters.Archer;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
-import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 
 /**
@@ -12,9 +13,9 @@ public class Arrow extends Item {
 
     private final Direction direction;
 
-    public Arrow(Coordinates coordinates, int time, Direction direction) {
-        super(coordinates, time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT);
-        this.direction = direction;
+    public Arrow(Archer archer, int time) {
+        super(archer.getCoordinates(), time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT, archer);
+        this.direction = archer.getDirection();
     }
 
     @Override
@@ -29,5 +30,10 @@ public class Arrow extends Item {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public Shape2D getHitbox() {
+        return null;
     }
 }

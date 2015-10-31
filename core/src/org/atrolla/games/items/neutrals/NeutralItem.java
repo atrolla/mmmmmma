@@ -10,7 +10,10 @@ import org.atrolla.games.system.Coordinates;
 import java.util.Optional;
 
 /**
- * Created by MicroOnde on 15/03/2015.
+ *
+ * NeutralItem spawns at different time in a round, their goal is to add a bonus to the player who pick the NeutralItem.<br/>
+ * Once it is picked, it disappears from the screen and can be used by the player once.<br/>
+ * Also replaces the item picked by the player if he has already one.
  */
 public abstract class NeutralItem extends Item {
 
@@ -19,7 +22,7 @@ public abstract class NeutralItem extends Item {
     private final Circle hitbox;
 
     public NeutralItem(Coordinates coordinates, int timeout) {
-        super(coordinates, timeout);
+        super(coordinates, timeout, null);
         picker = Optional.empty();
         hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
     }

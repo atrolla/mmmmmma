@@ -3,6 +3,7 @@ package org.atrolla.games.ai;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.system.Coordinates;
+import org.atrolla.games.system.Direction;
 
 import java.util.*;
 import java.util.function.IntConsumer;
@@ -12,13 +13,15 @@ import static org.atrolla.games.ai.Command.RandomCommand;
 
 /**
  * Created by MicroOnde on 25/02/2015.
+ *
+ * This class manages bots movements
+ *
+ *
+ * bots are smart enough to not go into walls
+ * bots can stop walking
+ *
  */
 public class AIManager {
-
-    /**
-     * AI are smart enough to not go into walls
-     * AI can stop walking
-     */
 
     private final List<Command> commands;
     private final Map<GameCharacter, Integer> knockOutBotsAwakeTime;
@@ -30,6 +33,12 @@ public class AIManager {
         initCommands(botNumber);
     }
 
+    /**
+     *
+     * add a random Command to each bot
+     *
+     * @see Command
+     */
     private void initCommands(int botNumber) {
         IntConsumer addRandomCommand = i -> commands.add(RandomCommand(0, Coordinates.NULL));
         IntStream.rangeClosed(1, botNumber)
@@ -40,6 +49,12 @@ public class AIManager {
         return commands;
     }
 
+    /**
+     *
+     * move bots accordingly to their command
+     *
+     * @see GameCharacter#moves(Direction)
+     */
     public void updateBotsMove(final Collection<GameCharacter> bots) {
         int i = 0;
         for (GameCharacter character : bots) {
@@ -54,6 +69,12 @@ public class AIManager {
         }
     }
 
+    /**
+     *
+     * for each finished Command, replace with a new one
+     *
+     * @see Command#checkIsDone(int)
+     */
     public void updateCommands(int time) {
         final ListIterator<Command> commandListIterator = commands.listIterator();
         while (commandListIterator.hasNext()) {
@@ -68,6 +89,13 @@ public class AIManager {
         commands.set(index, RandomCommand(time, coordinates));
     }
 
+    /**
+     *
+     * Each new KO bot is put in a map so that after a time, they will awake and move again.
+     *
+     * @see GameCharacter#isKnockOut()
+     * @see ConfigurationConstants#BOT_KNOCK_OUT_DURATION
+     */
     public void updateBotsState(final Collection<GameCharacter> characters,final int time) {
         characters.stream().filter(GameCharacter::isKnockOut).forEach(character -> {
             if (knockOutBotsAwakeTime.containsKey(character)) {

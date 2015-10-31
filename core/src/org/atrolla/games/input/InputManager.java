@@ -115,6 +115,23 @@ public class InputManager {
         return players;
     }
 
+    /**
+     *
+     * For each player, accordingly to their controller input, <br/>
+     * <ul>
+     *     <li>move the player</li>
+     *     <li>use player's ability</li>
+     *     <li>use player's neutral item</li>
+     * </ul>
+     *
+     * @return list of Items that players may create
+     *
+     * @see Player#getKeyboardInput()
+     * @see Player#getControllerInput()
+     * @see GameCharacter#useAbility(int)
+     * @see GameCharacter#useNeutralItem(int)
+     * @see Item
+     */
     public List<Item> updatePlayers(int time, List<GameCharacter> playerCharacterList) {
         List<Item> items = new ArrayList<>();
         for (GameCharacter character : playerCharacterList) {

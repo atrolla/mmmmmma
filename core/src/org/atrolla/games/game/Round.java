@@ -1,5 +1,6 @@
 package org.atrolla.games.game;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.ai.AIManager;
@@ -9,6 +10,8 @@ import org.atrolla.games.input.InputManager;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.neutrals.NeutralItem;
 import org.atrolla.games.items.neutrals.NeutralItemManager;
+import org.atrolla.games.items.weapons.Bomb;
+import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.sounds.SoundManager;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
@@ -21,6 +24,8 @@ import java.util.stream.IntStream;
 
 /**
  * Created by MicroOnde on 25/02/2015.
+ * <p>
+ * A round contains every mechanism needed to play
  */
 public class Round {
     private final Stage stage;
@@ -60,7 +65,10 @@ public class Round {
         return characters;
     }
 
-    public void initCharacters() {
+    /**
+     * creates bots with same classes as players and place characters randomly on screen
+     */
+    private void initCharacters() {
         final int playerNumber = inputManager.getPlayers().size();
         inputManager.getPlayers()
                 .stream()
@@ -98,6 +106,11 @@ public class Round {
                 );
     }
 
+    /**
+     * Update game state
+     * <p>
+     * This method should be called each time the game renders
+     */
     public void update() {
         manageItems();
         manageBots();
@@ -107,8 +120,17 @@ public class Round {
         postUpdate();
     }
 
+    /**
+     * <ol>
+     * <li>check if it is time to add a neutral item</li>
+     * <li>check if it is time to remove used items</li>
+     * </ol>
+     *
+     * @see NeutralItem
+     */
     private void manageItems() {
         neutralItemManager.addItem(time).ifPresent(gameItems::add);
+        //apply effect of any neutral item in gameItems TODO : wut ?
         gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(ni -> ni.applyEffect(this));
         final Iterator<Item> iterator = gameItems.iterator();
         while (iterator.hasNext()) {
@@ -122,31 +144,59 @@ public class Round {
         }
     }
 
+    /**
+     * <ol>
+     * <li>Awake KO bots</li>
+     * <li>Move bots</li>
+     * </ol>
+     */
     private void manageBots() {
         aiManager.updateBotsState(bots, time);
         aiManager.updateBotsMove(bots);
     }
 
+    /**
+     * Update players and add the newly created item to gameItems list
+     */
     private void managePlayers() {
         gameItems.addAll(inputManager.updatePlayers(time, players));
     }
 
+    /**
+     * <ol>
+     * <li>Players picking items</li>
+     * <li>Manage GameCharacters goinng to the walls</li>
+     * </ol>
+     */
     private void manageHitBoxes() {
         neutralItemsPick();
+        knockOutCharactersBeingHitByWeapons();
         preventCharactersFromBeingOutOfBound();
     }
 
+    /**
+     * Play sounds if a soundManager is present
+     */
     private void playSounds() {
         if (soundManager != null) {
             soundManager.playAllSounds();
         }
     }
 
+    /**
+     * update time
+     */
     private void postUpdate() {
         time++;
         aiManager.updateCommands(time);
     }
 
+    /**
+     * For each NeutralItem, the first player to hit it picks it.
+     *
+     * @see NeutralItem
+     * @see NeutralItem#isPicked(GameCharacter)
+     */
     private void neutralItemsPick() {
         gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(
                 item -> players.stream()
@@ -156,6 +206,40 @@ public class Round {
         );
     }
 
+    /**
+     * Players being hit will die
+     * Bots will only be knocked out and awakes later on
+     *
+     * @see GameCharacter#hit()
+     * @see Sword
+     */
+    private void knockOutCharactersBeingHitByWeapons() {
+        //TODO : sword must not kill now but after a while (considered like poison)
+        gameItems.stream().filter(Sword.class::isInstance).map(Sword.class::cast).forEach(
+                sword -> characters.stream()
+                        .filter(GameCharacter::canMove) // never hit a KO chacacter
+                        .filter(c -> !sword.getUser().equals(c)) // sword must not kill its user
+                        .filter(c -> Intersector.overlaps((Circle) sword.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
+                        .forEach(GameCharacter::hit)
+        );
+        gameItems.stream().filter(Bomb.class::isInstance).map(Bomb.class::cast)
+                .filter(Bomb::isExploding) // only exploding bombs will hit characters
+                .forEach(
+                        bomb -> characters.stream()
+                                .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                .filter(player -> Intersector.overlaps((Circle) bomb.getHitbox(), player.getHitbox()))
+                                .forEach(GameCharacter::hit)
+                );
+        //TODO : manage others weapons hit here
+    }
+
+    /**
+     * Players will not move when their hitbox are on bounds
+     * Bots will also have to go away from the wall by having another command/direction
+     *
+     * @see GameCharacter#teleports(Coordinates)
+     * @see AIManager#goAwayFromWall(int, int, Coordinates)
+     */
     private void preventCharactersFromBeingOutOfBound() {
         final double height = stage.getHeight();
         final double width = stage.getWidth();

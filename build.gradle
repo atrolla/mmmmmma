@@ -28,6 +28,9 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
+    compileJava {
+        sourceCompatibility = '1.8'
+    }
 
     sourceSets.test.java.srcDirs = ["test/"]
 
@@ -45,7 +48,9 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java"
-
+    compileJava {
+        sourceCompatibility = '1.8'
+    }
     sourceSets.test.java.srcDirs = ["test/"]
 
     dependencies {

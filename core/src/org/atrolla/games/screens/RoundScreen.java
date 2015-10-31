@@ -58,12 +58,16 @@ public class RoundScreen implements Screen {
             if (item instanceof Bomb) {
                 shapeRenderer.setColor(Color.RED);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
+                shapeRenderer.end();
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
             } else if (item instanceof Arrow) {
                 // Arrow
                 shapeRenderer.setColor(Color.PINK);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
             } else if (item instanceof Sword) {
-                // Arrow
+                // Sword
                 shapeRenderer.setColor(Color.TEAL);
                 shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 4);
             } else if (item instanceof NeutralItem) {
@@ -72,6 +76,25 @@ public class RoundScreen implements Screen {
             }
             shapeRenderer.end();
         }
+
+        final List<GameCharacter> characters = round.getCharacters();
+        characters.stream().forEach(
+                c ->  {
+                    final Rectangle hitbox = c.getHitbox();
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    switch (c.getState()) {
+                        case DEAD:
+                            shapeRenderer.setColor(Color.BLACK);
+                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+                            break;
+                        case KNOCK_OUT:
+                            shapeRenderer.setColor(Color.LIGHT_GRAY);
+                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+                            break;
+                    }
+                    shapeRenderer.end();
+                }
+        );
     }
 
     private void renderCharacters() {

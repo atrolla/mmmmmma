@@ -1,22 +1,33 @@
 package org.atrolla.games.items.weapons;
 
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Shape2D;
+import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.system.Coordinates;
-import org.atrolla.games.system.Direction;
 
 /**
- * Created by MicroOnde on 15/03/2015.
+ * A Sword is used by a Knight class player<br/>
+ * It is created in the direction the player faces and located at the Character HitBox.<br/>
+ * Every Character hit by it during the time it exists is knocked out / killed.
+ *
+ * @see org.atrolla.games.characters.Knight
+ * @see ConfigurationConstants#ITEM_SWORD_ACTION_TIME_OUT
  */
 public class Sword extends Item {
 
-    private Sword(Coordinates coordinates, int timeout) {
-        super(coordinates, timeout);
+    private final Circle hitbox;
+
+    private Sword(Coordinates coordinates, int timeout, GameCharacter character) {
+        super(coordinates, timeout, character);
+        this.hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.SWORD_SIZE);
     }
 
-    public static Sword generates(final Coordinates coordinates, int abilityUsedTime, final Direction direction) {
+    public static Item generates(GameCharacter character, int time) {
         Coordinates coord = null;
-        switch (direction) {
+        final Coordinates coordinates = character.getCoordinates();
+        switch (character.getDirection()) {
             case UP:
                 coord = coordinates.translateXandY(ConfigurationConstants.GAME_CHARACTER_WIDTH / 2, ConfigurationConstants.GAME_CHARACTER_HEIGHT);
                 break;
@@ -45,6 +56,11 @@ public class Sword extends Item {
                 coord = coordinates;
                 break;
         }
-        return new Sword(coord, abilityUsedTime + ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT);
+        return new Sword(coord, time + ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT, character);
+    }
+
+    @Override
+    public Shape2D getHitbox() {
+        return hitbox;
     }
 }

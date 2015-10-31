@@ -24,6 +24,6 @@ public class Knight extends GameCharacter {
         if (!isPlayer()) {
             return Optional.empty();
         }
-        return Optional.of(Sword.generates(getCoordinates(), time, getDirection()));
+        return Optional.of(Sword.generates(this, time));
     }
 }

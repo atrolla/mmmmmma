@@ -27,7 +27,7 @@ public class Bomber extends GameCharacter {
             return Optional.empty();
         }
         coolDownAbility(currentTime);
-        return Optional.of(new Bomb(getCoordinates(), currentTime));
+        return Optional.of(new Bomb(this, currentTime));
     }
 
     private boolean abilityIsCoolingDown(int time){

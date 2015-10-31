@@ -59,4 +59,10 @@ public class MageTests {
         mage.turnsInto(CharacterClasses.BOMBER);
         assertTrue(mage.useAbility(ABILITY_USE_TIME).get() instanceof Bomb);
     }
+
+    @Test
+    public void mageCanOnlyKillSamePlayerClass() throws Exception {
+        mage.turnsInto(CharacterClasses.BOMBER);
+        assertTrue(mage.useAbility(ABILITY_USE_TIME).get() instanceof Bomb);
+    }
 }

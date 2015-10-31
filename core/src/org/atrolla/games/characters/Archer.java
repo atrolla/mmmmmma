@@ -25,6 +25,6 @@ public class Archer extends GameCharacter {
         if (!isPlayer()) {
             return null;
         }
-        return Optional.of(new Arrow(getCoordinates(), time, getDirection()));
+        return Optional.of(new Arrow(this, time));
     }
 }

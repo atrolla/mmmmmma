@@ -33,10 +33,13 @@ public final class ConfigurationConstants {
 
     public static final int BOMBER_ABILITY_COOLDOWN_DURATION = 60;
 
-    public static final int ITEM_BOMB_COUNTDOWN_DURATION = 60;
+    public static final int ITEM_BOMB_COUNTDOWN_DURATION = 240;
     public static final double ITEM_ARROW_MOVE_STEP = 3d;
     public static final int ITEM_ARROW_RANGE_TIME_OUT = 30;
-    public static final int ITEM_SWORD_ACTION_TIME_OUT = 5;
+    public static final int ITEM_SWORD_ACTION_TIME_OUT = 1;
     public static final int ITEM_NEUTRAL_SPAWN_FREQUENCY_TIME = 300;
     public static final int ITEM_NEUTRAL_SIZE = 5;
+
+    public static final int SWORD_SIZE = 1;
+    public static final int EXPLOSION_RADIUS_SIZE = 50;
 }
