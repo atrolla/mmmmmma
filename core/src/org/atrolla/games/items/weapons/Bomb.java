@@ -1,7 +1,6 @@
 package org.atrolla.games.items.weapons;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Shape2D;
 import org.atrolla.games.characters.Bomber;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
@@ -9,9 +8,6 @@ import org.atrolla.games.system.Coordinates;
 
 import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_BOMB_COUNTDOWN_DURATION;
 
-/**
- * Created by MicroOnde on 04/03/2015.
- */
 public class Bomb extends Item {
 
     private final Circle hitbox;
@@ -40,7 +36,7 @@ public class Bomb extends Item {
     }
 
     @Override
-    public Shape2D getHitbox() {
+    public Circle getHitbox() {
         return hitbox;
     }
 

@@ -1,7 +1,6 @@
 package org.atrolla.games.items.weapons;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Shape2D;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
@@ -60,7 +59,7 @@ public class Sword extends Item {
     }
 
     @Override
-    public Shape2D getHitbox() {
+    public Circle getHitbox() {
         return hitbox;
     }
 }

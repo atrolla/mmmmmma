@@ -1,8 +1,5 @@
 package org.atrolla.games.configuration;
 
-/**
- * Created by MicroOnde on 24/02/2015.
- */
 public final class ConfigurationConstants {
 
     private ConfigurationConstants() {
@@ -42,4 +39,5 @@ public final class ConfigurationConstants {
 
     public static final int SWORD_SIZE = 1;
     public static final int EXPLOSION_RADIUS_SIZE = 50;
+    public static final int ARROW_HITBOX_SIZE = 1;
 }

@@ -1,12 +1,9 @@
 package org.atrolla.games.items;
 
-import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.math.Circle;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.system.Coordinates;
 
-/**
- * Created by MicroOnde on 08/03/2015.
- */
 public abstract class Item {
     private Coordinates coordinates;
     private final int timeout;
@@ -40,5 +37,5 @@ public abstract class Item {
         return user;
     }
 
-    public abstract Shape2D getHitbox();
+    public abstract Circle getHitbox();
 }

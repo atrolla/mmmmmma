@@ -1,31 +1,37 @@
 package org.atrolla.games.items.weapons;
 
-import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.math.Circle;
 import org.atrolla.games.characters.Archer;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 
-/**
- * Created by MicroOnde on 14/03/2015.
- */
 public class Arrow extends Item {
 
     private final Direction direction;
+    private final Circle hitbox;
 
     public Arrow(Archer archer, int time) {
         super(archer.getCoordinates(), time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT, archer);
         this.direction = archer.getDirection();
+        this.hitbox = new Circle((float) archer.getCoordinates().getX(), (float) archer.getCoordinates().getY(), ConfigurationConstants.ARROW_HITBOX_SIZE);
     }
 
     @Override
     public boolean update(int timeTick) {
-        moves();
+        final Coordinates coordinates = direction.move(getCoordinates(), ConfigurationConstants.ITEM_ARROW_MOVE_STEP);
+        move(coordinates);
+        updateHitbox(coordinates);
         return super.update(timeTick);
     }
 
-    private void moves() {
-        setCoordinates(direction.move(getCoordinates(), ConfigurationConstants.ITEM_ARROW_MOVE_STEP));
+    private void updateHitbox(Coordinates coordinates) {
+        hitbox.set((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ARROW_HITBOX_SIZE);
+    }
+
+    private void move(Coordinates coordinates) {
+        setCoordinates(coordinates);
     }
 
     public Direction getDirection() {
@@ -33,7 +39,7 @@ public class Arrow extends Item {
     }
 
     @Override
-    public Shape2D getHitbox() {
-        return null;
+    public Circle getHitbox() {
+        return hitbox;
     }
 }

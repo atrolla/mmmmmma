@@ -1,6 +1,5 @@
 package org.atrolla.games.game;
 
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.ai.AIManager;
@@ -10,6 +9,7 @@ import org.atrolla.games.input.InputManager;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.neutrals.NeutralItem;
 import org.atrolla.games.items.neutrals.NeutralItemManager;
+import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.sounds.SoundManager;
@@ -215,19 +215,28 @@ public class Round {
      */
     private void knockOutCharactersBeingHitByWeapons() {
         //TODO : sword must not kill now but after a while (considered like poison)
-        gameItems.stream().filter(Sword.class::isInstance).map(Sword.class::cast).forEach(
-                sword -> characters.stream()
-                        .filter(GameCharacter::canMove) // never hit a KO chacacter
-                        .filter(c -> !sword.getUser().equals(c)) // sword must not kill its user
-                        .filter(c -> Intersector.overlaps((Circle) sword.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
-                        .forEach(GameCharacter::hit)
-        );
+        gameItems.stream().filter(Sword.class::isInstance).map(Sword.class::cast)
+                .forEach(
+                        sword -> characters.stream()
+                                .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                .filter(c -> !sword.getUser().equals(c)) // sword must not kill its user
+                                .filter(c -> Intersector.overlaps(sword.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
+                                .forEach(GameCharacter::hit)
+                );
         gameItems.stream().filter(Bomb.class::isInstance).map(Bomb.class::cast)
                 .filter(Bomb::isExploding) // only exploding bombs will hit characters
                 .forEach(
                         bomb -> characters.stream()
                                 .filter(GameCharacter::canMove) // never hit a KO chacacter
-                                .filter(player -> Intersector.overlaps((Circle) bomb.getHitbox(), player.getHitbox()))
+                                .filter(player -> Intersector.overlaps(bomb.getHitbox(), player.getHitbox()))
+                                .forEach(GameCharacter::hit)
+                );
+        gameItems.stream().filter(Arrow.class::isInstance).map(Arrow.class::cast)
+                .forEach(
+                        arrow -> characters.stream()
+                                .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                .filter(c -> !arrow.getUser().equals(c)) // arrow must not kill its user
+                                .filter(player -> Intersector.overlaps(arrow.getHitbox(), player.getHitbox()))
                                 .forEach(GameCharacter::hit)
                 );
         //TODO : manage others weapons hit here
