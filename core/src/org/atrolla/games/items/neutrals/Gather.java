@@ -15,6 +15,9 @@ public class Gather extends NeutralItem {
         super(coordinates, Integer.MAX_VALUE);
     }
 
+    /**
+     * Gather effect is to teleport every characters to a random coordinates and to reset abilities so players are not able to shoot
+     */
     @Override
     public void applyEffect(Round round) {
         if (getUsedTime() > 0 && getPicker().isPresent()) {

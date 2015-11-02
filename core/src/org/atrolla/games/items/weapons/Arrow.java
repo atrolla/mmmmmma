@@ -18,6 +18,9 @@ public class Arrow extends Item {
         this.hitbox = new Circle((float) archer.getCoordinates().getX(), (float) archer.getCoordinates().getY(), ConfigurationConstants.ARROW_HITBOX_SIZE);
     }
 
+    /**
+     * arrow moves in the shooting direction till time-out
+     */
     @Override
     public boolean update(int timeTick) {
         final Coordinates coordinates = direction.move(getCoordinates(), ConfigurationConstants.ITEM_ARROW_MOVE_STEP);

@@ -37,7 +37,7 @@ public enum CharacterClasses {
         public Class getClazz() {
             return Knight.class;
         }
-    }, MAGE {
+    }, MAGE { /** @see org.atrolla.games.game.Round#addBotsToCharactersCollection() */
         @Override
         public GameCharacter createCharacter(Player player) {
             return new Mage(player);

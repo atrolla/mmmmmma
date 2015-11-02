@@ -15,7 +15,10 @@ public abstract class Item {
         this.user = user;
     }
 
-    // each item has a lifetime and if reached, return true
+    /**
+     *  update the item state if needed
+     *  each item has a lifetime and if reached, return true so it can be removed from game
+     */
     public boolean update(int timeTick) {
         //does nothing
         return isDone(timeTick);

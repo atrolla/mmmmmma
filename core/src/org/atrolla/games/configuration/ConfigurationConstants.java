@@ -17,7 +17,7 @@ public final class ConfigurationConstants {
 
     public static final int GAME_CHARACTER_INITIAL_READY_TIME = -1;
 
-    public static final int GAME_CHARACTERS = 40; // must be multiple of games character classes number
+    public static final int GAME_CHARACTERS = 48; // must be multiple of games character classes number
 
     public static final int RANDOM_UTILS_MAX_PROBABILITY = 100;
 
@@ -28,6 +28,7 @@ public final class ConfigurationConstants {
 
     public static final int MAX_PLAYERS = 4;
 
+    public static final int ARCHER_ABILITY_COOLDOWN_DURATION = 30;
     public static final int BOMBER_ABILITY_COOLDOWN_DURATION = 60;
 
     public static final int ITEM_BOMB_COUNTDOWN_DURATION = 240;

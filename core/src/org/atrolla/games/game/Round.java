@@ -3,7 +3,9 @@ package org.atrolla.games.game;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.ai.AIManager;
+import org.atrolla.games.characters.CharacterClasses;
 import org.atrolla.games.characters.GameCharacter;
+import org.atrolla.games.characters.Mage;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.input.InputManager;
 import org.atrolla.games.items.Item;
@@ -17,8 +19,10 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,15 +30,20 @@ import java.util.stream.IntStream;
  * Created by MicroOnde on 25/02/2015.
  * <p>
  * A round contains every mechanism needed to play
+ * </p>
  */
 public class Round {
     private final Stage stage;
     private final List<GameCharacter> characters;
     private final List<GameCharacter> players;
     private final List<GameCharacter> bots;
+    private List<CharacterClasses> visiblesClasses;
     private final AIManager aiManager;
     private final InputManager inputManager;
     private int time;
+    /**
+     * all items that are currently in the round
+     */
     private final List<Item> gameItems;
     private final SoundManager soundManager;
     private final NeutralItemManager neutralItemManager;
@@ -69,25 +78,29 @@ public class Round {
      * creates bots with same classes as players and place characters randomly on screen
      */
     private void initCharacters() {
-        final int playerNumber = inputManager.getPlayers().size();
-        inputManager.getPlayers()
-                .stream()
-                .map(mapPlayerToBotAndPlayerCharactersCollection(playerNumber))
-                .forEach(characters::addAll);
+        inputManager.getPlayers().forEach(
+                p -> characters.add(p.getGameCharacterClass().createCharacter(p))
+        );
+        addBotsToCharactersCollection();
         Collections.shuffle(characters);
         placeCharactersOnStage();
     }
 
-    private Function<Player, Collection<GameCharacter>> mapPlayerToBotAndPlayerCharactersCollection(int playerNumber) {
-        return p -> {
-            Collection<GameCharacter> characters = new ArrayList<>();
-            characters.add(p.getGameCharacterClass().createCharacter(p));
-            final int sameCharNumber = ConfigurationConstants.GAME_CHARACTERS / playerNumber;
-            for (int i = 1; i < sameCharNumber; i++) {
-                characters.add(p.getGameCharacterClass().createCharacter(Player.BOT));
-            }
-            return characters;
-        };
+    private void addBotsToCharactersCollection() {
+        visiblesClasses = characters.stream()
+                .map(c -> c.getPlayer().getGameCharacterClass())
+                .filter(c -> c != CharacterClasses.MAGE)
+                .distinct()
+                .collect(Collectors.toList());// Get all playing classes that are not mage
+        if(visiblesClasses.size()==0){ // there are only mages... get a random class
+            final int i = org.apache.commons.lang3.RandomUtils.nextInt(0, 3);
+            /** Mage must be last enum in CharacterClasses */
+            visiblesClasses.add(CharacterClasses.values()[i]);
+        }
+        final int players = characters.size();
+        for (int i = players; i <  ConfigurationConstants.GAME_CHARACTERS; i++) {
+            characters.add(visiblesClasses.get(i % visiblesClasses.size()).createCharacter(Player.BOT));
+        }
     }
 
     private void placeCharactersOnStage() {
@@ -130,14 +143,20 @@ public class Round {
      */
     private void manageItems() {
         neutralItemManager.addItem(time).ifPresent(gameItems::add);
-        //apply effect of any neutral item in gameItems TODO : wut ?
-        gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(ni -> ni.applyEffect(this));
+        //apply effect of any neutral item in gameItems
+        // TODO : should not exists, neutral items effect is triggered when the player uses it
+        gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast)
+                .forEach(
+                        ni -> ni.applyEffect(this)
+                );
+        //
         final Iterator<Item> iterator = gameItems.iterator();
         while (iterator.hasNext()) {
             final Item item = iterator.next();
-            if (item.update(time)) {
+            if (item.update(time)) { //update the item state if needed (ex: Arrow moves)
                 iterator.remove();
-                if (soundManager != null) {
+                if (soundManager != null) { // play item sound when it disappears.
+                    //TODO: i think this limits the sound to only 1 per item...
                     soundManager.register(item);
                 }
             }
@@ -159,6 +178,16 @@ public class Round {
      * Update players and add the newly created item to gameItems list
      */
     private void managePlayers() {
+        //Make mage disguise if not already disguised
+        players.stream()
+                .filter(p -> Mage.class.equals(p.getClass()))
+                .map(Mage.class::cast)
+                .filter(m -> !m.getCharacterClass().isPresent())
+                .forEach(m -> {
+                    final int i = org.apache.commons.lang3.RandomUtils.nextInt(0, visiblesClasses.size());
+                    final CharacterClasses characterClasses = visiblesClasses.get(i);
+                    m.turnsInto(characterClasses);
+                });
         gameItems.addAll(inputManager.updatePlayers(time, players));
     }
 
@@ -215,11 +244,14 @@ public class Round {
      */
     private void knockOutCharactersBeingHitByWeapons() {
         //TODO : sword must not kill now but after a while (considered like poison)
+        /**
+         * @see Mage#equals(java.lang.Object)
+         */
         gameItems.stream().filter(Sword.class::isInstance).map(Sword.class::cast)
                 .forEach(
                         sword -> characters.stream()
                                 .filter(GameCharacter::canMove) // never hit a KO chacacter
-                                .filter(c -> !sword.getUser().equals(c)) // sword must not kill its user
+                                .filter(c -> !c.equals(sword.getUser())) // sword must not kill its user
                                 .filter(c -> Intersector.overlaps(sword.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
                                 .forEach(GameCharacter::hit)
                 );
@@ -235,7 +267,7 @@ public class Round {
                 .forEach(
                         arrow -> characters.stream()
                                 .filter(GameCharacter::canMove) // never hit a KO chacacter
-                                .filter(c -> !arrow.getUser().equals(c)) // arrow must not kill its user
+                                .filter(c -> !c.equals(arrow.getUser())) // arrow must not kill its user
                                 .filter(player -> Intersector.overlaps(arrow.getHitbox(), player.getHitbox()))
                                 .forEach(GameCharacter::hit)
                 );

@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by MicroOnde on 01/03/2015.
- */
 public class InputManager {
     private final Array<Controller> controllers;
     private final Input keyboard;
@@ -148,6 +145,7 @@ public class InputManager {
             } else if (player.getControllerInput().isPresent()) {
                 final Controller controller = player.getControllerInput().get();
                 moveGameCharacter(character, controller);
+                //TODO : must release
                 if (controller.getButton(Xbox360PadInput.BUTTON_A)) {
                     character.useAbility(time).ifPresent(items::add);
                 }
