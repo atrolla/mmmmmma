@@ -90,6 +90,15 @@ public abstract class GameCharacter {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;
     }
 
+    public final void hitByMage(GameCharacter mageDisguisedClass) {
+        System.out.println("hitByMage:" + mageDisguisedClass.getClass() + "/" + this.getClass());
+        if (mageDisguisedClass.getClass().isAssignableFrom(this.getClass())) {
+            hit();
+        } else {
+            state = CharacterState.KNOCK_OUT;
+        }
+    }
+
     public final void awake() {
         state = isPlayer() ? CharacterState.DEAD : CharacterState.ALIVE;
     }

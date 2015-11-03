@@ -117,6 +117,7 @@ public class RoundScreen implements Screen {
                         (float) coordinates.getX() + 10, (float) coordinates.getY(),
                         (float) coordinates.getX() + 5, (float) coordinates.getY() + 10);
             } else if (gameCharacter instanceof Mage) {
+                //TODO: draw their disguised character instead
                 shapeRenderer.line((float) coordinates.getX(), (float) coordinates.getY(), (float) coordinates.getX() + hitbox.getWidth(), (float) coordinates.getY() + hitbox.getHeight());
             }
             shapeRenderer.end();

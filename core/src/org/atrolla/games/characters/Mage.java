@@ -1,6 +1,7 @@
 package org.atrolla.games.characters;
 
 import org.atrolla.games.items.Item;
+import org.atrolla.games.items.weapons.MageWeaponWrapper;
 import org.atrolla.games.system.Player;
 
 import java.util.Optional;
@@ -23,9 +24,10 @@ public class Mage extends GameCharacter {
         if (disguisedCharacter.isPresent()) {
             final GameCharacter gameCharacter = disguisedCharacter.get();
             gameCharacter.teleports(this.getCoordinates(), getDirection()); //so we use the ability at the mage place
-            return gameCharacter.useAbility(time);
+            final Optional<Item> weapon = gameCharacter.useAbility(time);
+            return weapon.map(w -> new MageWeaponWrapper(w,this));
         }
-        return super.useAbility(time);
+        return super.useAbility(time); //empty
     }
 
     public void turnsInto(CharacterClasses characterClass) {

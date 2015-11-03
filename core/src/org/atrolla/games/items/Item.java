@@ -7,7 +7,7 @@ import org.atrolla.games.system.Coordinates;
 public abstract class Item {
     private Coordinates coordinates;
     private final int timeout;
-    private final GameCharacter user;
+    private GameCharacter user;
 
     public Item(Coordinates coordinates, int timeout, GameCharacter user) {
         this.coordinates = coordinates;
@@ -40,5 +40,8 @@ public abstract class Item {
         return user;
     }
 
+    public int getTimeout() {
+        return timeout;
+    }
     public abstract Circle getHitbox();
 }
