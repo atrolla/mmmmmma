@@ -9,6 +9,7 @@ import org.atrolla.games.system.Player;
 
 import java.util.Optional;
 
+import static org.atrolla.games.characters.CharacterState.*;
 import static org.atrolla.games.configuration.ConfigurationConstants.*;
 
 /**
@@ -20,7 +21,7 @@ public abstract class GameCharacter {
 
 
     private final int id;
-    private final Player player;
+    private Player player;
     private Direction direction;
     private Coordinates coordinates;
     private CharacterState state;
@@ -30,7 +31,7 @@ public abstract class GameCharacter {
 
     protected GameCharacter(Player player) {
         this.player = player;
-        this.state = CharacterState.ALIVE;
+        this.state = ALIVE;
         direction = Direction.DOWN;
         this.id = counter++;
         this.hitbox = new Rectangle();
@@ -39,7 +40,7 @@ public abstract class GameCharacter {
     }
 
     public final void moves(Direction direction) {
-        if (canMove()) {
+        if (isAlive()) {
             if (!Direction.STOP.equals(direction)) {
                 this.direction = direction;
             }
@@ -74,6 +75,10 @@ public abstract class GameCharacter {
         return player != Player.BOT;
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public final Player getPlayer() {
         return player;
     }
@@ -87,28 +92,30 @@ public abstract class GameCharacter {
     }
 
     public final void hit() {
-        state = isPlayer() ? CharacterState.DEAD : CharacterState.KNOCK_OUT;
+        state = isPlayer() ? DEAD : KNOCK_OUT;
     }
 
     public final void hitByMage(GameCharacter mageDisguisedClass) {
-        System.out.println("hitByMage:" + mageDisguisedClass.getClass() + "/" + this.getClass());
-        if (mageDisguisedClass.getClass().isAssignableFrom(this.getClass())) {
+        //if it is a player and it has same class as the disguised mage class
+        //or if it is a mage
+        if ((isPlayer() && mageDisguisedClass.getClass().isAssignableFrom(this.getClass()))
+                || Mage.class.isAssignableFrom(this.getClass())) {
             hit();
         } else {
-            state = CharacterState.KNOCK_OUT;
+            state = KNOCK_OUT;
         }
     }
 
     public final void awake() {
-        state = isPlayer() ? CharacterState.DEAD : CharacterState.ALIVE;
+        state = (state == KNOCK_OUT) ? ALIVE : DEAD;
     }
 
-    public final boolean canMove() {
-        return CharacterState.ALIVE.equals(state);
+    public final boolean isAlive() {
+        return ALIVE.equals(state);
     }
 
     public final boolean isKnockOut() {
-        return CharacterState.KNOCK_OUT.equals(state);
+        return KNOCK_OUT.equals(state);
     }
 
     public abstract void coolDownAbility(int time);

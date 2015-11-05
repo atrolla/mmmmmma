@@ -7,9 +7,6 @@ import org.atrolla.games.system.Player;
 
 import java.util.Optional;
 
-/**
- * Created by MicroOnde on 24/02/2015.
- */
 public class Archer extends GameCharacter {
 
     public Archer(Player player) {
@@ -23,7 +20,7 @@ public class Archer extends GameCharacter {
 
     @Override
     public Optional<Item> useAbility(int time) {
-        if (!isPlayer() || abilityIsCoolingDown(time)) {
+        if (!isAlive() || !isPlayer() || abilityIsCoolingDown(time)) {
             return Optional.empty();
         }
         coolDownAbility(time);

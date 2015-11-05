@@ -4,15 +4,14 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.utils.RandomUtils;
 
-import static org.atrolla.games.utils.RandomUtils.getRandomDirectionFrom;
-import static org.atrolla.games.utils.RandomUtils.getRandomMoveTime;
-import static org.atrolla.games.utils.RandomUtils.getRandomStopTime;
+import static org.atrolla.games.utils.RandomUtils.*;
 
 /**
  * Created by MicroOnde on 25/02/2015.
  */
 public class Command {
 
+    public static Command NO_COMMAND = new Command(Direction.STOP, 0);
     private final Direction direction;
     private final int timeout;
 
@@ -25,8 +24,8 @@ public class Command {
         this.timeout = timeout;
     }
 
-    public static Command RandomCommand(int time,Coordinates coordinates) {
-        if(RandomUtils.stopRandomChance()){
+    public static Command RandomCommand(int time, Coordinates coordinates) {
+        if (RandomUtils.stopRandomChance()) {
             return new Command(Direction.STOP, getRandomStopTime(time));
         }
         return new Command(getRandomDirectionFrom(coordinates), getRandomMoveTime(time));

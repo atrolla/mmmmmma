@@ -160,16 +160,16 @@ public class GameCharacterTests {
 
     @Test
     public void onlyAliveCharacterCanMove() throws Exception {
-        assertTrue(defaultBotArcher.canMove());
+        assertTrue(defaultBotArcher.isAlive());
         defaultBotArcher.hit();
         assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
-        assertFalse(defaultBotArcher.canMove());
+        assertFalse(defaultBotArcher.isAlive());
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
-        assertTrue(archer.canMove());
+        assertTrue(archer.isAlive());
         archer.hit();
         assertEquals(CharacterState.DEAD, archer.getState());
-        assertFalse(archer.canMove());
+        assertFalse(archer.isAlive());
     }
 
 }

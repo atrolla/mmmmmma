@@ -14,6 +14,7 @@ import org.atrolla.games.items.Item;
 import org.atrolla.games.items.neutrals.NeutralItem;
 import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.items.weapons.Bomb;
+import org.atrolla.games.items.weapons.MageWeaponWrapper;
 import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Coordinates;
 
@@ -55,31 +56,17 @@ public class RoundScreen implements Screen {
         for (Item item : gameObjects) {
             final Coordinates coordinates = item.getCoordinates();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            if (item instanceof Bomb) {
-                shapeRenderer.setColor(Color.RED);
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
-                shapeRenderer.end();
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                shapeRenderer.setColor(Color.RED);
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
-            } else if (item instanceof Arrow) {
-                // Arrow
-                shapeRenderer.setColor(Color.PINK);
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
-            } else if (item instanceof Sword) {
-                // Sword
-                shapeRenderer.setColor(Color.TEAL);
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 4);
-            } else if (item instanceof NeutralItem) {
-                shapeRenderer.setColor(Color.MAGENTA);
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
+            showItem(item, coordinates);
+            if (item instanceof MageWeaponWrapper) {
+                final Item weapon = ((MageWeaponWrapper) item).getWeapon();
+                showItem(weapon, weapon.getCoordinates());
             }
             shapeRenderer.end();
         }
 
         final List<GameCharacter> characters = round.getCharacters();
         characters.stream().forEach(
-                c ->  {
+                c -> {
                     final Rectangle hitbox = c.getHitbox();
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                     switch (c.getState()) {
@@ -95,6 +82,28 @@ public class RoundScreen implements Screen {
                     shapeRenderer.end();
                 }
         );
+    }
+
+    private void showItem(Item item, Coordinates coordinates) {
+        if (item instanceof Bomb) {
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
+            shapeRenderer.end();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+        } else if (item instanceof Arrow) {
+            // Arrow
+            shapeRenderer.setColor(Color.PINK);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+        } else if (item instanceof Sword) {
+            // Sword
+            shapeRenderer.setColor(Color.TEAL);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 4);
+        } else if (item instanceof NeutralItem) {
+            shapeRenderer.setColor(Color.MAGENTA);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
+        }
     }
 
     private void renderCharacters() {

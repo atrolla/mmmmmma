@@ -21,7 +21,7 @@ public class Mage extends GameCharacter {
 
     @Override
     public Optional<Item> useAbility(int time) {
-        if (disguisedCharacter.isPresent()) {
+        if (isAlive() && disguisedCharacter.isPresent()) {
             final GameCharacter gameCharacter = disguisedCharacter.get();
             gameCharacter.teleports(this.getCoordinates(), getDirection()); //so we use the ability at the mage place
             final Optional<Item> weapon = gameCharacter.useAbility(time);
@@ -59,6 +59,14 @@ public class Mage extends GameCharacter {
         int result = super.hashCode();
         result = 31 * result + (disguisedCharacter != null ? disguisedCharacter.hashCode() : 0);
         return result;
+    }
+
+    public Optional<GameCharacter> getDisguisedCharacter() {
+        return disguisedCharacter;
+    }
+
+    public void setDisguisedCharacter(GameCharacter disguisedCharacter) {
+        this.disguisedCharacter = Optional.of(disguisedCharacter);
     }
 
     public Optional<Class> getCharacterClass() {

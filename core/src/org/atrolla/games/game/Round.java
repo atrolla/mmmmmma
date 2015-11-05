@@ -3,7 +3,9 @@ package org.atrolla.games.game;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.ai.AIManager;
+import org.atrolla.games.ai.Command;
 import org.atrolla.games.characters.CharacterClasses;
+import org.atrolla.games.characters.CharacterState;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.characters.Mage;
 import org.atrolla.games.configuration.ConfigurationConstants;
@@ -20,12 +22,10 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -90,7 +90,7 @@ public class Round {
     private void addBotsToCharactersCollection() {
         initVisibleClasses();
         final int players = characters.size();
-        for (int i = players; i <  ConfigurationConstants.GAME_CHARACTERS; i++) {
+        for (int i = players; i < ConfigurationConstants.GAME_CHARACTERS; i++) {
             characters.add(visibleClasses.get(i % visibleClasses.size()).createCharacter(Player.BOT));
         }
     }
@@ -104,7 +104,7 @@ public class Round {
                 .filter(c -> c != CharacterClasses.MAGE)
                 .distinct()
                 .collect(Collectors.toList());// Get all playing classes that are not mage
-        if(visibleClasses.size()==0){ // there are only mages... get a random class
+        if (visibleClasses.size() == 0) { // there are only mages... get a random class
             final int i = org.apache.commons.lang3.RandomUtils.nextInt(0, 3);
             /** Mage must be last enum in CharacterClasses */
             visibleClasses.add(CharacterClasses.values()[i]);
@@ -143,13 +143,6 @@ public class Round {
     }
 
     /**
-     * TODO: If there is no more players that mage can kill, they must switch class
-     */
-    private void reDisguiseMages() {
-
-    }
-
-    /**
      * <ol>
      * <li>check if it is time to add a neutral item</li>
      * <li>check if it is time to remove used items</li>
@@ -158,8 +151,8 @@ public class Round {
      * @see NeutralItem
      */
     private void manageItems() {
-        neutralItemManager.addItem(time).ifPresent(gameItems::add);
-        //apply effect of any neutral item in gameItems
+        //TODO : uncomment this to add neutral items + randomly... + max neutral displayed
+//        neutralItemManager.addItem(time).ifPresent(gameItems::add);
         // TODO : should not exists, neutral items effect is triggered when the player uses it
         gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast)
                 .forEach(
@@ -181,12 +174,13 @@ public class Round {
 
     /**
      * <ol>
-     * <li>Awake KO bots</li>
+     * <li>Awake KO characters</li>
      * <li>Move bots</li>
      * </ol>
      */
     private void manageBots() {
-        aiManager.updateBotsState(bots, time);
+        //TODO : refactor as its not only bots anymore
+        aiManager.updateKOCharactersState(characters, time);
         aiManager.updateBotsMove(bots);
     }
 
@@ -218,6 +212,44 @@ public class Round {
         knockOutCharactersBeingHitByWeapons();
         preventCharactersFromBeingOutOfBound();
     }
+
+    /**
+     * TODO: If there is no more players that mage can kill, they must switch class
+     */
+    private void reDisguiseMages() {
+        final Stream<GameCharacter> magePlayers = players.stream()
+                .filter(GameCharacter::isAlive)
+                .filter(p -> CharacterClasses.MAGE == p.getPlayer().getGameCharacterClass());
+        final Set<Class<? extends GameCharacter>> nonMageAliveClasses = players.stream()
+                .filter(p -> CharacterState.DEAD != p.getState())
+                .map(p -> p.getClass())
+                .filter(c -> !Mage.class.equals(c))
+                .collect(Collectors.toSet());
+        if (!nonMageAliveClasses.isEmpty()) {
+            magePlayers
+                    .map(Mage.class::cast)
+                    .filter(m -> m.getDisguisedCharacter().isPresent()) // should always be true...
+                    .filter(p -> !nonMageAliveClasses.contains(p.getDisguisedCharacter().get().getClass())) //no more alive players with same class matches disguised class
+                    .forEach(p -> {
+                        System.out.println("reDisguiseMages !");
+                        final GameCharacter botToAdd = p.getDisguisedCharacter().get(); //first disguised Class
+                        botToAdd.teleports(p.getCoordinates()); //second set it to the mage coordinates
+                        botToAdd.setPlayer(Player.BOT);// disguised class as a bot
+                        final int botIndex = org.apache.commons.lang3.RandomUtils.nextInt(0, bots.size());
+                        final GameCharacter newDisguised = bots.remove(botIndex);
+                        p.setDisguisedCharacter(newDisguised); //while setting a random existing bot
+                        newDisguised.setPlayer(p.getPlayer());//
+                        p.teleports(newDisguised.getCoordinates());
+                        aiManager.getCommands().remove(botIndex); // and removing the bot command
+                        bots.add(botToAdd); //finaly add the old disguised class as a bot to bots !
+                        aiManager.getCommands().add(Command.NO_COMMAND); //assign a NO_COMMAND to it
+                        characters.remove(newDisguised);
+                        characters.add(botToAdd);
+                    });
+        }
+        //if there are only mages, set them to same class
+    }
+
 
     /**
      * Play sounds if a soundManager is present
@@ -276,18 +308,20 @@ public class Round {
                             final Item realWeapon = w.getWeapon();
                             if (Sword.class.isAssignableFrom(realWeapon.getClass())) {
                                 characters.stream()
-                                        .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                        .filter(GameCharacter::isAlive) // never hit a KO chacacter
                                         .filter(c -> !c.equals(w.getUser())) // sword must not kill its user
                                         .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
                                         .forEach(c -> c.hitByMage(realWeapon.getUser()));
-                            }else if(Bomb.class.isAssignableFrom(realWeapon.getClass())) {
+                            } else if (Bomb.class.isAssignableFrom(realWeapon.getClass())) {
+                                if (((Bomb) realWeapon).isExploding()) {
+                                    characters.stream()
+                                            .filter(GameCharacter::isAlive) // never hit a KO chacacter
+                                            .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox()))
+                                            .forEach(c -> c.hitByMage(realWeapon.getUser()));
+                                }
+                            } else if (Arrow.class.isAssignableFrom(realWeapon.getClass())) {
                                 characters.stream()
-                                        .filter(GameCharacter::canMove) // never hit a KO chacacter
-                                        .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox()))
-                                        .forEach(c -> c.hitByMage(realWeapon.getUser()));
-                            }else if(Arrow.class.isAssignableFrom(realWeapon.getClass())) {
-                                characters.stream()
-                                        .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                        .filter(GameCharacter::isAlive) // never hit a KO chacacter
                                         .filter(c -> !c.equals(w.getUser())) // arrow must not kill its user
                                         .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox()))
                                         .forEach(c -> c.hitByMage(realWeapon.getUser()));
@@ -300,7 +334,7 @@ public class Round {
         gameItems.stream().filter(Arrow.class::isInstance).map(Arrow.class::cast)
                 .forEach(
                         arrow -> characters.stream()
-                                .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                .filter(GameCharacter::isAlive) // never hit a KO chacacter
                                 .filter(c -> !c.equals(arrow.getUser())) // arrow must not kill its user
                                 .filter(c -> Intersector.overlaps(arrow.getHitbox(), c.getHitbox()))
                                 .forEach(GameCharacter::hit)
@@ -312,7 +346,7 @@ public class Round {
                 .filter(Bomb::isExploding) // only exploding bombs will hit characters
                 .forEach(
                         bomb -> characters.stream()
-                                .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                .filter(GameCharacter::isAlive) // never hit a KO chacacter
                                 .filter(c -> Intersector.overlaps(bomb.getHitbox(), c.getHitbox()))
                                 .forEach(GameCharacter::hit)
                 );
@@ -322,7 +356,7 @@ public class Round {
         gameItems.stream().filter(Sword.class::isInstance).map(Sword.class::cast)
                 .forEach(
                         sword -> characters.stream()
-                                .filter(GameCharacter::canMove) // never hit a KO chacacter
+                                .filter(GameCharacter::isAlive) // never hit a KO chacacter
                                 .filter(c -> !c.equals(sword.getUser())) // sword must not kill its user
                                 .filter(c -> Intersector.overlaps(sword.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
                                 .forEach(GameCharacter::hit)

@@ -42,7 +42,7 @@ public class SoundManager {
                     return true;
                 })
                 .otherwise(o -> {
-                    System.out.println("no matching found for " + o);
+//                    System.out.println("no matching found for " + o);
                     return false;
                 })
                 .matches(object);

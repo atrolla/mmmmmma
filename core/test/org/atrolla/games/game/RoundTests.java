@@ -139,17 +139,17 @@ public class RoundTests {
         defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
         defaultRound.update();
         final Coordinates baseCoordinates = firstBot.getCoordinates();
-        Assert.assertTrue(firstBot.canMove());
+        Assert.assertTrue(firstBot.isAlive());
         firstBot.hit();
-        assertFalse(firstBot.canMove());
+        assertFalse(firstBot.isAlive());
         int i = 0;
-        while (i++ < ConfigurationConstants.BOT_KNOCK_OUT_DURATION) {
+        while (i++ < ConfigurationConstants.KNOCK_OUT_DURATION) {
             defaultRound.update();
-            assertFalse(firstBot.canMove());
+            assertFalse(firstBot.isAlive());
             assertEquals(baseCoordinates, firstBot.getCoordinates());
         }
         defaultRound.update();
-        assertTrue(firstBot.canMove());
+        assertTrue(firstBot.isAlive());
         assertNotEquals(baseCoordinates, firstBot.getCoordinates());
     }
 

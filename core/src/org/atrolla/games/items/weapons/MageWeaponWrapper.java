@@ -12,6 +12,11 @@ public class MageWeaponWrapper extends Item {
         this.weapon = weapon;
     }
 
+    @Override
+    public boolean update(int timeTick) {
+        return weapon.update(timeTick);
+    }
+
     public Item getWeapon() {
         return weapon;
     }

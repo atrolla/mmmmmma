@@ -7,9 +7,6 @@ import org.atrolla.games.system.Player;
 
 import java.util.Optional;
 
-/**
- * Created by MicroOnde on 24/02/2015.
- */
 public class Bomber extends GameCharacter {
 
     public Bomber(Player player) {
@@ -23,7 +20,7 @@ public class Bomber extends GameCharacter {
 
     @Override
     public Optional<Item> useAbility(int currentTime) {
-        if (!isPlayer() || abilityIsCoolingDown(currentTime)) {
+        if (!isAlive() || !isPlayer() || abilityIsCoolingDown(currentTime)) {
             return Optional.empty();
         }
         coolDownAbility(currentTime);
