@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.characters.*;
@@ -18,7 +20,6 @@ import org.atrolla.games.items.weapons.MageWeaponWrapper;
 import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Coordinates;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,11 +31,16 @@ public class RoundScreen implements Screen {
     private final Round round;
 
     private final ShapeRenderer shapeRenderer;
+    private final SpriteBatch spriteBatch;
+    private final CharacterSkinManager skinManager;
+
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
         round = new Round(game.getInputManager(), game.getSoundManager());
         shapeRenderer = new ShapeRenderer();
+        spriteBatch = new SpriteBatch();
+        skinManager = new CharacterSkinManager();
     }
 
     @Override
@@ -51,7 +57,12 @@ public class RoundScreen implements Screen {
 
         //draw objects...
         renderCharacters();
-        //render bombs...
+        //render items...
+        renderItems();
+
+    }
+
+    private void renderItems() {
         final List<Item> gameObjects = round.getGameItems();
         for (Item item : gameObjects) {
             final Coordinates coordinates = item.getCoordinates();
@@ -63,25 +74,6 @@ public class RoundScreen implements Screen {
             }
             shapeRenderer.end();
         }
-
-        final List<GameCharacter> characters = round.getCharacters();
-        characters.stream().forEach(
-                c -> {
-                    final Rectangle hitbox = c.getHitbox();
-                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    switch (c.getState()) {
-                        case DEAD:
-                            shapeRenderer.setColor(Color.BLACK);
-                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-                            break;
-                        case KNOCK_OUT:
-                            shapeRenderer.setColor(Color.LIGHT_GRAY);
-                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-                            break;
-                    }
-                    shapeRenderer.end();
-                }
-        );
     }
 
     private void showItem(Item item, Coordinates coordinates) {
@@ -107,32 +99,85 @@ public class RoundScreen implements Screen {
     }
 
     private void renderCharacters() {
-        final Collection<GameCharacter> gameCharacters = round.getCharacters();
-        for (GameCharacter gameCharacter : gameCharacters) {
-            final Coordinates coordinates = gameCharacter.getCoordinates();
-            final Rectangle hitbox = gameCharacter.getHitbox();
+        final List<GameCharacter> characters = round.getCharacters();
+        spriteBatch.begin();
+        characters.stream()
+                .filter(c -> CharacterState.ALIVE == c.getState())
+                .forEach(this::renderCharacter);
+        spriteBatch.end();
+        characters.stream().forEach(
+                c -> {
+                    final Rectangle hitbox = c.getHitbox();
+                    switch (c.getState()) {
+                        case DEAD:
+                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                            shapeRenderer.setColor(Color.BLACK);
+                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+                            shapeRenderer.end();
+                            break;
+                        case KNOCK_OUT:
+                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                            shapeRenderer.setColor(Color.LIGHT_GRAY);
+                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+                            shapeRenderer.end();
+                            break;
+                    }
+                }
+        );
+    }
+
+    private void renderCharacter(GameCharacter gameCharacter) {
+        /*debug mode*/
+        final Coordinates coordinates = gameCharacter.getCoordinates();
+        final Rectangle hitbox = gameCharacter.getHitbox();
+
+        if (gameCharacter instanceof Archer) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             if (gameCharacter.isPlayer()) {
                 shapeRenderer.setColor(Color.BLACK);
             } else {
                 shapeRenderer.setColor(Color.LIGHT_GRAY);
             }
-            if (gameCharacter instanceof Archer) {
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
-            } else if (gameCharacter instanceof Bomber) {
-                shapeRenderer.rect((float) coordinates.getX(), (float) coordinates.getY(), 10, 10);
-            } else if (gameCharacter instanceof Knight) {
-                shapeRenderer.triangle((float) coordinates.getX(), (float) coordinates.getY(),
-                        (float) coordinates.getX() + 10, (float) coordinates.getY(),
-                        (float) coordinates.getX() + 5, (float) coordinates.getY() + 10);
-            } else if (gameCharacter instanceof Mage) {
-                //TODO: draw their disguised character instead
-                shapeRenderer.line((float) coordinates.getX(), (float) coordinates.getY(), (float) coordinates.getX() + hitbox.getWidth(), (float) coordinates.getY() + hitbox.getHeight());
-            }
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
             shapeRenderer.end();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
             shapeRenderer.end();
+        } else if (gameCharacter instanceof Bomber) {
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//            if (gameCharacter.isPlayer()) {
+//                shapeRenderer.setColor(Color.BLACK);
+//            } else {
+//                shapeRenderer.setColor(Color.LIGHT_GRAY);
+//            }
+//            shapeRenderer.rect((float) coordinates.getX(), (float) coordinates.getY(), 10, 10);
+//            shapeRenderer.end();
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+//            shapeRenderer.end();
+            final CharacterSkin skin = skinManager.getSkin(Bomber.class);
+            final TextureRegion frame = skin.getFrame(gameCharacter.getDirection(), gameCharacter.isMoving());
+            spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
+                    (float) (frame.getRegionWidth() * 1.2), (float) (frame.getRegionHeight() * 1.2));
+        } else if (gameCharacter instanceof Knight) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            if (gameCharacter.isPlayer()) {
+                shapeRenderer.setColor(Color.BLACK);
+            } else {
+                shapeRenderer.setColor(Color.LIGHT_GRAY);
+            }
+            shapeRenderer.triangle((float) coordinates.getX(), (float) coordinates.getY(),
+                    (float) coordinates.getX() + 10, (float) coordinates.getY(),
+                    (float) coordinates.getX() + 5, (float) coordinates.getY() + 10);
+            shapeRenderer.end();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+            shapeRenderer.end();
+        } else if (gameCharacter instanceof Mage) {
+            final CharacterSkin skin = skinManager.getSkin(((Mage) gameCharacter).getCharacterClass().orElse(Bomber.class));
+            final TextureRegion frame = skin.getFrame(gameCharacter.getDirection(), gameCharacter.isMoving());
+            spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
+                    (float) (frame.getRegionWidth() * 1.2), (float) (frame.getRegionHeight() * 1.2));
         }
     }
 

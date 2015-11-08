@@ -12,9 +12,6 @@ import java.util.Optional;
 import static org.atrolla.games.characters.CharacterState.*;
 import static org.atrolla.games.configuration.ConfigurationConstants.*;
 
-/**
- * Created by MicroOnde on 24/02/2015.
- */
 public abstract class GameCharacter {
 
     private static int counter = 0;
@@ -28,6 +25,7 @@ public abstract class GameCharacter {
     private final Rectangle hitbox;
     private Optional<NeutralItem> neutralItem;
     protected int abilityReadyTime;
+    private boolean isMoving = false;
 
     protected GameCharacter(Player player) {
         this.player = player;
@@ -41,8 +39,10 @@ public abstract class GameCharacter {
 
     public final void moves(Direction direction) {
         if (isAlive()) {
+            isMoving = false;
             if (!Direction.STOP.equals(direction)) {
                 this.direction = direction;
+                isMoving = true;
             }
             coordinates = direction.move(coordinates);
             updateHitbox();
@@ -148,5 +148,9 @@ public abstract class GameCharacter {
         Optional<NeutralItem> usedItem = neutralItem;
         neutralItem = Optional.empty();
         return usedItem.map(nItem -> nItem.isUsed(time));
+    }
+
+    public boolean isMoving() {
+        return isMoving;
     }
 }

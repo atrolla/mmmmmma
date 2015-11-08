@@ -134,6 +134,7 @@ public class InputManager {
         for (GameCharacter character : playerCharacterList) {
             final Player player = character.getPlayer();
             if (player.getKeyboardInput().isPresent()) {
+                character.moves(Direction.STOP);
                 final Input input = player.getKeyboardInput().get();
                 moveGameCharacter(character, input);
                 if (keyboard.isKeyPressed(Input.Keys.CONTROL_RIGHT)) {
@@ -209,6 +210,7 @@ public class InputManager {
                 gameCharacter.moves(Direction.DOWN_RIGHT);
                 break;
             default:
+                gameCharacter.moves(Direction.STOP);
                 break;
         }
     }
