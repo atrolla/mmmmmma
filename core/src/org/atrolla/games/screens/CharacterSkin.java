@@ -8,5 +8,5 @@ import org.atrolla.games.system.Direction;
  */
 public interface CharacterSkin {
 
-    TextureRegion getFrame(Direction direction, boolean isMoving);
+    TextureRegion getFrame(Direction direction, boolean isMoving, float stateTime);
 }
