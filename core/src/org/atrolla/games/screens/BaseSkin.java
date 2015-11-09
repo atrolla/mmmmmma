@@ -1,9 +1,7 @@
 package org.atrolla.games.screens;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,14 +11,13 @@ public class BaseSkin implements CharacterSkin {
 
     public static final float FRAME_DURATION = 0.2f;
 
-    Animation walkDown;
-    Animation walkDownLeft;
-    Animation walkLeft;
-    Animation walkUpLeft;
-    Animation walkUp;
+    private Animation walkDown;
+    private Animation walkDownLeft;
+    private Animation walkLeft;
+    private Animation walkUpLeft;
+    private Animation walkUp;
 
     public BaseSkin(FileHandle textureFile) {
-//        final FileHandle internal = Gdx.files.internal("skins/asagi.png");
         Texture walkSheet = new Texture(textureFile);
         TextureRegion[] regions = new TextureRegion[50];
         int k = 0;
@@ -49,7 +46,6 @@ public class BaseSkin implements CharacterSkin {
 
     @Override
     public TextureRegion getFrame(Direction direction, boolean isMoving, float stateTime) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         TextureRegion result = null;
         switch (direction) {
             case UP:

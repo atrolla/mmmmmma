@@ -8,9 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import org.atrolla.games.characters.Bomber;
+import org.atrolla.games.characters.CharacterState;
 import org.atrolla.games.characters.GameCharacter;
-import org.atrolla.games.characters.Knight;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
 import org.atrolla.games.game.Round;
@@ -60,7 +59,7 @@ public class RoundScreen implements Screen {
         //draw objects...
         renderCharacters();
         //render items...
-//        renderItems();
+        renderItems();
 
     }
 
@@ -104,49 +103,31 @@ public class RoundScreen implements Screen {
         skinManager.updateTime();
         final List<GameCharacter> characters = round.getCharacters();
         spriteBatch.begin();
-//        characters.stream()
-//                .filter(c -> CharacterState.ALIVE == c.getState())
-//                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
-//                .sequential()
-//                .forEach(this::renderCharacter);
-
-        final Class clazz = skinManager.getStateTime() > 10 ? Knight.class : Bomber.class;
-        final TextureRegion frame0 = skinManager.getFrame(characters.get(0), clazz);
-        final Rectangle hitbox0 = characters.get(0).getHitbox();
-        spriteBatch.draw(frame0, hitbox0.getX(), hitbox0.getY(),
-                (float) (frame0.getRegionWidth() * 1.2), (float) (frame0.getRegionHeight() * 1.2));
-        final TextureRegion frame1 = skinManager.getFrame(characters.get(1), clazz);
-        final Rectangle hitbox1 = characters.get(1).getHitbox();
-        spriteBatch.draw(frame1, hitbox1.getX(), hitbox1.getY(),
-                (float) (frame1.getRegionWidth() * 1.2), (float) (frame1.getRegionHeight() * 1.2));
-        final TextureRegion frame2 = skinManager.getFrame(characters.get(2), clazz);
-        final Rectangle hitbox2 = characters.get(2).getHitbox();
-        spriteBatch.draw(frame2, hitbox2.getX(), hitbox2.getY(),
-                (float) (frame2.getRegionWidth() * 1.2), (float) (frame2.getRegionHeight() * 1.2));
-        final TextureRegion frame3 = skinManager.getFrame(characters.get(3), clazz);
-        final Rectangle hitbox3 = characters.get(3).getHitbox();
-        spriteBatch.draw(frame3, hitbox3.getX(), hitbox3.getY(),
-                (float) (frame3.getRegionWidth() * 1.2), (float) (frame3.getRegionHeight() * 1.2));
+        characters.stream()
+                .filter(c -> CharacterState.ALIVE == c.getState())
+                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
+                .sequential()
+                .forEach(this::renderCharacter);
         spriteBatch.end();
-//        characters.stream().forEach(
-//                c -> {
-//                    final Rectangle hitbox = c.getHitbox();
-//                    switch (c.getState()) {
-//                        case DEAD:
-//                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//                            shapeRenderer.setColor(Color.BLACK);
-//                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-//                            shapeRenderer.end();
-//                            break;
-//                        case KNOCK_OUT:
-//                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//                            shapeRenderer.setColor(Color.LIGHT_GRAY);
-//                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-//                            shapeRenderer.end();
-//                            break;
-//                    }
-//                }
-//        );
+        characters.stream().forEach(
+                c -> {
+                    final Rectangle hitbox = c.getHitbox();
+                    switch (c.getState()) {
+                        case DEAD:
+                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                            shapeRenderer.setColor(Color.BLACK);
+                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+                            shapeRenderer.end();
+                            break;
+                        case KNOCK_OUT:
+                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                            shapeRenderer.setColor(Color.LIGHT_GRAY);
+                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+                            shapeRenderer.end();
+                            break;
+                    }
+                }
+        );
     }
 
     private void renderCharacter(GameCharacter gameCharacter) {
@@ -224,6 +205,7 @@ public class RoundScreen implements Screen {
 
     @Override
     public void dispose() {
+        spriteBatch.dispose();
         shapeRenderer.dispose();
     }
 }
