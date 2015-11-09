@@ -57,10 +57,8 @@ public class RoundScreen implements Screen {
         round.update();
 
         //draw objects...
-        renderCharacters();
-        //render items...
         renderItems();
-
+        renderCharacters();
     }
 
     private void renderItems() {
@@ -80,11 +78,11 @@ public class RoundScreen implements Screen {
     private void showItem(Item item, Coordinates coordinates) {
         if (item instanceof Bomb) {
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 3);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
             shapeRenderer.end();
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//            shapeRenderer.setColor(Color.RED);
+//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
         } else if (item instanceof Arrow) {
             // Arrow
             shapeRenderer.setColor(Color.PINK);
@@ -92,7 +90,7 @@ public class RoundScreen implements Screen {
         } else if (item instanceof Sword) {
             // Sword
             shapeRenderer.setColor(Color.TEAL);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 4);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
         } else if (item instanceof NeutralItem) {
             shapeRenderer.setColor(Color.MAGENTA);
             shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
@@ -131,53 +129,7 @@ public class RoundScreen implements Screen {
     }
 
     private void renderCharacter(GameCharacter gameCharacter) {
-        /*debug mode*/
-//        final Coordinates coordinates = gameCharacter.getCoordinates();
         final Rectangle hitbox = gameCharacter.getHitbox();
-
-//        if (gameCharacter instanceof Archer) {
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//            if (gameCharacter.isPlayer()) {
-//                shapeRenderer.setColor(Color.BLACK);
-//            } else {
-//                shapeRenderer.setColor(Color.LIGHT_GRAY);
-//            }
-//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 5);
-//            shapeRenderer.end();
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-//            shapeRenderer.end();
-//        } else if (gameCharacter instanceof Bomber) {
-////            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-////            if (gameCharacter.isPlayer()) {
-////                shapeRenderer.setColor(Color.BLACK);
-////            } else {
-////                shapeRenderer.setColor(Color.LIGHT_GRAY);
-////            }
-////            shapeRenderer.rect((float) coordinates.getX(), (float) coordinates.getY(), 10, 10);
-////            shapeRenderer.end();
-////            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-////            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-////            shapeRenderer.end();
-//            final TextureRegion frame = skinManager.getFrame(gameCharacter);
-//            spriteBatch.draw(frame, hitbox.getX(), hitbox.getY());
-//        } else if (gameCharacter instanceof Knight) {
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//            if (gameCharacter.isPlayer()) {
-//                shapeRenderer.setColor(Color.BLACK);
-//            } else {
-//                shapeRenderer.setColor(Color.LIGHT_GRAY);
-//            }
-//            shapeRenderer.triangle((float) coordinates.getX(), (float) coordinates.getY(),
-//                    (float) coordinates.getX() + 10, (float) coordinates.getY(),
-//                    (float) coordinates.getX() + 5, (float) coordinates.getY() + 10);
-//            shapeRenderer.end();
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-//            shapeRenderer.end();
-//
-//        } else
-//        if (gameCharacter instanceof Mage) {
         final TextureRegion frame = skinManager.getFrame(gameCharacter);
         spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
                 (float) (frame.getRegionWidth() * 1.2), (float) (frame.getRegionHeight() * 1.2));
