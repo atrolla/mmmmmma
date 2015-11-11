@@ -32,4 +32,20 @@ public abstract class PadInput {
     public abstract int axisRightY();
     public abstract int axisRightTrigger();
     public abstract PovDirection getPovDirection(Controller controller);
+
+    public PovDirection leftStickDirection(Controller controller) {
+        boolean up = controller.getAxis(axisLeftY()) < -0.5f;
+        boolean down = controller.getAxis(axisLeftY()) > 0.5f;
+        boolean left = controller.getAxis(axisLeftX()) < -0.5f;
+        boolean right = controller.getAxis(axisLeftX()) > 0.5f;
+        if (up && left) return PovDirection.northWest;
+        if (left && down) return PovDirection.southWest;
+        if (down && right) return PovDirection.southEast;
+        if (right && up) return PovDirection.northEast;
+        if (up) return PovDirection.north;
+        if (down) return PovDirection.south;
+        if (left) return PovDirection.west;
+        if (right) return PovDirection.east;
+        return PovDirection.center;
+    }
 }

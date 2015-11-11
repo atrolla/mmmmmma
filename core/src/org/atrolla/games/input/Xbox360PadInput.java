@@ -43,7 +43,11 @@ public class Xbox360PadInput extends PadInput {
 
     @Override
     public PovDirection getPovDirection(Controller controller) {
-        return controller.getPov(povIndex());
+        PovDirection direction = controller.getPov(povIndex());
+        if (PovDirection.center == direction) {
+            return leftStickDirection(controller);
+        }
+        return direction;
     }
 
 }
