@@ -205,7 +205,7 @@ public class Round {
     /**
      * <ol>
      * <li>Players picking items</li>
-     * <li>Manage GameCharacters goinng to the walls</li>
+     * <li>Manage GameCharacters going to the walls</li>
      * </ol>
      */
     private void manageHitBoxes() {
@@ -214,9 +214,6 @@ public class Round {
         preventCharactersFromBeingOutOfBound();
     }
 
-    /**
-     * TODO: If there is no more players that mage can kill, they must switch class
-     */
     private void reDisguiseMages() {
         final Stream<GameCharacter> magePlayers = players.stream()
                 .filter(GameCharacter::isAlive)
@@ -232,7 +229,6 @@ public class Round {
                     .filter(m -> m.getDisguisedCharacter().isPresent()) // should always be true...
                     .filter(p -> !nonMageAliveClasses.contains(p.getDisguisedCharacter().get().getClass())) //no more alive players with same class matches disguised class
                     .forEach(p -> {
-                        System.out.println("reDisguiseMages !");
                         final GameCharacter botToAdd = p.getDisguisedCharacter().get(); //first disguised Class
                         botToAdd.teleports(p.getCoordinates()); //second set it to the mage coordinates
                         botToAdd.setPlayer(Player.BOT);// disguised class as a bot
@@ -248,7 +244,7 @@ public class Round {
                         characters.add(botToAdd);
                     });
         }
-        //if there are only mages, set them to same class
+        //TODO: if there are only mages, set them to same class
     }
 
 

@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.CharacterState;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
@@ -31,6 +35,7 @@ public class RoundScreen implements Screen {
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch spriteBatch;
     private final CharacterSkinManager skinManager;
+    private final Stage stage;
 
 
     public RoundScreen(Mmmmmma game) {
@@ -38,6 +43,9 @@ public class RoundScreen implements Screen {
         round = new Round(game.getInputManager(), game.getSoundManager());
         shapeRenderer = new ShapeRenderer();
         spriteBatch = new SpriteBatch();
+        stage = new Stage(new ScalingViewport(Scaling.stretch, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, new OrthographicCamera()),
+                spriteBatch);
+        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
     }
 
@@ -56,6 +64,8 @@ public class RoundScreen implements Screen {
         //draw objects...
         renderItems();
         renderCharacters();
+
+        stage.draw();
     }
 
     private void renderItems() {
@@ -128,12 +138,13 @@ public class RoundScreen implements Screen {
     private void renderCharacter(GameCharacter gameCharacter) {
         final Rectangle hitbox = gameCharacter.getHitbox();
         final TextureRegion frame = skinManager.getFrame(gameCharacter);
-        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
-                (float) (frame.getRegionWidth() * 1.2), (float) (frame.getRegionHeight() * 1.2));
+        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY());//,
+//                (float) (frame.getRegionWidth() * 1.2), (float) (frame.getRegionHeight() * 1.2));
     }
 
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height, false);
     }
 
     @Override
