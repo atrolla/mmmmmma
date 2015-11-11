@@ -30,6 +30,7 @@ public final class ConfigurationConstants {
 
     public static final int ARCHER_ABILITY_COOLDOWN_DURATION = 30;
     public static final int BOMBER_ABILITY_COOLDOWN_DURATION = 60;
+    public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 40;
 
     public static final int ITEM_BOMB_COUNTDOWN_DURATION = 240;
     public static final double ITEM_ARROW_MOVE_STEP = 3d;

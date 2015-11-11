@@ -9,9 +9,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Created by MicroOnde on 04/03/2015.
@@ -29,12 +27,12 @@ public class BomberTests {
     @Test
     public void bomberBotCannotUseHisAbility() throws Exception {
         Bomber bomberBot = new Bomber(Player.BOT);
-        assertFalse(bomberBot.useAbility(ABILITY_USE_TIME).isPresent());
+        assertThat(bomberBot.useAbility(ABILITY_USE_TIME)).isEmpty();
     }
 
     @Test
     public void bomberAbilityIsToCreateBomb() throws Exception {
-        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Bomb);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Bomb.class);
     }
 
     @Test
@@ -42,19 +40,19 @@ public class BomberTests {
         final Coordinates coordinates = new Coordinates(42, 1337);
         bomberPlayer.teleports(coordinates);
         final Bomb bomb = (Bomb) bomberPlayer.useAbility(ABILITY_USE_TIME).get();
-        assertEquals(coordinates, bomb.getCoordinates());
+        assertThat(bomb.getCoordinates()).isEqualTo(coordinates);
     }
 
     @Test
     public void bomberCanOnlyPlaceOneBomb() throws Exception {
-        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Bomb);
-        assertFalse(bomberPlayer.useAbility(ABILITY_USE_TIME).isPresent());
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Bomb.class);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).isPresent()).isFalse();
     }
 
     @Test
     public void bomberCanReplaceBombOnlyAfterItsCooldownTime() throws Exception {
-        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Bomb);
-        assertFalse(bomberPlayer.useAbility(ABILITY_USE_TIME + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).isPresent());
-        assertTrue(bomberPlayer.useAbility(ABILITY_USE_TIME +1 + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).get() instanceof Bomb);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Bomb.class);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).isPresent()).isFalse();
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME +1 + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).get()).isInstanceOf(Bomb.class);
     }
 }
