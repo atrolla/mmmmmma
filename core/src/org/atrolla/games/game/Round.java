@@ -23,6 +23,7 @@ import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -287,7 +288,7 @@ public class Round {
      * Players being hit will die
      * Bots will only be knocked out and awakes later on
      *
-     * @see GameCharacter#hit()
+     * @see GameCharacter#hit(GameCharacter)
      * @see Sword
      */
     private void knockOutCharactersBeingHitByWeapons() {
@@ -295,9 +296,12 @@ public class Round {
         /**
          * @see Mage#equals(java.lang.Object)
          */
-        swordHit();
-        bombHit();
-        arrowHit();
+        //manage sword and arrow hit
+        gameItems.stream().filter(i -> Sword.class.isInstance(i) || Arrow.class.isInstance(i))
+                .forEach(weaponHitConsumer(false));
+        gameItems.stream().filter(Bomb.class::isInstance).map(Bomb.class::cast)
+                .filter(Bomb::isExploding) // only exploding bombs will hit characters
+                .forEach(weaponHitConsumer(true));
         mageWeaponHit();
     }
 
@@ -306,61 +310,22 @@ public class Round {
                 .forEach(
                         w -> {
                             final Item realWeapon = w.getWeapon();
-                            if (Sword.class.isAssignableFrom(realWeapon.getClass())) {
-                                characters.stream()
-                                        .filter(GameCharacter::isAlive) // never hit a KO chacacter
-                                        .filter(c -> !c.equals(w.getUser())) // sword must not kill its user
-                                        .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
-                                        .forEach(c -> c.hitByMage(realWeapon.getUser()));
-                            } else if (Bomb.class.isAssignableFrom(realWeapon.getClass())) {
-                                if (((Bomb) realWeapon).isExploding()) {
-                                    characters.stream()
-                                            .filter(GameCharacter::isAlive) // never hit a KO chacacter
-                                            .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox()))
-                                            .forEach(c -> c.hitByMage(realWeapon.getUser()));
-                                }
-                            } else if (Arrow.class.isAssignableFrom(realWeapon.getClass())) {
-                                characters.stream()
-                                        .filter(GameCharacter::isAlive) // never hit a KO chacacter
-                                        .filter(c -> !c.equals(w.getUser())) // arrow must not kill its user
-                                        .filter(c -> Intersector.overlaps(realWeapon.getHitbox(), c.getHitbox()))
-                                        .forEach(c -> c.hitByMage(realWeapon.getUser()));
+                            if (Bomb.class.isAssignableFrom(realWeapon.getClass()) && ((Bomb) realWeapon).isExploding()) {
+                                weaponHitConsumer(true);
+                            } else if (Sword.class.isAssignableFrom(realWeapon.getClass())
+                                    || Arrow.class.isAssignableFrom(realWeapon.getClass())) {
+                                weaponHitConsumer(false);
                             }
                         }
                 );
     }
 
-    private void arrowHit() {
-        gameItems.stream().filter(Arrow.class::isInstance).map(Arrow.class::cast)
-                .forEach(
-                        arrow -> characters.stream()
-                                .filter(GameCharacter::isAlive) // never hit a KO chacacter
-                                .filter(c -> !c.equals(arrow.getUser())) // arrow must not kill its user
-                                .filter(c -> Intersector.overlaps(arrow.getHitbox(), c.getHitbox()))
-                                .forEach(GameCharacter::hit)
-                );
-    }
-
-    private void bombHit() {
-        gameItems.stream().filter(Bomb.class::isInstance).map(Bomb.class::cast)
-                .filter(Bomb::isExploding) // only exploding bombs will hit characters
-                .forEach(
-                        bomb -> characters.stream()
-                                .filter(GameCharacter::isAlive) // never hit a KO chacacter
-                                .filter(c -> Intersector.overlaps(bomb.getHitbox(), c.getHitbox()))
-                                .forEach(GameCharacter::hit)
-                );
-    }
-
-    private void swordHit() {
-        gameItems.stream().filter(Sword.class::isInstance).map(Sword.class::cast)
-                .forEach(
-                        sword -> characters.stream()
-                                .filter(GameCharacter::isAlive) // never hit a KO chacacter
-                                .filter(c -> !c.equals(sword.getUser())) // sword must not kill its user
-                                .filter(c -> Intersector.overlaps(sword.getHitbox(), c.getHitbox())) //sword must hit every character it overlaps
-                                .forEach(GameCharacter::hit)
-                );
+    private Consumer<Item> weaponHitConsumer(boolean canKillUser) {
+        return weapon -> characters.stream()
+                .filter(GameCharacter::isAlive) // never hit a KO chacacter
+                .filter(c -> canKillUser || !c.equals(weapon.getUser())) // if canKillUser = false, then must not kill its user
+                .filter(c -> Intersector.overlaps(weapon.getHitbox(), c.getHitbox()))
+                .forEach(c -> c.hit(weapon.getUser()));
     }
 
     /**

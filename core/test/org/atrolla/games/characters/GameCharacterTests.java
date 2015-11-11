@@ -130,19 +130,19 @@ public class GameCharacterTests {
     public void playedCharacterAfterHitIsDead() throws Exception {
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
-        archer.hit();
+        archer.hit(new Knight(Player.BOT));
         assertEquals(CharacterState.DEAD, archer.getState());
     }
 
     @Test
     public void botCharacterAfterHitIsKnockOut() throws Exception {
-        defaultBotArcher.hit();
+        defaultBotArcher.hit(new Knight(Player.BOT));
         assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
     }
 
     @Test
     public void knockOutCharacterAfterAwakeIsAlive() throws Exception {
-        defaultBotArcher.hit();
+        defaultBotArcher.hit(new Knight(Player.BOT));
         assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
         defaultBotArcher.awake();
         assertEquals(CharacterState.ALIVE, defaultBotArcher.getState());
@@ -152,7 +152,7 @@ public class GameCharacterTests {
     public void deadCharacterAfterAwakeIsStillDead() throws Exception {
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
-        archer.hit();
+        archer.hit(new Knight(Player.BOT));
         assertEquals(CharacterState.DEAD, archer.getState());
         archer.awake();
         assertEquals(CharacterState.DEAD, archer.getState());
@@ -161,13 +161,13 @@ public class GameCharacterTests {
     @Test
     public void onlyAliveCharacterCanMove() throws Exception {
         assertTrue(defaultBotArcher.isAlive());
-        defaultBotArcher.hit();
+        defaultBotArcher.hit(new Knight(Player.BOT));
         assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
         assertFalse(defaultBotArcher.isAlive());
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         assertTrue(archer.isAlive());
-        archer.hit();
+        archer.hit(new Knight(Player.BOT));
         assertEquals(CharacterState.DEAD, archer.getState());
         assertFalse(archer.isAlive());
     }

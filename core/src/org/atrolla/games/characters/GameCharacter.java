@@ -92,16 +92,18 @@ public abstract class GameCharacter {
         return hitbox;
     }
 
-    public final void hit() {
-        state = isPlayer() ? DEAD : KNOCK_OUT;
-    }
-
-    public final void hitByMage(GameCharacter mageDisguisedClass) {
+    public final void hit(GameCharacter gameCharacter) {
         //if it is a player and it has same class as the disguised mage class
         //or if it is a mage
-        if ((isPlayer() && mageDisguisedClass.getClass().isAssignableFrom(this.getClass()))
-                || Mage.class.isAssignableFrom(this.getClass())) {
-            hit();
+        if (isPlayer()) {
+            if (!Mage.class.isAssignableFrom(this.getClass())
+                    && Mage.class.isAssignableFrom(gameCharacter.getClass())
+                    && !((Mage) gameCharacter).getDisguisedCharacter().get().getClass()
+                    .isAssignableFrom(this.getClass())) {
+                state = KNOCK_OUT;
+            } else {
+                state = DEAD;
+            }
         } else {
             state = KNOCK_OUT;
         }

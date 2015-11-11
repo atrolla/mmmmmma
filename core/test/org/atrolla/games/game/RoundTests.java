@@ -11,6 +11,7 @@ import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.mocks.MockController;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
+import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 import org.junit.Assert;
 import org.junit.Before;
@@ -128,7 +129,7 @@ public class RoundTests {
         defaultRound.update();
         final Coordinates coordinates2 = firstBot.getCoordinates();
         assertNotEquals(baseCoordinates, coordinates2);
-        firstBot.hit();
+        firstBot.hit(new Knight(Player.BOT));
         defaultRound.update();
         assertEquals(coordinates2, firstBot.getCoordinates());
     }
@@ -140,7 +141,7 @@ public class RoundTests {
         defaultRound.update();
         final Coordinates baseCoordinates = firstBot.getCoordinates();
         Assert.assertTrue(firstBot.isAlive());
-        firstBot.hit();
+        firstBot.hit(new Knight(Player.BOT));
         assertFalse(firstBot.isAlive());
         int i = 0;
         while (i++ < ConfigurationConstants.KNOCK_OUT_DURATION) {

@@ -77,7 +77,6 @@ public class MainMenuScreen implements Screen {
         table.add(buttonExit).size(150, 60).padBottom(20).row();
         table.add(playersTable).expand().padBottom(20).row();
         table.setFillParent(true);
-        //table.debug();
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
@@ -113,7 +112,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, false);
     }
 
     @Override

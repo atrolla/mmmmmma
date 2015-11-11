@@ -23,9 +23,6 @@ import org.atrolla.games.system.Coordinates;
 
 import java.util.List;
 
-/**
- * Created by MicroOnde on 21/03/2015.
- */
 public class RoundScreen implements Screen {
 
     private final Mmmmmma game;
@@ -137,7 +134,6 @@ public class RoundScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override

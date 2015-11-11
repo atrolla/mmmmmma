@@ -10,6 +10,7 @@ import org.atrolla.games.mocks.MockController;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class GatherTests {
     }
 
     @Test
+    @Ignore
     public void usedGatherTeleportsAllSamePickerClassAtTheSameArea() throws Exception {
         final Array<Controller> controllers = new Array<>();
         controllers.add(new MockController());
