@@ -107,13 +107,6 @@ public class RoundScreen implements Screen {
     private void renderCharacters() {
         skinManager.updateTime();
         final List<GameCharacter> characters = round.getCharacters();
-        spriteBatch.begin();
-        characters.stream()
-                .filter(c -> CharacterState.ALIVE == c.getState())
-                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
-                .sequential()
-                .forEach(this::renderCharacter);
-        spriteBatch.end();
         characters.stream().forEach(
                 c -> {
                     final Rectangle hitbox = c.getHitbox();
@@ -133,6 +126,14 @@ public class RoundScreen implements Screen {
                     }
                 }
         );
+        spriteBatch.begin();
+        characters.stream()
+                .filter(c -> CharacterState.ALIVE == c.getState())
+                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
+                .sequential()
+                .forEach(this::renderCharacter);
+        spriteBatch.end();
+
     }
 
     private void renderCharacter(GameCharacter gameCharacter) {
