@@ -19,6 +19,7 @@ public class InputManager {
     private final List<Player> players;
     private boolean keyboardArrrowState;
     private final List<Boolean> controllerPovState;
+    private PadInput padInput;
 
     public InputManager(Array<Controller> controllers, Input keyboard) {
         this.keyboard = keyboard;
@@ -29,6 +30,7 @@ public class InputManager {
         }
         this.players = new ArrayList<>();
         this.keyboardArrrowState = false;
+        this.padInput = PadInput.getPadInput();
     }
 
     //TODO : remove
@@ -66,15 +68,15 @@ public class InputManager {
         }
         int controllerIndex = 0;
         for (Controller controller : controllers) {
-            if (controller.getButton(Xbox360PadInput.BUTTON_START)) {
+            if (controller.getButton(padInput.buttonStart())) {
                 addPlayerIfNotPresent(controller);
             }
-            if (PovDirection.west == controller.getPov(Xbox360PadInput.POV_INDEX)) {
+            if (PovDirection.west == padInput.getPovDirection(controller)) {
                 if (!controllerPovState.get(controllerIndex)) {
                     controllerPovState.set(controllerIndex, Boolean.TRUE);
                     switchClassIfPresent(controller, false);
                 }
-            } else if (PovDirection.east == controller.getPov(Xbox360PadInput.POV_INDEX)) {
+            } else if (PovDirection.east == padInput.getPovDirection(controller)) {
                 if (!controllerPovState.get(controllerIndex)) {
                     controllerPovState.set(controllerIndex, Boolean.TRUE);
                     switchClassIfPresent(controller, true);
@@ -147,10 +149,10 @@ public class InputManager {
                 final Controller controller = player.getControllerInput().get();
                 moveGameCharacter(character, controller);
                 //TODO : must release
-                if (controller.getButton(Xbox360PadInput.BUTTON_A)) {
+                if (controller.getButton(padInput.buttonA())) {
                     character.useAbility(time).ifPresent(items::add);
                 }
-                if (controller.getButton(Xbox360PadInput.BUTTON_X)) {
+                if (controller.getButton(padInput.buttonX())) {
                     character.useNeutralItem(time).ifPresent(items::add);
                 }
             }
@@ -183,7 +185,7 @@ public class InputManager {
     }
 
     private void moveGameCharacter(GameCharacter gameCharacter, Controller controller) {
-        final PovDirection pov = controller.getPov(Xbox360PadInput.POV_INDEX);
+        final PovDirection pov = padInput.getPovDirection(controller);
         switch (pov) {
             case east:
                 gameCharacter.moves(Direction.RIGHT);
