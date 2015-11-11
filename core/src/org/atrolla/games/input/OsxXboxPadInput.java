@@ -44,10 +44,10 @@ public class OsxXboxPadInput extends PadInput {
 
     @Override
     public PovDirection getPovDirection(Controller controller) {
-        boolean up = controller.getButton(0) || controller.getAxis(axisLeftY()) > 0.5f;
-        boolean down = controller.getButton(1) || controller.getAxis(axisLeftY()) < -0.5f;
-        boolean left = controller.getButton(2) || controller.getAxis(axisLeftX()) < -0.5f;
-        boolean right = controller.getButton(3) || controller.getAxis(axisLeftX()) > 0.5f;
+        boolean up = controller.getButton(0);
+        boolean down = controller.getButton(1);
+        boolean left = controller.getButton(2);
+        boolean right = controller.getButton(3);
         if (up && left) return PovDirection.northWest;
         if (left && down) return PovDirection.southWest;
         if (down && right) return PovDirection.southEast;
@@ -56,7 +56,7 @@ public class OsxXboxPadInput extends PadInput {
         if (down) return PovDirection.south;
         if (left) return PovDirection.west;
         if (right) return PovDirection.east;
-        return PovDirection.center;
+        return leftStickDirection(controller);
     }
 
 }
