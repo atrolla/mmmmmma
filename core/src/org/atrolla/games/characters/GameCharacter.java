@@ -35,6 +35,7 @@ public abstract class GameCharacter {
         this.hitbox = new Rectangle();
         neutralItem = Optional.empty();
         abilityReadyTime = GAME_CHARACTER_INITIAL_READY_TIME;
+        this.coordinates = Coordinates.DEFAULT;
     }
 
     public final void moves(Direction direction) {

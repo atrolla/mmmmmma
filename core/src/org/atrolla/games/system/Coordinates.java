@@ -7,6 +7,8 @@ public final class Coordinates {
 
     public static final Coordinates NULL = null;
 
+    public static final Coordinates DEFAULT = new Coordinates(0d,0d);
+
     private final double x;
     private final double y;
 

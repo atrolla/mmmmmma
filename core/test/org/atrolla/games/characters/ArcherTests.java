@@ -1,5 +1,6 @@
 package org.atrolla.games.characters;
 
+import static org.assertj.core.api.Assertions.*;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.system.Coordinates;
@@ -9,9 +10,6 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by MicroOnde on 14/03/2015.
@@ -29,12 +27,12 @@ public class ArcherTests {
     @Test
     public void archerBotCannotUseHisAbility() throws Exception {
         Archer archerBot = new Archer(Player.BOT);
-        assertNull(archerBot.useAbility(ABILITY_USE_TIME));
+        assertThat(archerBot.useAbility(ABILITY_USE_TIME)).isEmpty();
     }
 
     @Test
     public void archerAbilityIsToThrowArrow() throws Exception {
-        assertTrue(archerPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Arrow);
+        assertThat(archerPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Arrow.class);
     }
 
     @Test
@@ -42,6 +40,6 @@ public class ArcherTests {
         final Coordinates coordinates = new Coordinates(42, 1337);
         archerPlayer.teleports(coordinates);
         final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME).get();
-        assertEquals(coordinates,arrow.getCoordinates());
+        assertThat(arrow.getCoordinates()).isEqualTo(coordinates);
     }
 }
