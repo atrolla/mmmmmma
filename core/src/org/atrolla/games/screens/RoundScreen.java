@@ -28,7 +28,9 @@ import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RoundScreen implements Screen {
 
@@ -46,6 +48,7 @@ public class RoundScreen implements Screen {
     private Label winnerText;
     private float winDelay;
 
+    private Set<Item> itemsToHide;
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
@@ -67,6 +70,7 @@ public class RoundScreen implements Screen {
         winnerText = new Label("", skin);
         opacity = 0f;
         winDelay = 2f;
+        itemsToHide = new HashSet<>();
     }
 
     @Override
@@ -98,7 +102,11 @@ public class RoundScreen implements Screen {
             }
             //winDelay
             int index = getWinningPlayerIndex();
-            winnerText.setText("Player " + index + " wins !");
+            if (index > 0) {
+                winnerText.setText("Player " + index + " wins !");
+            } else {
+                winnerText.setText("Well... All that for a draw !?");
+            }
             winnerText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.2f + opacity));
             winnerText.setAlignment(Align.center);
             winnerText.setWidth(stage.getWidth());
@@ -147,20 +155,20 @@ public class RoundScreen implements Screen {
 
     private void showItem(Item item, Coordinates coordinates) {
         if (item instanceof Bomb) {
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
-            shapeRenderer.end();
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//            shapeRenderer.setColor(Color.RED);
-//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+            if (!itemsToHide.contains(item)) {
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+                shapeRenderer.end();
+                itemsToHide.add(item);
+            }
         } else if (item instanceof Arrow) {
             // Arrow
             shapeRenderer.setColor(Color.PINK);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 1);
         } else if (item instanceof Sword) {
             // Sword
             shapeRenderer.setColor(Color.TEAL);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 1);
         } else if (item instanceof NeutralItem) {
             shapeRenderer.setColor(Color.MAGENTA);
             shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
@@ -170,28 +178,8 @@ public class RoundScreen implements Screen {
     private void renderCharacters() {
         skinManager.updateTime();
         final List<GameCharacter> characters = round.getCharacters();
-//        characters.stream().forEach(
-//                c -> {
-//                    final Rectangle hitbox = c.getHitbox();
-//                    switch (c.getState()) {
-//                        case DEAD:
-//                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//                            shapeRenderer.setColor(Color.BLACK);
-//                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-//                            shapeRenderer.end();
-//                            break;
-////                        case KNOCK_OUT:
-////                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-////                            shapeRenderer.setColor(Color.LIGHT_GRAY);
-////                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-////                            shapeRenderer.end();
-////                            break;
-//                    }
-//                }
-//        );
         spriteBatch.begin();
         characters.stream()
-//                .filter(c -> CharacterState.DEAD != c.getState())
                 .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
                 .sequential()
                 .forEach(this::renderCharacter);

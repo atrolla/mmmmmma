@@ -164,7 +164,7 @@ public class RoundTests {
     }
 
     @Test
-    public void roundIsFinishedWhenOnly1PlayerAlive() throws Exception {
+    public void roundIsFinishedWhenLessThan2PlayersAlive() throws Exception {
         final Array<Controller> controllers = new Array<>();
         controllers.add(new MockController());
         controllers.add(new MockController());
