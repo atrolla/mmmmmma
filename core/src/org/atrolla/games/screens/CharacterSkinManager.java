@@ -35,6 +35,7 @@ public class CharacterSkinManager {
         baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/priest.png")));
         baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/warrior.png")));
         baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/swordman.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/babylon.png")));
 
         classSkins.put(Bomber.class, getRandomSkin(baseSkinList));
         classSkins.put(Knight.class, getRandomSkin(baseSkinList));
