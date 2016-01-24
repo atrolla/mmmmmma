@@ -2,6 +2,7 @@ package org.atrolla.games.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,9 +11,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import org.atrolla.games.characters.CharacterState;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
@@ -37,6 +39,8 @@ public class RoundScreen implements Screen {
     private final CharacterSkinManager skinManager;
     private final Stage stage;
 
+    private Label topLeftText;
+
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
@@ -45,13 +49,26 @@ public class RoundScreen implements Screen {
         spriteBatch = new SpriteBatch();
         stage = new Stage(new ScalingViewport(Scaling.stretch, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, new OrthographicCamera()),
                 spriteBatch);
-        stage.setDebugAll(true);
+//        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
+        FileHandle skinFile = Gdx.files.internal("skins/skin.json");
+        Skin skin = new Skin(skinFile);
+        final int playersNumber = round.getPlayers().size();
+        if (playersNumber == 1) {
+            topLeftText = new Label("(ALONE)", skin);
+        } else if (playersNumber == 0) {
+            topLeftText = new Label("(DEMO)", skin);
+        }
+
     }
 
     @Override
     public void show() {
-
+        if (round.getPlayers().size() < 2) {
+            topLeftText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.3f));
+            topLeftText.setFontScale(0.5f);
+            stage.addActor(topLeftText);
+        }
     }
 
     @Override
@@ -107,28 +124,28 @@ public class RoundScreen implements Screen {
     private void renderCharacters() {
         skinManager.updateTime();
         final List<GameCharacter> characters = round.getCharacters();
-        characters.stream().forEach(
-                c -> {
-                    final Rectangle hitbox = c.getHitbox();
-                    switch (c.getState()) {
-                        case DEAD:
-                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            shapeRenderer.setColor(Color.BLACK);
-                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-                            shapeRenderer.end();
-                            break;
-                        case KNOCK_OUT:
-                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            shapeRenderer.setColor(Color.LIGHT_GRAY);
-                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-                            shapeRenderer.end();
-                            break;
-                    }
-                }
-        );
+//        characters.stream().forEach(
+//                c -> {
+//                    final Rectangle hitbox = c.getHitbox();
+//                    switch (c.getState()) {
+//                        case DEAD:
+//                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//                            shapeRenderer.setColor(Color.BLACK);
+//                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+//                            shapeRenderer.end();
+//                            break;
+////                        case KNOCK_OUT:
+////                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+////                            shapeRenderer.setColor(Color.LIGHT_GRAY);
+////                            shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+////                            shapeRenderer.end();
+////                            break;
+//                    }
+//                }
+//        );
         spriteBatch.begin();
         characters.stream()
-                .filter(c -> CharacterState.ALIVE == c.getState())
+//                .filter(c -> CharacterState.DEAD != c.getState())
                 .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
                 .sequential()
                 .forEach(this::renderCharacter);

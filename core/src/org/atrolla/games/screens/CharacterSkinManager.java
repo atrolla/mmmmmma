@@ -23,10 +23,10 @@ public class CharacterSkinManager {
     }
 
     private void initClassSkins() {
-        // randomly affect a skin to a class
+        //TODO ? randomly affect a skin to a class
         classSkins.put(Bomber.class, new BaseSkin(Gdx.files.internal("skins/asagi.png")));
         classSkins.put(Knight.class, new BaseSkin(Gdx.files.internal("skins/etna.png")));
-        classSkins.put(Archer.class, new BaseSkin(Gdx.files.internal("skins/blond.png")));
+        classSkins.put(Archer.class, new BaseSkin(Gdx.files.internal("skins/castille.png")));
     }
 
     public void updateTime() {
@@ -39,16 +39,7 @@ public class CharacterSkinManager {
             gameCharacterClass = ((Mage) gameCharacter).getDisguisedCharacter().get().getClass();
         }
         final CharacterSkin characterSkin = classSkins.get(gameCharacterClass);
-        return characterSkin.getFrame(gameCharacter.getDirection(), gameCharacter.isMoving(), stateTime);
-    }
-
-    public TextureRegion getFrame(GameCharacter gameCharacter, Class clazz) {
-//        Class<? extends GameCharacter> gameCharacterClass = gameCharacter.getClass();
-//        if (gameCharacter instanceof Mage) {
-//            gameCharacterClass = ((Mage) gameCharacter).getDisguisedCharacter().get().getClass();
-//        }
-        final CharacterSkin characterSkin = classSkins.get(clazz);
-        return characterSkin.getFrame(gameCharacter.getDirection(), gameCharacter.isMoving(), stateTime);
+        return characterSkin.getFrame(gameCharacter, stateTime);
     }
 
     public float getStateTime() {

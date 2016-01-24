@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,9 +20,6 @@ import org.atrolla.games.system.Player;
 
 import java.util.List;
 
-/**
- * Created by MicroOnde on 21/03/2015.
- */
 public class MainMenuScreen implements Screen {
 
     private final Mmmmmma game;
@@ -34,6 +32,8 @@ public class MainMenuScreen implements Screen {
     private final Label title;
     private final Stage stage;
     private final InputManager inputManager;
+    private int currentChosenButtonIndex;
+    private final Color defaultButtonFontColor;
 
     public MainMenuScreen(Mmmmmma game) {
         this.game = game;
@@ -47,6 +47,8 @@ public class MainMenuScreen implements Screen {
         title = new Label("Multiplayer Multi Mortal Mix Melee Mashup Arena", skin);
         stage = new Stage();
         inputManager = game.getInputManager();
+        currentChosenButtonIndex = -1;
+        defaultButtonFontColor = buttonPlay.getStyle().fontColor;
     }
 
     @Override
@@ -54,19 +56,19 @@ public class MainMenuScreen implements Screen {
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new RoundScreen(game));
+                startNewRound();
             }
         });
         buttonExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                exitGame();
             }
         });
         buttonResetPlayers.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                inputManager.unAssignPlayers();
+                unAssignPlayers();
             }
         });
         //The elements are displayed in the order you add them.
@@ -79,6 +81,18 @@ public class MainMenuScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void startNewRound() {
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new RoundScreen(game));
+    }
+
+    private void exitGame() {
+        Gdx.app.exit();
+    }
+
+    private void unAssignPlayers() {
+        inputManager.unAssignPlayers();
     }
 
     @Override
@@ -106,8 +120,52 @@ public class MainMenuScreen implements Screen {
             label.setAlignment(Align.center);
             playersTable.add(label).width(300).expand().uniform();
         }
-
+        if (size > 0) {
+            if (currentChosenButtonIndex == -1 && size > 0) {
+                currentChosenButtonIndex = 0;
+            } else {
+                final int i = inputManager.watchChangeMenu();
+                currentChosenButtonIndex += i;
+                currentChosenButtonIndex = currentChosenButtonIndex == -1 ? 0 : currentChosenButtonIndex == 3 ? 2 : currentChosenButtonIndex;
+                focusChosenButton();
+            }
+            if (inputManager.watchChooseMenu()) {
+                switch (currentChosenButtonIndex) {
+                    case 0:
+                        startNewRound();
+                        break;
+                    case 1:
+                        unAssignPlayers();
+                        break;
+                    case 2:
+                        exitGame();
+                        break;
+                    default:
+                        startNewRound();
+                }
+            }
+        }
         stage.draw();
+    }
+
+    private void focusChosenButton() {
+        buttonPlay.getLabel().setColor(defaultButtonFontColor);
+        buttonResetPlayers.getLabel().setColor(defaultButtonFontColor);
+        buttonExit.getLabel().setColor(defaultButtonFontColor);
+        getChoosenTextButton().getLabel().setColor(Color.GREEN);
+    }
+
+    private TextButton getChoosenTextButton() {
+        switch (currentChosenButtonIndex) {
+            case 0:
+                return buttonPlay;
+            case 1:
+                return buttonResetPlayers;
+            case 2:
+                return buttonExit;
+            default:
+                return buttonPlay;
+        }
     }
 
     @Override

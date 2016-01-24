@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.system.Direction;
 
 public class BaseSkin implements CharacterSkin {
@@ -16,6 +17,8 @@ public class BaseSkin implements CharacterSkin {
     private Animation walkLeft;
     private Animation walkUpLeft;
     private Animation walkUp;
+    private TextureRegion hit;
+    private TextureRegion dead;
 
     public BaseSkin(FileHandle textureFile) {
         Texture walkSheet = new Texture(textureFile);
@@ -36,6 +39,8 @@ public class BaseSkin implements CharacterSkin {
         walkLeft = buildAnimation(regions, 2);
         walkUpLeft = buildAnimation(regions, 3);
         walkUp = buildAnimation(regions, 4);
+        hit = new TextureRegion(walkSheet, 224, 632 - 1, 32, 40);
+        dead = new TextureRegion(walkSheet, 224, 672 - 1, 32, 40);
     }
 
     private Animation buildAnimation(TextureRegion[] tmp, int row) {
@@ -45,48 +50,56 @@ public class BaseSkin implements CharacterSkin {
     }
 
     @Override
-    public TextureRegion getFrame(Direction direction, boolean isMoving, float stateTime) {
+    public TextureRegion getFrame(GameCharacter gameCharacter, float stateTime) {
+        Direction direction = gameCharacter.getDirection();
+        boolean isMoving = gameCharacter.isMoving();
         TextureRegion result = null;
-        switch (direction) {
-            case UP:
-                result = isMoving ? walkUp.getKeyFrame(stateTime, true) : walkUp.getKeyFrame(0);
-                break;
-            case DOWN:
-                result = isMoving ? walkDown.getKeyFrame(stateTime, true) : walkDown.getKeyFrame(0);
-                break;
-            case LEFT:
-                result = isMoving ? walkLeft.getKeyFrame(stateTime, true) : walkLeft.getKeyFrame(0);
-                if (result.isFlipX())
-                    result.flip(true, false);
-                break;
-            case RIGHT:
-                result = isMoving ? walkLeft.getKeyFrame(stateTime, true) : walkLeft.getKeyFrame(0);
-                if (!result.isFlipX())
-                    result.flip(true, false);
-                break;
-            case UP_LEFT:
-                result = isMoving ? walkUpLeft.getKeyFrame(stateTime, true) : walkUpLeft.getKeyFrame(0);
-                if (result.isFlipX())
-                    result.flip(true, false);
-                break;
-            case UP_RIGHT:
-                result = isMoving ? walkUpLeft.getKeyFrame(stateTime, true) : walkUpLeft.getKeyFrame(0);
-                if (!result.isFlipX())
-                    result.flip(true, false);
-                break;
-            case DOWN_LEFT:
-                result = isMoving ? walkDownLeft.getKeyFrame(stateTime, true) : walkDownLeft.getKeyFrame(0);
-                if (result.isFlipX())
-                    result.flip(true, false);
-                break;
-            case DOWN_RIGHT:
-                result = isMoving ? walkDownLeft.getKeyFrame(stateTime, true) : walkDownLeft.getKeyFrame(0);
-                if (!result.isFlipX())
-                    result.flip(true, false);
-                break;
-            case STOP:
-                //should never happen
-                break;
+        if (gameCharacter.isKnockOut()) {
+            result = hit;
+        } else if (!gameCharacter.isAlive()) {
+            result = dead;
+        } else {
+            switch (direction) {
+                case UP:
+                    result = isMoving ? walkUp.getKeyFrame(stateTime, true) : walkUp.getKeyFrame(0);
+                    break;
+                case DOWN:
+                    result = isMoving ? walkDown.getKeyFrame(stateTime, true) : walkDown.getKeyFrame(0);
+                    break;
+                case LEFT:
+                    result = isMoving ? walkLeft.getKeyFrame(stateTime, true) : walkLeft.getKeyFrame(0);
+                    if (result.isFlipX())
+                        result.flip(true, false);
+                    break;
+                case RIGHT:
+                    result = isMoving ? walkLeft.getKeyFrame(stateTime, true) : walkLeft.getKeyFrame(0);
+                    if (!result.isFlipX())
+                        result.flip(true, false);
+                    break;
+                case UP_LEFT:
+                    result = isMoving ? walkUpLeft.getKeyFrame(stateTime, true) : walkUpLeft.getKeyFrame(0);
+                    if (result.isFlipX())
+                        result.flip(true, false);
+                    break;
+                case UP_RIGHT:
+                    result = isMoving ? walkUpLeft.getKeyFrame(stateTime, true) : walkUpLeft.getKeyFrame(0);
+                    if (!result.isFlipX())
+                        result.flip(true, false);
+                    break;
+                case DOWN_LEFT:
+                    result = isMoving ? walkDownLeft.getKeyFrame(stateTime, true) : walkDownLeft.getKeyFrame(0);
+                    if (result.isFlipX())
+                        result.flip(true, false);
+                    break;
+                case DOWN_RIGHT:
+                    result = isMoving ? walkDownLeft.getKeyFrame(stateTime, true) : walkDownLeft.getKeyFrame(0);
+                    if (!result.isFlipX())
+                        result.flip(true, false);
+                    break;
+                case STOP:
+                    //should never happen
+                    break;
+            }
         }
         return (result == null) ? null : result;
     }

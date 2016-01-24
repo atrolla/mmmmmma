@@ -106,7 +106,7 @@ public class InputManager {
     private void addPlayerIfNotPresent(Controller controller) {
         Optional<Player> playerOptional = players.stream().filter(p -> p.isSameInput(controller)).findFirst();
         if (!playerOptional.isPresent()) {
-            players.add(new Player(Optional.empty(), Optional.of(controller)));
+            players.add(new Player(Optional.empty(), Optional.of(new PadController(controller))));
         }
     }
 
@@ -115,18 +115,16 @@ public class InputManager {
     }
 
     /**
-     *
      * For each player, accordingly to their controller input, <br/>
      * <ul>
-     *     <li>move the player</li>
-     *     <li>use player's ability</li>
-     *     <li>use player's neutral item</li>
+     * <li>move the player</li>
+     * <li>use player's ability</li>
+     * <li>use player's neutral item</li>
      * </ul>
      *
      * @return list of Items that players may create
-     *
      * @see Player#getKeyboardInput()
-     * @see Player#getControllerInput()
+     * @see Player#getPadControllerInput()
      * @see GameCharacter#useAbility(int)
      * @see GameCharacter#useNeutralItem(int)
      * @see Item
@@ -139,20 +137,19 @@ public class InputManager {
                 character.moves(Direction.STOP);
                 final Input input = player.getKeyboardInput().get();
                 moveGameCharacter(character, input);
-                if (keyboard.isKeyPressed(Input.Keys.CONTROL_RIGHT)) {
+                if (keyboard.isKeyJustPressed(Input.Keys.CONTROL_RIGHT)) {
                     character.useAbility(time).ifPresent(items::add);
                 }
-                if (keyboard.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+                if (keyboard.isKeyJustPressed(Input.Keys.SHIFT_RIGHT)) {
                     character.useNeutralItem(time).ifPresent(items::add);
                 }
-            } else if (player.getControllerInput().isPresent()) {
-                final Controller controller = player.getControllerInput().get();
-                moveGameCharacter(character, controller);
-                //TODO : must release
-                if (controller.getButton(padInput.buttonA())) {
+            } else if (player.getPadControllerInput().isPresent()) {
+                final PadController padController = player.getPadControllerInput().get();
+                moveGameCharacter(character, padController.getController());
+                if (padController.hasJustPressed(padInput.buttonA())) {
                     character.useAbility(time).ifPresent(items::add);
                 }
-                if (controller.getButton(padInput.buttonX())) {
+                if (padController.hasJustPressed(padInput.buttonX())) {
                     character.useNeutralItem(time).ifPresent(items::add);
                 }
             }
@@ -217,4 +214,41 @@ public class InputManager {
         }
     }
 
+    public int watchChangeMenu() {
+        for (Player p : players) {
+            if (p.getPadControllerInput().isPresent()) {
+                final PadController padController = p.getPadControllerInput().get();
+                if (padController.hasJustPressed(PovDirection.north, padInput)) {
+                    return -1;
+                }
+                if (padController.hasJustPressed(PovDirection.south, padInput)) {
+                    return 1;
+                }
+            } else {
+                if (keyboard.isKeyJustPressed(Input.Keys.UP)) {
+                    return -1;
+                }
+                if (keyboard.isKeyJustPressed(Input.Keys.DOWN)) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public boolean watchChooseMenu() {
+        for (Player p : players) {
+            if (p.getPadControllerInput().isPresent()) {
+                final PadController padController = p.getPadControllerInput().get();
+                if(padController.hasJustPressed(padInput.buttonA())){
+                    return true;
+                }
+            } else {
+                if(keyboard.isKeyJustPressed(Input.Keys.ENTER)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

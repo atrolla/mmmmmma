@@ -3,23 +3,21 @@ package org.atrolla.games.system;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import org.atrolla.games.characters.CharacterClasses;
+import org.atrolla.games.input.PadController;
 
 import java.util.Optional;
 
-/**
- * Created by MicroOnde on 25/02/2015.
- */
 public class Player {
 
     public final static Player BOT = null;
 
     private final Optional<Input> keyboardInput;
-    private final Optional<Controller> controllerInput;
+    private final Optional<PadController> padControllerInput;
     private CharacterClasses gameCharacterClass;
 
-    public Player(Optional<Input> keyboardInput, Optional<Controller> controllerInput) {
+    public Player(Optional<Input> keyboardInput, Optional<PadController> padControllerInput) {
         this.keyboardInput = keyboardInput;
-        this.controllerInput = controllerInput;
+        this.padControllerInput = padControllerInput;
         this.gameCharacterClass = CharacterClasses.BOMBER;
     }
 
@@ -28,7 +26,7 @@ public class Player {
     }
 
     public boolean isSameInput(Controller controller) {
-        return controllerInput.filter(c -> c.equals(controller)).isPresent();
+        return padControllerInput.filter(pc -> pc.getController().equals(controller)).isPresent();
     }
 
     public void switchClass(boolean next) {
@@ -39,8 +37,8 @@ public class Player {
         return keyboardInput;
     }
 
-    public Optional<Controller> getControllerInput() {
-        return controllerInput;
+    public Optional<PadController> getPadControllerInput() {
+        return padControllerInput;
     }
 
     public CharacterClasses getGameCharacterClass() {
