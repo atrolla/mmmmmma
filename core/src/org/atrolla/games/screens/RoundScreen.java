@@ -203,7 +203,8 @@ public class RoundScreen implements Screen {
         final Rectangle hitbox = gameCharacter.getHitbox();
         final TextureRegion frame = skinManager.getFrame(gameCharacter);
         spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
-                (float) (frame.getRegionWidth() * 1.5), (float) (frame.getRegionHeight() * 1.5));
+                (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
+                (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
     }
 
     @Override

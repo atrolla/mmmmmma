@@ -36,7 +36,7 @@ public final class ConfigurationConstants {
     public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 40;
 
     public static final int ITEM_BOMB_COUNTDOWN_DURATION = 240;
-    public static final double ITEM_ARROW_MOVE_STEP = 3d;
+    public static final double ITEM_ARROW_MOVE_STEP = 5d;
     public static final int ITEM_ARROW_RANGE_TIME_OUT = 30;
     public static final int ITEM_SWORD_ACTION_TIME_OUT = 1;
     public static final int ITEM_NEUTRAL_SPAWN_FREQUENCY_TIME = 300;

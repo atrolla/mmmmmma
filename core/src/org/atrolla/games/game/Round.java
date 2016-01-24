@@ -139,7 +139,7 @@ public class Round {
         managePlayers();
         manageHitBoxes();
         reDisguiseMages();
-        playSounds();
+//        playSounds(); TODO: remove for sound
         postUpdate();
     }
 

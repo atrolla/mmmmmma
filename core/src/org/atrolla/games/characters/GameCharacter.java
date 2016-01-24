@@ -120,6 +120,10 @@ public abstract class GameCharacter {
         return KNOCK_OUT.equals(state);
     }
 
+    public final Coordinates getCenter() {
+        return coordinates.translateXandY(GAME_CHARACTER_WIDTH / 2, GAME_CHARACTER_HEIGHT / 2);
+    }
+
     public abstract void coolDownAbility(int time);
 
     @Override

@@ -13,7 +13,7 @@ public class Arrow extends Item {
     private final Circle hitbox;
 
     public Arrow(Archer archer, int time) {
-        super(archer.getCoordinates(), time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT, archer);
+        super(archer.getCenter(), time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT, archer);
         this.direction = archer.getDirection();
         this.hitbox = new Circle((float) archer.getCoordinates().getX(), (float) archer.getCoordinates().getY(), ConfigurationConstants.ARROW_HITBOX_SIZE);
     }
