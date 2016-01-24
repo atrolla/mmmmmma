@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.atrolla.games.characters.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CharacterSkinManager {
 
@@ -23,10 +26,25 @@ public class CharacterSkinManager {
     }
 
     private void initClassSkins() {
-        //TODO ? randomly affect a skin to a class
-        classSkins.put(Bomber.class, new BaseSkin(Gdx.files.internal("skins/asagi.png")));
-        classSkins.put(Knight.class, new BaseSkin(Gdx.files.internal("skins/etna.png")));
-        classSkins.put(Archer.class, new BaseSkin(Gdx.files.internal("skins/castille.png")));
+        List<BaseSkin> baseSkinList = new ArrayList<>();
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/asagi.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/etna.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/castille.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/flonne.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/archer.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/priest.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/warrior.png")));
+        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/swordman.png")));
+
+        classSkins.put(Bomber.class, getRandomSkin(baseSkinList));
+        classSkins.put(Knight.class, getRandomSkin(baseSkinList));
+        classSkins.put(Archer.class, getRandomSkin(baseSkinList));
+
+    }
+
+    private CharacterSkin getRandomSkin(List<BaseSkin> baseSkinList) {
+        final int i = ThreadLocalRandom.current().nextInt(0, baseSkinList.size());
+        return baseSkinList.remove(i);
     }
 
     public void updateTime() {

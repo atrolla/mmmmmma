@@ -1,6 +1,5 @@
 package org.atrolla.games.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
@@ -48,12 +47,29 @@ public class MainMenuScreen implements Screen {
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
         defaultButtonFontColor = buttonPlay.getStyle().fontColor;
+        stage = new Stage();
+        addElementsToTable();
+        addButtonListeners();
+    }
+
+    private void addElementsToTable() {
+        //The elements are displayed in the order you add them.
+        //The first appear on top, the last at the bottom.
+        table.add(title).center().padTop(40).padBottom(40).row();
+        table.add(buttonPlay).size(150, 60).padBottom(20).row();
+        table.add(buttonResetPlayers).size(400, 60).padBottom(20).row();
+        table.add(buttonExit).size(150, 60).padBottom(20).row();
+        table.add(playersTable).expand().padBottom(20).row();
+        table.setFillParent(true);
     }
 
     @Override
     public void show() {
-        System.out.println("show :" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
-        stage = new Stage();
+        stage.addActor(table);
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    private void addButtonListeners() {
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -72,20 +88,10 @@ public class MainMenuScreen implements Screen {
                 unAssignPlayers();
             }
         });
-        //The elements are displayed in the order you add them.
-        //The first appear on top, the last at the bottom.
-        table.add(title).center().padTop(40).padBottom(40).row();
-        table.add(buttonPlay).size(150, 60).padBottom(20).row();
-        table.add(buttonResetPlayers).size(400, 60).padBottom(20).row();
-        table.add(buttonExit).size(150, 60).padBottom(20).row();
-        table.add(playersTable).expand().padBottom(20).row();
-        table.setFillParent(true);
-        stage.addActor(table);
-        Gdx.input.setInputProcessor(stage);
     }
 
     private void startNewRound() {
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new RoundScreen(game));
+        game.setScreen(new RoundScreen(game));
     }
 
     private void exitGame() {
@@ -185,12 +191,12 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-        System.out.println("MainMenuScreen hidden");
+//        System.out.println("MainMenuScreen hidden");
     }
 
     @Override
     public void dispose() {
-        System.out.println("MainMenuScreen disposed");
+//        System.out.println("MainMenuScreen disposed");
         stage.dispose();
         skin.dispose();
     }

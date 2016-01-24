@@ -71,7 +71,6 @@ public class RoundScreen implements Screen {
 
     @Override
     public void show() {
-        System.out.println("game :" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
         if (round.getPlayers().size() < 2) {
             topLeftText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.3f));
             topLeftText.setFontScale(0.5f);
@@ -91,7 +90,7 @@ public class RoundScreen implements Screen {
         //draw objects...
         renderItems();
         renderCharacters();
-//        if (round.isFinished()) { TODO: uncomment when mainScreen bug is fixed
+        if (round.isFinished()) {
             if (opacity < 0.8f) {
                 opacity += 0.005f;
             } else {
@@ -112,7 +111,7 @@ public class RoundScreen implements Screen {
             shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());
             shapeRenderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
-//        }
+        }
 
         stage.draw();
         if (winDelay < 0) {
