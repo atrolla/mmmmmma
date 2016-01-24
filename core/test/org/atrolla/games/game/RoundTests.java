@@ -4,7 +4,8 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.utils.Array;
 import org.atrolla.games.ai.AIManager;
 import org.atrolla.games.ai.Command;
-import org.atrolla.games.characters.*;
+import org.atrolla.games.characters.GameCharacter;
+import org.atrolla.games.characters.Knight;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.input.InputManager;
 import org.atrolla.games.items.weapons.Bomb;
@@ -160,5 +161,30 @@ public class RoundTests {
         defaultRound.update();
         Assert.assertTrue(defaultRound.getGameItems().size() > 0);
         Assert.assertTrue(defaultRound.getGameItems().stream().anyMatch(Bomb.class::isInstance));
+    }
+
+    @Test
+    public void roundIsFinishedWhenOnly1PlayerAlive() throws Exception {
+        final Array<Controller> controllers = new Array<>();
+        controllers.add(new MockController());
+        controllers.add(new MockController());
+        inputManager = new InputManager(controllers, null);
+        inputManager.assignPlayers();
+        Round round = new Round(inputManager, null);
+        Assert.assertEquals(round.getPlayers().size(), 2);
+        Assert.assertFalse(round.isFinished());
+        round.getPlayers().get(0).hit(new Knight(null));
+        Assert.assertTrue(round.isFinished());
+    }
+
+    @Test
+    public void roundNeverFinishesWhenOnly1PlayerIsPLaying() throws Exception {
+        final Array<Controller> controllers = new Array<>();
+        controllers.add(new MockController());
+        inputManager = new InputManager(controllers, null);
+        inputManager.assignPlayers();
+        Round round = new Round(inputManager, null);
+        Assert.assertEquals(round.getPlayers().size(), 1);
+        Assert.assertFalse(round.isFinished());
     }
 }

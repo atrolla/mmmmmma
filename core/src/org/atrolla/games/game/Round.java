@@ -119,12 +119,12 @@ public class Round {
         IntStream
                 .rangeClosed(1, endInclusive)
                 .forEach(i -> IntStream
-                                .rangeClosed(1, 4)
-                                .forEach(j -> {
-                                            final GameCharacter gameCharacter = characters.get((i - 1) * 4 + j - 1);
-                                            gameCharacter.teleports(new Coordinates(xStep * j, yStep * i));
-                                        }
-                                )
+                        .rangeClosed(1, 4)
+                        .forEach(j -> {
+                                    final GameCharacter gameCharacter = characters.get((i - 1) * 4 + j - 1);
+                                    gameCharacter.teleports(new Coordinates(xStep * j, yStep * i));
+                                }
+                        )
                 );
     }
 
@@ -357,6 +357,14 @@ public class Round {
         }
     }
 
+    public boolean isFinished() {
+        if (players.size() < 2) {
+            return false;
+        } else {
+            return players.stream().filter(GameCharacter::isAlive).count() == 1;
+        }
+    }
+
     public AIManager getAIManager() {
         return aiManager;
     }
@@ -372,4 +380,5 @@ public class Round {
     public List<GameCharacter> getPlayers() {
         return players;
     }
+
 }

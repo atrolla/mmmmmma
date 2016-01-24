@@ -18,6 +18,7 @@ public class InputManager {
     private final Input keyboard;
     private final List<Player> players;
     private boolean keyboardArrrowState;
+    //TODO : refactor ?
     private final List<Boolean> controllerPovState;
     private PadInput padInput;
 

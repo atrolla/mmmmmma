@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.GameCharacter;
@@ -26,6 +26,7 @@ import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.items.weapons.MageWeaponWrapper;
 import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Coordinates;
+import org.atrolla.games.system.Player;
 
 import java.util.List;
 
@@ -38,8 +39,12 @@ public class RoundScreen implements Screen {
     private final SpriteBatch spriteBatch;
     private final CharacterSkinManager skinManager;
     private final Stage stage;
+    private final Skin skin;
 
     private Label topLeftText;
+    private float opacity;
+    private Label winnerText;
+    private float winDelay;
 
 
     public RoundScreen(Mmmmmma game) {
@@ -47,28 +52,32 @@ public class RoundScreen implements Screen {
         round = new Round(game.getInputManager(), game.getSoundManager());
         shapeRenderer = new ShapeRenderer();
         spriteBatch = new SpriteBatch();
-        stage = new Stage(new ScalingViewport(Scaling.stretch, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, new OrthographicCamera()),
+        stage = new Stage(new ScalingViewport(Scaling.stretch, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()),
                 spriteBatch);
 //        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
         FileHandle skinFile = Gdx.files.internal("skins/skin.json");
-        Skin skin = new Skin(skinFile);
+        this.skin = new Skin(skinFile);
         final int playersNumber = round.getPlayers().size();
         if (playersNumber == 1) {
             topLeftText = new Label("(ALONE)", skin);
         } else if (playersNumber == 0) {
             topLeftText = new Label("(DEMO)", skin);
         }
-
+        winnerText = new Label("", skin);
+        opacity = 0f;
+        winDelay = 2f;
     }
 
     @Override
     public void show() {
+        System.out.println("game :" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
         if (round.getPlayers().size() < 2) {
             topLeftText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.3f));
             topLeftText.setFontScale(0.5f);
             stage.addActor(topLeftText);
         }
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -76,13 +85,51 @@ public class RoundScreen implements Screen {
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         round.update();
 
         //draw objects...
         renderItems();
         renderCharacters();
+//        if (round.isFinished()) { TODO: uncomment when mainScreen bug is fixed
+            if (opacity < 0.8f) {
+                opacity += 0.005f;
+            } else {
+                winDelay -= delta;
+            }
+            //winDelay
+            int index = getWinningPlayerIndex();
+            winnerText.setText("Player " + index + " wins !");
+            winnerText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.2f + opacity));
+            winnerText.setAlignment(Align.center);
+            winnerText.setWidth(stage.getWidth());
+            winnerText.setY(stage.getHeight() / 2);
+            stage.addActor(winnerText);
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0.9f, 0.9f, 0.9f, opacity);
+            shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+//        }
 
         stage.draw();
+        if (winDelay < 0) {
+            game.switchToMenuScreen();
+        }
+    }
+
+    private int getWinningPlayerIndex() {
+        final Player player = round.getPlayers().stream().filter(GameCharacter::isAlive).map(GameCharacter::getPlayer).findFirst().get();
+        final List<Player> playerList = game.getInputManager().getPlayers();
+        for (int i = 0; i < playerList.size(); i++) {
+            final Player playerI = playerList.get(i);
+            if (player.equals(playerI)) {
+                return i + 1;
+            }
+        }
+        return 0;
     }
 
     private void renderItems() {
@@ -156,8 +203,8 @@ public class RoundScreen implements Screen {
     private void renderCharacter(GameCharacter gameCharacter) {
         final Rectangle hitbox = gameCharacter.getHitbox();
         final TextureRegion frame = skinManager.getFrame(gameCharacter);
-        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY());//,
-//                (float) (frame.getRegionWidth() * 1.2), (float) (frame.getRegionHeight() * 1.2));
+        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
+                (float) (frame.getRegionWidth() * 1.5), (float) (frame.getRegionHeight() * 1.5));
     }
 
     @Override
@@ -177,7 +224,7 @@ public class RoundScreen implements Screen {
 
     @Override
     public void hide() {
-
+        dispose();
     }
 
     @Override

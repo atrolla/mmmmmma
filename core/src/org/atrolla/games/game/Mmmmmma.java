@@ -10,10 +10,12 @@ import org.atrolla.games.screens.MainMenuScreen;
 import org.atrolla.games.sounds.SoundManager;
 
 public class Mmmmmma extends Game {
+
     //    private Texture img;
     private OrthographicCamera camera;
     private SoundManager soundManager;
     private InputManager inputManager;
+    private MainMenuScreen mainMenuScreen;
 
     @Override
     public void create() {
@@ -23,7 +25,16 @@ public class Mmmmmma extends Game {
         camera.setToOrtho(false, (float) ConfigurationConstants.STAGE_WIDTH, (float) ConfigurationConstants.STAGE_HEIGHT);
         soundManager = new SoundManager();
         inputManager = new InputManager(Controllers.getControllers(), Gdx.input);
-        setScreen(new MainMenuScreen(this));
+        mainMenuScreen = new MainMenuScreen(this);
+        switchToMenuScreen();
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    public void switchToMenuScreen() {
+        setScreen(mainMenuScreen);
     }
 
     /*@Override

@@ -16,7 +16,6 @@ public abstract class GameCharacter {
 
     private static int counter = 0;
 
-
     private final int id;
     private Player player;
     private Direction direction;

@@ -12,8 +12,11 @@ public final class ConfigurationConstants {
     public static final int STAGE_WIDTH = 1280;
     public static final int STAGE_HEIGHT = 720;
 
-    public static final int GAME_CHARACTER_WIDTH = 32;
-    public static final int GAME_CHARACTER_HEIGHT = 40;
+//    public static final int GAME_CHARACTER_WIDTH = 32;
+//    public static final int GAME_CHARACTER_HEIGHT = 40;
+
+    public static final int GAME_CHARACTER_WIDTH = 40;
+    public static final int GAME_CHARACTER_HEIGHT = 50;
 
     public static final int GAME_CHARACTER_INITIAL_READY_TIME = -1;
 

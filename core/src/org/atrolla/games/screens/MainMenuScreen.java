@@ -30,7 +30,7 @@ public class MainMenuScreen implements Screen {
     private final TextButton buttonPlay;
     private final TextButton buttonResetPlayers;
     private final Label title;
-    private final Stage stage;
+    private Stage stage;
     private final InputManager inputManager;
     private int currentChosenButtonIndex;
     private final Color defaultButtonFontColor;
@@ -45,7 +45,6 @@ public class MainMenuScreen implements Screen {
         buttonResetPlayers = new TextButton("Reset Players", skin);
         buttonExit = new TextButton("Exit", skin);
         title = new Label("Multiplayer Multi Mortal Mix Melee Mashup Arena", skin);
-        stage = new Stage();
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
         defaultButtonFontColor = buttonPlay.getStyle().fontColor;
@@ -53,6 +52,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
+        System.out.println("show :" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
+        stage = new Stage();
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -180,16 +181,16 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-        dispose();
+        System.out.println("MainMenuScreen hidden");
     }
 
     @Override
     public void dispose() {
+        System.out.println("MainMenuScreen disposed");
         stage.dispose();
         skin.dispose();
     }
