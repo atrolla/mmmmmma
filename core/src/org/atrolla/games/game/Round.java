@@ -307,21 +307,25 @@ public class Round {
                         w -> {
                             final Item realWeapon = w.getWeapon();
                             if (Bomb.class.isAssignableFrom(realWeapon.getClass()) && ((Bomb) realWeapon).isExploding()) {
-                                weaponHitConsumer(true);
+                                weaponHitConsumer(true, realWeapon, w.getUser());
                             } else if (Sword.class.isAssignableFrom(realWeapon.getClass())
                                     || Arrow.class.isAssignableFrom(realWeapon.getClass())) {
-                                weaponHitConsumer(false);
+                                weaponHitConsumer(false, realWeapon, w.getUser());
                             }
                         }
                 );
     }
 
     private Consumer<Item> weaponHitConsumer(boolean canKillUser) {
-        return weapon -> characters.stream()
+        return weapon -> weaponHitConsumer(canKillUser, weapon, weapon.getUser());
+    }
+
+    private void weaponHitConsumer(boolean canKillUser, Item weapon, final GameCharacter user) {
+        characters.stream()
                 .filter(GameCharacter::isAlive) // never hit a KO chacacter
                 .filter(c -> canKillUser || !c.equals(weapon.getUser())) // if canKillUser = false, then must not kill its user
                 .filter(c -> Intersector.overlaps(weapon.getHitbox(), c.getHitbox()))
-                .forEach(c -> c.hit(weapon.getUser()));
+                .forEach(c -> c.hit(user));
     }
 
     /**

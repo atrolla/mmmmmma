@@ -41,7 +41,6 @@ public class RoundScreen implements Screen {
     private final SpriteBatch spriteBatch;
     private final CharacterSkinManager skinManager;
     private final Stage stage;
-    private final Skin skin;
 
     private Label topLeftText;
     private float opacity;
@@ -60,7 +59,7 @@ public class RoundScreen implements Screen {
 //        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
         FileHandle skinFile = Gdx.files.internal("skins/skin.json");
-        this.skin = new Skin(skinFile);
+        Skin skin = new Skin(skinFile);
         final int playersNumber = round.getPlayers().size();
         if (playersNumber == 1) {
             topLeftText = new Label("(ALONE)", skin);

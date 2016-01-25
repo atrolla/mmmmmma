@@ -21,6 +21,7 @@ import java.util.List;
 
 public class MainMenuScreen implements Screen {
 
+    public static final float PAD_BOTTOM = 12f;
     private final Mmmmmma game;
     private final Table table;
     private final Table playersTable;
@@ -50,6 +51,9 @@ public class MainMenuScreen implements Screen {
         stage = new Stage();
         addElementsToTable();
         addButtonListeners();
+        buttonPlay.getLabelCell().padBottom(PAD_BOTTOM);
+        buttonResetPlayers.getLabelCell().padBottom(PAD_BOTTOM);
+        buttonExit.getLabelCell().padBottom(PAD_BOTTOM);
     }
 
     private void addElementsToTable() {
