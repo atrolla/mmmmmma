@@ -1,6 +1,5 @@
 package org.atrolla.games.characters;
 
-import static org.assertj.core.api.Assertions.*;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.system.Coordinates;
@@ -9,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -36,10 +37,10 @@ public class ArcherTests {
     }
 
     @Test
-    public void arrowSpawnsAtPlayerCoordinates() throws Exception {
+    public void arrowSpawnsAtPlayerCenter() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         archerPlayer.teleports(coordinates);
         final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME).get();
-        assertThat(arrow.getCoordinates()).isEqualTo(coordinates);
+        assertThat(arrow.getCoordinates()).isEqualTo(archerPlayer.getCenter());
     }
 }

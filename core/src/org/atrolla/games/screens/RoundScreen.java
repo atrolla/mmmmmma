@@ -34,6 +34,11 @@ import java.util.Set;
 
 public class RoundScreen implements Screen {
 
+    public static final float ELLIPSE_HEIGHT = (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT / 5;
+    public static final float PADDING_SHADOW_WIDTH = 4f;
+    public static final float PADDING_SHADOW_HEIGHT = 1f;
+    public static final float ELLIPSE_WIDTH = (float) ConfigurationConstants.GAME_CHARACTER_WIDTH - PADDING_SHADOW_WIDTH - PADDING_SHADOW_WIDTH;
+
     private final Mmmmmma game;
     private final Round round;
 
@@ -48,6 +53,9 @@ public class RoundScreen implements Screen {
     private float winDelay;
 
     private Set<Item> itemsToHide;
+
+    private float green = 0f;
+    private boolean sub = true;
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
@@ -84,7 +92,15 @@ public class RoundScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+        if (green > 0.35f && sub) {
+            green -= 0.0005f;
+        } else if (green < 0.5f) {
+            sub = false;
+            green += 0.0005f;
+        } else {
+            sub = true;
+        }
+        Gdx.gl.glClearColor(0f, green, green / 3, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
@@ -177,6 +193,18 @@ public class RoundScreen implements Screen {
     private void renderCharacters() {
         skinManager.updateTime();
         final List<GameCharacter> characters = round.getCharacters();
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        characters.stream()
+                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
+                .sequential()
+                .forEach(c -> {
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    shapeRenderer.setColor(0f, 0f, 0f, 0.25f);
+                    shapeRenderer.ellipse(c.getHitbox().getX()+PADDING_SHADOW_WIDTH, c.getHitbox().getY()-PADDING_SHADOW_HEIGHT, ELLIPSE_WIDTH, ELLIPSE_HEIGHT);
+                    shapeRenderer.end();
+                });
+        Gdx.gl.glDisable(GL20.GL_BLEND);
         spriteBatch.begin();
         characters.stream()
                 .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))

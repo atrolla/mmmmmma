@@ -3,14 +3,12 @@ package org.atrolla.games.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import org.atrolla.games.game.Mmmmmma;
@@ -26,14 +24,13 @@ public class MainMenuScreen implements Screen {
     private final Table table;
     private final Table playersTable;
     private final Skin skin;
-    private final TextButton buttonExit;
-    private final TextButton buttonPlay;
-    private final TextButton buttonResetPlayers;
+    private final Label buttonExit;
+    private final Label buttonPlay;
+    private final Label buttonResetPlayers;
     private final Label title;
     private Stage stage;
     private final InputManager inputManager;
     private int currentChosenButtonIndex;
-    private final Color defaultButtonFontColor;
 
     public MainMenuScreen(Mmmmmma game) {
         this.game = game;
@@ -41,28 +38,24 @@ public class MainMenuScreen implements Screen {
         playersTable = new Table();
         FileHandle skinFile = Gdx.files.internal("skins/skin.json");
         skin = new Skin(skinFile);
-        buttonPlay = new TextButton("Play", skin);
-        buttonResetPlayers = new TextButton("Reset Players", skin);
-        buttonExit = new TextButton("Exit", skin);
+        buttonPlay = new Label("Play", skin);
+        buttonResetPlayers = new Label("Reset Players", skin);
+        buttonExit = new Label("Exit", skin);
         title = new Label("Multiplayer Multi Mortal Mix Melee Mashup Arena", skin);
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
-        defaultButtonFontColor = buttonPlay.getStyle().fontColor;
         stage = new Stage();
         addElementsToTable();
         addButtonListeners();
-        buttonPlay.getLabelCell().padBottom(PAD_BOTTOM);
-        buttonResetPlayers.getLabelCell().padBottom(PAD_BOTTOM);
-        buttonExit.getLabelCell().padBottom(PAD_BOTTOM);
     }
 
     private void addElementsToTable() {
         //The elements are displayed in the order you add them.
         //The first appear on top, the last at the bottom.
         table.add(title).center().padTop(40).padBottom(40).row();
-        table.add(buttonPlay).size(150, 60).padBottom(20).row();
-        table.add(buttonResetPlayers).size(400, 60).padBottom(20).row();
-        table.add(buttonExit).size(150, 60).padBottom(20).row();
+        table.add(buttonPlay).center().padBottom(20).row();
+        table.add(buttonResetPlayers).center().padBottom(20).row();
+        table.add(buttonExit).center().padBottom(20).row();
         table.add(playersTable).expand().padBottom(20).row();
         table.setFillParent(true);
     }
@@ -108,12 +101,13 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         // (1) process the game logic
         // update the actors
         stage.act(delta);
         // (2) draw the result
         // clear the screen with the given RGB color (black)
-        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // draw the actors
         inputManager.assignPlayers();
@@ -160,13 +154,13 @@ public class MainMenuScreen implements Screen {
     }
 
     private void focusChosenButton() {
-        buttonPlay.getLabel().setColor(defaultButtonFontColor);
-        buttonResetPlayers.getLabel().setColor(defaultButtonFontColor);
-        buttonExit.getLabel().setColor(defaultButtonFontColor);
-        getChoosenTextButton().getLabel().setColor(Color.GREEN);
+        buttonPlay.setFontScale(1);
+        buttonResetPlayers.setFontScale(1);
+        buttonExit.setFontScale(1);
+        getChoosenTextButton().setFontScale(1.5f);
     }
 
-    private TextButton getChoosenTextButton() {
+    private Label getChoosenTextButton() {
         switch (currentChosenButtonIndex) {
             case 0:
                 return buttonPlay;
