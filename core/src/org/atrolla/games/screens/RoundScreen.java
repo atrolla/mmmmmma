@@ -5,8 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,6 +31,7 @@ import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,14 +58,30 @@ public class RoundScreen implements Screen {
 
     private Set<Item> itemsToHide;
 
-    private float green = 0f;
-    private boolean sub = true;
+    private final Sprite backgroundSprite;
+    private final List<Sprite> trees;
+
+    private ShaderProgram shader;
+
+    private float startGameDelay = 3;
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
         round = new Round(game.getInputManager(), game.getSoundManager());
+
+        //important since we aren't using some uniforms and attributes that SpriteBatch expects
+        ShaderProgram.pedantic = false;
+
+        shader = new ShaderProgram(GLShaders.VERT, GLShaders.FRAG);
+        if (!shader.isCompiled()) {
+            System.err.println(shader.getLog());
+            System.exit(0);
+        }
+        if (shader.getLog().length() != 0)
+            System.out.println(shader.getLog());
         shapeRenderer = new ShapeRenderer();
-        spriteBatch = new SpriteBatch();
+        spriteBatch = new SpriteBatch(1000, shader);
+        spriteBatch.setShader(shader);
         stage = new Stage(new ScalingViewport(Scaling.stretch, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()),
                 spriteBatch);
 //        stage.setDebugAll(true);
@@ -78,6 +98,10 @@ public class RoundScreen implements Screen {
         opacity = 0f;
         winDelay = 2f;
         itemsToHide = new HashSet<>();
+        backgroundSprite = new Sprite(new Texture("background/level.png"));
+        trees = new ArrayList<>();
+        trees.add(new Sprite(new Texture("trees/tree1.png")));
+        trees.add(new Sprite(new Texture("trees/tree1s.png")));
     }
 
     @Override
@@ -90,21 +114,29 @@ public class RoundScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    private void trees() {
+        spriteBatch.draw(trees.get(0), 800f, 150f);
+    }
+
+    private void treesShadows() {
+        spriteBatch.draw(trees.get(1), 800f, 150f);
+    }
+
     @Override
     public void render(float delta) {
-        if (green > 0.35f && sub) {
-            green -= 0.0005f;
-        } else if (green < 0.5f) {
-            sub = false;
-            green += 0.0005f;
-        } else {
-            sub = true;
-        }
-        Gdx.gl.glClearColor(0f, green, green / 3, 1);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+//        treesShadows();
+        spriteBatch.end();
 
-        round.update();
+        if (startGameDelay >= 0) {
+            startGameDelay -= delta;
+        } else {
+            round.update();
+        }
 
         //draw objects...
         renderItems();
@@ -140,6 +172,10 @@ public class RoundScreen implements Screen {
         if (winDelay < 0) {
             game.switchToMenuScreen();
         }
+
+//        spriteBatch.begin();
+//        trees();
+//        spriteBatch.end();
     }
 
     private int getWinningPlayerIndex() {
@@ -201,7 +237,7 @@ public class RoundScreen implements Screen {
                 .forEach(c -> {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                     shapeRenderer.setColor(0f, 0f, 0f, 0.25f);
-                    shapeRenderer.ellipse(c.getHitbox().getX()+PADDING_SHADOW_WIDTH, c.getHitbox().getY()-PADDING_SHADOW_HEIGHT, ELLIPSE_WIDTH, ELLIPSE_HEIGHT);
+                    shapeRenderer.ellipse(c.getHitbox().getX() + PADDING_SHADOW_WIDTH, c.getHitbox().getY() - PADDING_SHADOW_HEIGHT, ELLIPSE_WIDTH, ELLIPSE_HEIGHT);
                     shapeRenderer.end();
                 });
         Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -225,6 +261,10 @@ public class RoundScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
+        //bind the shader, then set the uniform, then unbind the shader
+        shader.begin();
+        shader.setUniformf("resolution", width, height);
+        shader.end();
     }
 
     @Override
@@ -246,5 +286,6 @@ public class RoundScreen implements Screen {
     public void dispose() {
         spriteBatch.dispose();
         shapeRenderer.dispose();
+        shader.dispose();
     }
 }
