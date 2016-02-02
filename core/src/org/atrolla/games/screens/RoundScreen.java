@@ -65,6 +65,8 @@ public class RoundScreen implements Screen {
 
     private float startGameDelay = 3;
 
+    private List<ScreenElement> screenElements;
+
     public RoundScreen(Mmmmmma game) {
         this.game = game;
         round = new Round(game.getInputManager(), game.getSoundManager());
@@ -115,11 +117,12 @@ public class RoundScreen implements Screen {
     }
 
     private void trees() {
-        spriteBatch.draw(trees.get(0), 800f, 150f);
-    }
-
-    private void treesShadows() {
+        screenElements.add(new ScreenElement(trees.get(0), 800f, 150f));
         spriteBatch.draw(trees.get(1), 800f, 150f);
+        screenElements.add(new ScreenElement(trees.get(0), 350f, 220f));
+        spriteBatch.draw(trees.get(1), 350f, 220f);
+        screenElements.add(new ScreenElement(trees.get(0), 1100f, 600f));
+        spriteBatch.draw(trees.get(1), 1100f, 600f);
     }
 
     @Override
@@ -127,9 +130,11 @@ public class RoundScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        screenElements = new ArrayList<>();
+
         spriteBatch.begin();
         backgroundSprite.draw(spriteBatch);
-//        treesShadows();
+        trees();
         spriteBatch.end();
 
         if (startGameDelay >= 0) {
@@ -141,6 +146,7 @@ public class RoundScreen implements Screen {
         //draw objects...
         renderItems();
         renderCharacters();
+        renderScreenElements();
         if (round.isFinished()) {
             if (opacity < 0.8f) {
                 opacity += 0.005f;
@@ -173,9 +179,31 @@ public class RoundScreen implements Screen {
             game.switchToMenuScreen();
         }
 
-//        spriteBatch.begin();
-//        trees();
-//        spriteBatch.end();
+
+    }
+
+    private void renderScreenElements() {
+        spriteBatch.begin();
+        round.getCharacters().stream()
+//                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
+//                .sequential()
+                .forEach(this::renderCharacter);
+        screenElements.stream()
+                .sorted((s1, s2) -> Float.compare(s2.y, s1.y))
+                .sequential()
+                .forEach(s -> s.draw(spriteBatch));
+        spriteBatch.end();
+    }
+
+    private void renderCharacter(GameCharacter gameCharacter) {
+        final Rectangle hitbox = gameCharacter.getHitbox();
+        final TextureRegion frame = skinManager.getFrame(gameCharacter);
+        screenElements.add(new ScreenElement(frame, hitbox.getX(), hitbox.getY(),
+                (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
+                (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT));
+//        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
+//                (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
+//                (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
     }
 
     private int getWinningPlayerIndex() {
@@ -241,21 +269,6 @@ public class RoundScreen implements Screen {
                     shapeRenderer.end();
                 });
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        spriteBatch.begin();
-        characters.stream()
-                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
-                .sequential()
-                .forEach(this::renderCharacter);
-        spriteBatch.end();
-
-    }
-
-    private void renderCharacter(GameCharacter gameCharacter) {
-        final Rectangle hitbox = gameCharacter.getHitbox();
-        final TextureRegion frame = skinManager.getFrame(gameCharacter);
-        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
-                (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
-                (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
     }
 
     @Override
