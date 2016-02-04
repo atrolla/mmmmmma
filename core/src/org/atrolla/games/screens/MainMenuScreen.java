@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
 import org.atrolla.games.input.InputManager;
 import org.atrolla.games.system.Player;
@@ -24,7 +27,7 @@ public class MainMenuScreen implements Screen {
     private final Table table;
     private final Table playersTable;
     private final Skin skin;
-    private final Label buttonExit;
+//    private final Label buttonExit;
     private final Label buttonPlay;
     private final Label buttonResetPlayers;
     private final Label title;
@@ -40,11 +43,11 @@ public class MainMenuScreen implements Screen {
         skin = new Skin(skinFile);
         buttonPlay = new Label("Play", skin);
         buttonResetPlayers = new Label("Reset Players", skin);
-        buttonExit = new Label("Exit", skin);
+//        buttonExit = new Label("Exit", skin);
         title = new Label("Multiplayer Multi Mortal Mix Melee Mashup Arena", skin);
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
-        stage = new Stage();
+        stage = new Stage(new ScalingViewport(Scaling.fit, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()));
         addElementsToTable();
         addButtonListeners();
     }
@@ -55,7 +58,7 @@ public class MainMenuScreen implements Screen {
         table.add(title).center().padTop(40).padBottom(40).row();
         table.add(buttonPlay).center().padBottom(20).row();
         table.add(buttonResetPlayers).center().padBottom(20).row();
-        table.add(buttonExit).center().padBottom(20).row();
+//        table.add(buttonExit).center().padBottom(20).row();
         table.add(playersTable).expand().padBottom(20).row();
         table.setFillParent(true);
     }
@@ -73,12 +76,12 @@ public class MainMenuScreen implements Screen {
                 startNewRound();
             }
         });
-        buttonExit.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                exitGame();
-            }
-        });
+//        buttonExit.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                exitGame();
+//            }
+//        });
         buttonResetPlayers.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -156,7 +159,7 @@ public class MainMenuScreen implements Screen {
     private void focusChosenButton() {
         buttonPlay.setFontScale(1);
         buttonResetPlayers.setFontScale(1);
-        buttonExit.setFontScale(1);
+//        buttonExit.setFontScale(1);
         getChoosenTextButton().setFontScale(1.5f);
     }
 
@@ -166,8 +169,8 @@ public class MainMenuScreen implements Screen {
                 return buttonPlay;
             case 1:
                 return buttonResetPlayers;
-            case 2:
-                return buttonExit;
+//            case 2:
+//                return buttonExit;
             default:
                 return buttonPlay;
         }

@@ -42,7 +42,7 @@ public final class ConfigurationConstants {
     public static final int ITEM_NEUTRAL_SPAWN_FREQUENCY_TIME = 300;
     public static final int ITEM_NEUTRAL_SIZE = 5;
 
-    public static final int SWORD_SIZE = 1;
+    public static final int SWORD_SIZE = 10;
     public static final int EXPLOSION_RADIUS_SIZE = 50;
     public static final int ARROW_HITBOX_SIZE = 1;
 }

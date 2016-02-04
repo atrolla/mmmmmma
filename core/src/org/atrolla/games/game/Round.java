@@ -62,6 +62,7 @@ public class Round {
         this.aiManager = new AIManager(bots.size());
         this.gameItems = new ArrayList<>();
         this.neutralItemManager = new NeutralItemManager();
+        initMages();
     }
 
     public Round(InputManager inputManager, SoundManager soundManager) {
@@ -247,6 +248,21 @@ public class Round {
         //TODO: if there are only mages, set them to same class
     }
 
+    private void initMages(){
+        players.stream()
+                .filter(p -> CharacterClasses.MAGE == p.getPlayer().getGameCharacterClass())
+                .map(Mage.class::cast)
+                .forEach(p -> {
+                    final int botIndex = org.apache.commons.lang3.RandomUtils.nextInt(0, bots.size());
+                    final GameCharacter newDisguised = bots.remove(botIndex);
+                    p.setDisguisedCharacter(newDisguised); //while setting a random existing bot
+                    newDisguised.setPlayer(p.getPlayer());//
+                    p.teleports(newDisguised.getCoordinates());
+                    aiManager.getCommands().remove(botIndex); // and removing the bot command
+                    aiManager.getCommands().add(Command.NO_COMMAND); //assign a NO_COMMAND to it
+                    characters.remove(newDisguised);
+                });
+    }
 
     /**
      * Play sounds if a soundManager is present

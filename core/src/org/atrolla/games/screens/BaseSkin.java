@@ -29,11 +29,6 @@ public class BaseSkin implements CharacterSkin {
                 regions[k++] = new TextureRegion(walkSheet, (32 * j), (40 * i) - 1, 32, 40);
             }
         }
-        //TODO : dies
-//        regions[0] = new TextureRegion(walkSheet, 0, 0, 32, 40);
-//        regions[1] = new TextureRegion(walkSheet, 0.5f, 0f, 1f, 0.5f);
-//        regions[2] = new TextureRegion(walkSheet, 0, 63, 64, 64);
-//        regions[3] = new TextureRegion(walkSheet, 0.5f, 0.5f, 1f, 1f);
         walkDown = buildAnimation(regions, 0);
         walkDownLeft = buildAnimation(regions, 1);
         walkLeft = buildAnimation(regions, 2);

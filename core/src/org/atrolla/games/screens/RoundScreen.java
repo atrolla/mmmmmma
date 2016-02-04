@@ -42,6 +42,7 @@ public class RoundScreen implements Screen {
     public static final float PADDING_SHADOW_WIDTH = 4f;
     public static final float PADDING_SHADOW_HEIGHT = 1f;
     public static final float ELLIPSE_WIDTH = (float) ConfigurationConstants.GAME_CHARACTER_WIDTH - PADDING_SHADOW_WIDTH - PADDING_SHADOW_WIDTH;
+    public static final float WINNER_AURA = 50f;
 
     private final Mmmmmma game;
     private final Round round;
@@ -82,9 +83,10 @@ public class RoundScreen implements Screen {
         if (shader.getLog().length() != 0)
             System.out.println(shader.getLog());
         shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(game.getCamera().combined);
         spriteBatch = new SpriteBatch(1000, shader);
         spriteBatch.setShader(shader);
-        stage = new Stage(new ScalingViewport(Scaling.stretch, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()),
+        stage = new Stage(new ScalingViewport(Scaling.fit, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()),
                 spriteBatch);
 //        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
@@ -167,6 +169,11 @@ public class RoundScreen implements Screen {
             stage.addActor(winnerText);
             Gdx.gl.glEnable(GL20.GL_BLEND);
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            final GameCharacter winner = round.getPlayers().stream().filter(GameCharacter::isAlive).findFirst().get();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0f, 1f, 0f, 0.5f);
+            shapeRenderer.circle((float) winner.getCenter().getX(), (float) winner.getCenter().getY(), WINNER_AURA);
+            shapeRenderer.end();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0.9f, 0.9f, 0.9f, opacity);
             shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());

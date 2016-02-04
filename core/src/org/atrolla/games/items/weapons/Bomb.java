@@ -14,8 +14,8 @@ public class Bomb extends Item {
     private boolean explodes = false;
 
     public Bomb(Bomber bomber, int currentTime) {
-        super(bomber.getCoordinates(), currentTime + ITEM_BOMB_COUNTDOWN_DURATION, bomber);
-        final Coordinates coordinates = bomber.getCoordinates();
+        super(bomber.getCenter(), currentTime + ITEM_BOMB_COUNTDOWN_DURATION, bomber);
+        final Coordinates coordinates = bomber.getCenter();
         this.hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
     }
 
