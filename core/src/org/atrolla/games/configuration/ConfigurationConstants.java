@@ -31,11 +31,13 @@ public final class ConfigurationConstants {
 
     public static final int MAX_PLAYERS = 4;
 
+    public static final int ITEM_BOMB_COUNTDOWN_DURATION = 150;
+
     public static final int ARCHER_ABILITY_COOLDOWN_DURATION = 150;
-    public static final int BOMBER_ABILITY_COOLDOWN_DURATION = 210;
+    public static final int BOMBER_ABILITY_COOLDOWN_DURATION = ITEM_BOMB_COUNTDOWN_DURATION + 10;
     public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 50;
 
-    public static final int ITEM_BOMB_COUNTDOWN_DURATION = 200;
+
     public static final double ITEM_ARROW_MOVE_STEP = 4d;
     public static final int ITEM_ARROW_RANGE_TIME_OUT = 30;
     public static final int ITEM_SWORD_ACTION_TIME_OUT = 1;

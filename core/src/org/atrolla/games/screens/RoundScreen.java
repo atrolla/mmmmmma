@@ -23,11 +23,8 @@ import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.items.Item;
-import org.atrolla.games.items.neutrals.NeutralItem;
-import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.items.weapons.MageWeaponWrapper;
-import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
@@ -50,6 +47,7 @@ public class RoundScreen implements Screen {
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch spriteBatch;
     private final CharacterSkinManager skinManager;
+    private final ItemSpriteManager itemSpriteManager;
     private final Stage stage;
 
     private Label topLeftText;
@@ -90,6 +88,7 @@ public class RoundScreen implements Screen {
                 spriteBatch);
 //        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
+        itemSpriteManager = new ItemSpriteManager();
         FileHandle skinFile = Gdx.files.internal("skins/skin.json");
         Skin skin = new Skin(skinFile);
         final int playersNumber = round.getPlayers().size();
@@ -118,13 +117,17 @@ public class RoundScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
-    private void trees() {
+    private void renderTrees() {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
         screenElements.add(new ScreenElement(trees.get(0), 800f, 150f));
         spriteBatch.draw(trees.get(1), 800f, 150f);
         screenElements.add(new ScreenElement(trees.get(0), 350f, 220f));
         spriteBatch.draw(trees.get(1), 350f, 220f);
         screenElements.add(new ScreenElement(trees.get(0), 1100f, 600f));
         spriteBatch.draw(trees.get(1), 1100f, 600f);
+
+        spriteBatch.end();
     }
 
     @Override
@@ -134,21 +137,31 @@ public class RoundScreen implements Screen {
 
         screenElements = new ArrayList<>();
 
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        trees();
-        spriteBatch.end();
+        delayRoundStart(delta);
 
+        //draw objects...
+        renderTrees();
+        renderCharacters();
+        renderScreenElements();
+        renderItems();
+        renderEndGame(delta);
+
+        stage.draw();
+        if (winDelay < 0) {
+            game.switchToMenuScreen();
+        }
+
+    }
+
+    private void delayRoundStart(float delta) {
         if (startGameDelay >= 0) {
             startGameDelay -= delta;
         } else {
             round.update();
         }
+    }
 
-        //draw objects...
-        renderItems();
-        renderCharacters();
-        renderScreenElements();
+    private void renderEndGame(float delta) {
         if (round.isFinished()) {
             if (opacity < 0.8f) {
                 opacity += 0.005f;
@@ -180,13 +193,6 @@ public class RoundScreen implements Screen {
             shapeRenderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
         }
-
-        stage.draw();
-        if (winDelay < 0) {
-            game.switchToMenuScreen();
-        }
-
-
     }
 
     private void renderScreenElements() {
@@ -208,9 +214,6 @@ public class RoundScreen implements Screen {
         screenElements.add(new ScreenElement(frame, hitbox.getX(), hitbox.getY(),
                 (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
                 (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT));
-//        spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
-//                (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
-//                (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
     }
 
     private int getWinningPlayerIndex() {
@@ -226,6 +229,7 @@ public class RoundScreen implements Screen {
     }
 
     private void renderItems() {
+        spriteBatch.begin();
         final List<Item> gameObjects = round.getGameItems();
         for (Item item : gameObjects) {
             final Coordinates coordinates = item.getCoordinates();
@@ -237,28 +241,38 @@ public class RoundScreen implements Screen {
             }
             shapeRenderer.end();
         }
+        itemSpriteManager.render(spriteBatch);
+        spriteBatch.end();
     }
 
     private void showItem(Item item, Coordinates coordinates) {
         if (item instanceof Bomb) {
-            if (!itemsToHide.contains(item)) {
-                shapeRenderer.setColor(Color.RED);
-                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
-                shapeRenderer.end();
-                itemsToHide.add(item);
+//            if (!itemsToHide.contains(item)) {
+//                shapeRenderer.setColor(Color.RED);
+//                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 2);
+
+//                itemsToHide.add(item);
+//            }
+            final Bomb bomb = (Bomb) item;
+            if (bomb.isExploding()) {
+//                shapeRenderer.setColor(Color.DARK_GRAY);
+//                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+
+                itemSpriteManager.makeExplosion(bomb,coordinates);
             }
-        } else if (item instanceof Arrow) {
-            // Arrow
-            shapeRenderer.setColor(Color.PINK);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 1);
-        } else if (item instanceof Sword) {
-            // Sword
-            shapeRenderer.setColor(Color.TEAL);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 1);
-        } else if (item instanceof NeutralItem) {
-            shapeRenderer.setColor(Color.MAGENTA);
-            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
         }
+//        else if (item instanceof Arrow) {
+//            // Arrow
+//            shapeRenderer.setColor(Color.PINK);
+//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 1);
+//        } else if (item instanceof Sword) {
+//            // Sword
+//            shapeRenderer.setColor(Color.TEAL);
+//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), 1);
+//        } else if (item instanceof NeutralItem) {
+//            shapeRenderer.setColor(Color.MAGENTA);
+//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
+//        }
     }
 
     private void renderCharacters() {
