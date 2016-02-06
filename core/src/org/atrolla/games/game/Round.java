@@ -39,6 +39,7 @@ public class Round {
     private final List<GameCharacter> characters;
     private final List<GameCharacter> players;
     private final List<GameCharacter> bots;
+    private final List<GameCharacter> mages;
     private List<CharacterClasses> visibleClasses;
     private final AIManager aiManager;
     private final InputManager inputManager;
@@ -55,6 +56,7 @@ public class Round {
         this.inputManager = inputManager;
         this.soundManager = soundManager;
         this.characters = new ArrayList<>(ConfigurationConstants.GAME_CHARACTERS);
+        this.mages = new ArrayList<>(inputManager.getPlayers().size());
         this.time = 0;
         initCharacters();
         this.bots = characters.stream().filter(c -> !c.isPlayer()).collect(Collectors.toList());
@@ -82,7 +84,14 @@ public class Round {
      */
     private void initCharacters() {
         inputManager.getPlayers().forEach(
-                p -> characters.add(p.getGameCharacterClass().createCharacter(p))
+                p -> {
+                    final GameCharacter character = p.getGameCharacterClass().createCharacter(p);
+                    if (!(character instanceof Mage)) {
+                        characters.add(character);
+                    } else {
+                        mages.add(character);
+                    }
+                }
         );
         addBotsToCharactersCollection();
         Collections.shuffle(characters);
@@ -103,7 +112,6 @@ public class Round {
     private void initVisibleClasses() {
         visibleClasses = characters.stream()
                 .map(c -> c.getPlayer().getGameCharacterClass())
-                .filter(c -> c != CharacterClasses.MAGE)
                 .distinct()
                 .collect(Collectors.toList());// Get all playing classes that are not mage
         if (visibleClasses.size() == 0) { // there are only mages... get a random class
@@ -120,12 +128,12 @@ public class Round {
         IntStream
                 .rangeClosed(1, endInclusive)
                 .forEach(i -> IntStream
-                        .rangeClosed(1, 4)
-                        .forEach(j -> {
-                                    final GameCharacter gameCharacter = characters.get((i - 1) * 4 + j - 1);
-                                    gameCharacter.teleports(new Coordinates(xStep * j, yStep * i));
-                                }
-                        )
+                                .rangeClosed(1, 4)
+                                .forEach(j -> {
+                                            final GameCharacter gameCharacter = characters.get((i - 1) * 4 + j - 1);
+                                            gameCharacter.teleports(new Coordinates(xStep * j, yStep * i));
+                                        }
+                                )
                 );
     }
 
@@ -216,16 +224,14 @@ public class Round {
     }
 
     private void reDisguiseMages() {
-        final Stream<GameCharacter> magePlayers = players.stream()
-                .filter(GameCharacter::isAlive)
-                .filter(p -> CharacterClasses.MAGE == p.getPlayer().getGameCharacterClass());
         final Set<Class<? extends GameCharacter>> nonMageAliveClasses = players.stream()
                 .filter(p -> CharacterState.DEAD != p.getState())
                 .map(p -> p.getClass())
                 .filter(c -> !Mage.class.equals(c))
                 .collect(Collectors.toSet());
         if (!nonMageAliveClasses.isEmpty()) {
-            magePlayers
+            mages.stream()
+                    .filter(GameCharacter::isAlive)
                     .map(Mage.class::cast)
                     .filter(m -> m.getDisguisedCharacter().isPresent()) // should always be true...
                     .filter(p -> !nonMageAliveClasses.contains(p.getDisguisedCharacter().get().getClass())) //no more alive players with same class matches disguised class
@@ -249,8 +255,7 @@ public class Round {
     }
 
     private void initMages() {
-        players.stream()
-                .filter(p -> CharacterClasses.MAGE == p.getPlayer().getGameCharacterClass())
+        mages.stream()
                 .map(Mage.class::cast)
                 .forEach(p -> {
                     final int botIndex = org.apache.commons.lang3.RandomUtils.nextInt(0, bots.size());
@@ -261,6 +266,8 @@ public class Round {
                     aiManager.getCommands().remove(botIndex); // and removing the bot command
                     aiManager.getCommands().add(Command.NO_COMMAND); //assign a NO_COMMAND to it
                     characters.remove(newDisguised);
+                    characters.add(p);
+                    players.add(p);
                 });
     }
 
