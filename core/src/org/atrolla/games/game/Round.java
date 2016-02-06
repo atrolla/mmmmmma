@@ -183,7 +183,7 @@ public class Round {
     private void manageBots() {
         //TODO : refactor as its not only bots anymore
         aiManager.updateKOCharactersState(characters, time);
-        aiManager.updateBotsMove(bots);
+        aiManager.updateBotsMove(time, bots);
     }
 
     /**
@@ -248,7 +248,7 @@ public class Round {
         //TODO: if there are only mages, set them to same class
     }
 
-    private void initMages(){
+    private void initMages() {
         players.stream()
                 .filter(p -> CharacterClasses.MAGE == p.getPlayer().getGameCharacterClass())
                 .map(Mage.class::cast)

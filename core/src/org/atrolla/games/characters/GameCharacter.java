@@ -37,7 +37,7 @@ public abstract class GameCharacter {
         this.coordinates = Coordinates.DEFAULT;
     }
 
-    public final void moves(Direction direction) {
+    public void moves(int time, Direction direction) {
         if (isAlive()) {
             isMoving = false;
             if (!Direction.STOP.equals(direction)) {

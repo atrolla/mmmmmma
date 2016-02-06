@@ -13,13 +13,12 @@ import static org.atrolla.games.ai.Command.RandomCommand;
 
 /**
  * Created by MicroOnde on 25/02/2015.
- *
+ * <p>
  * This class manages bots movements
- *
- *
+ * <p>
+ * <p>
  * bots are smart enough to not go into walls
  * bots can stop walking
- *
  */
 public class AIManager {
 
@@ -34,7 +33,6 @@ public class AIManager {
     }
 
     /**
-     *
      * add a random Command to each bot
      *
      * @see Command
@@ -50,17 +48,16 @@ public class AIManager {
     }
 
     /**
-     *
      * move bots accordingly to their command
      *
-     * @see GameCharacter#moves(Direction)
+     * @see GameCharacter#moves(int,Direction)
      */
-    public void updateBotsMove(final Collection<GameCharacter> bots) {
+    public void updateBotsMove(int time, final Collection<GameCharacter> bots) {
         int i = 0;
         for (GameCharacter character : bots) {
             if (!character.isPlayer()) {
                 final Command command = commands.get(i);
-                character.moves(command.getDirection());
+                character.moves(time, command.getDirection());
                 i++;
             } else {
                 System.err.println("Found a player in bot list for updateBotsMove, please remove in code");
@@ -70,7 +67,6 @@ public class AIManager {
     }
 
     /**
-     *
      * for each finished Command, replace with a new one
      *
      * @see Command#checkIsDone(int)
@@ -90,7 +86,6 @@ public class AIManager {
     }
 
     /**
-     *
      * Each new KO character is put in a map so that after a time, they will awake and move again.
      *
      * @see GameCharacter#isKnockOut()

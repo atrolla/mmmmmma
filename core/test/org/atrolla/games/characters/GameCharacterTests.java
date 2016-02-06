@@ -54,57 +54,57 @@ public class GameCharacterTests {
 
     @Test
     public void moveUpChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.UP);
+        defaultBotArcher.moves(0,Direction.UP);
         assertEquals(Direction.UP, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveUpLeftChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.UP_LEFT);
+        defaultBotArcher.moves(0,Direction.UP_LEFT);
         assertEquals(Direction.UP_LEFT, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveUpRightChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.UP_RIGHT);
+        defaultBotArcher.moves(0,Direction.UP_RIGHT);
         assertEquals(Direction.UP_RIGHT, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveLeftChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.LEFT);
+        defaultBotArcher.moves(0,Direction.LEFT);
         assertEquals(Direction.LEFT, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveRightChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.RIGHT);
+        defaultBotArcher.moves(0,Direction.RIGHT);
         assertEquals(Direction.RIGHT, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveDownLeftChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.DOWN_LEFT);
+        defaultBotArcher.moves(0,Direction.DOWN_LEFT);
         assertEquals(Direction.DOWN_LEFT, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveDownChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.DOWN);
+        defaultBotArcher.moves(0,Direction.DOWN);
         assertEquals(Direction.DOWN, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveDownRightChangesDirection() throws Exception {
-        defaultBotArcher.moves(Direction.DOWN_RIGHT);
+        defaultBotArcher.moves(0,Direction.DOWN_RIGHT);
         assertEquals(Direction.DOWN_RIGHT, defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveChangesCoordinates() throws Exception {
-        defaultBotArcher.moves(Direction.UP);
+        defaultBotArcher.moves(0,Direction.UP);
         Coordinates c1 = defaultBotArcher.getCoordinates();
-        defaultBotArcher.moves(Direction.UP);
+        defaultBotArcher.moves(0,Direction.UP);
         assertNotEquals(c1, defaultBotArcher.getCoordinates());
     }
 

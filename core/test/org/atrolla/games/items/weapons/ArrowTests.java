@@ -10,9 +10,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotEquals;
 
 /**
@@ -32,7 +30,7 @@ public class ArrowTests {
 
     @Test
     public void arrowHasSamePlayerDirection() throws Exception {
-        assertEquals(archer.getDirection(), arrow.getDirection());
+        assertThat(archer.getDirection()).isEqualTo(arrow.getDirection());
     }
 
     @Test
@@ -41,15 +39,15 @@ public class ArrowTests {
         final Coordinates coordinates = arrow.getCoordinates();
         final boolean update = arrow.update(1);
         //is not done
-        assertFalse(update);
-        assertEquals(direction, arrow.getDirection());
+        assertThat(update).isFalse();
+        assertThat(direction).isEqualTo( arrow.getDirection());
         assertNotEquals(coordinates, arrow.getCoordinates());
     }
 
     @Test
     public void arrowHasMaxRangeDefinedByTimeOut() throws Exception {
-        assertFalse(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT - 1));
-        assertFalse(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT));
-        assertTrue(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT + 1));
+        assertThat(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT - 1)).isFalse();
+        assertThat(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT)).isFalse();
+        assertThat(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT + 1)).isTrue();
     }
 }

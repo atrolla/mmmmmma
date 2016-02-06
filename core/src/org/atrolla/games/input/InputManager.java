@@ -135,9 +135,9 @@ public class InputManager {
         for (GameCharacter character : playerCharacterList) {
             final Player player = character.getPlayer();
             if (player.getKeyboardInput().isPresent()) {
-                character.moves(Direction.STOP);
+                character.moves(time, Direction.STOP);
                 final Input input = player.getKeyboardInput().get();
-                moveGameCharacter(character, input);
+                moveGameCharacter(time, character, input);
                 if (keyboard.isKeyJustPressed(Input.Keys.CONTROL_RIGHT)) {
                     character.useAbility(time).ifPresent(items::add);
                 }
@@ -146,7 +146,7 @@ public class InputManager {
                 }
             } else if (player.getPadControllerInput().isPresent()) {
                 final PadController padController = player.getPadControllerInput().get();
-                moveGameCharacter(character, padController.getController());
+                moveGameCharacter(time, character, padController.getController());
                 if (padController.hasJustPressed(padInput.buttonA())) {
                     character.useAbility(time).ifPresent(items::add);
                 }
@@ -158,59 +158,59 @@ public class InputManager {
         return items;
     }
 
-    private void moveGameCharacter(GameCharacter gameCharacter, Input keyboard) {
+    private void moveGameCharacter(int time, GameCharacter gameCharacter, Input keyboard) {
         if (keyboard.isKeyPressed(Input.Keys.UP)) {
             if (keyboard.isKeyPressed(Input.Keys.LEFT)) {
-                gameCharacter.moves(Direction.UP_LEFT);
+                gameCharacter.moves(time, Direction.UP_LEFT);
             } else if (keyboard.isKeyPressed(Input.Keys.RIGHT)) {
-                gameCharacter.moves(Direction.UP_RIGHT);
+                gameCharacter.moves(time, Direction.UP_RIGHT);
             } else {
-                gameCharacter.moves(Direction.UP);
+                gameCharacter.moves(time, Direction.UP);
             }
         } else if (keyboard.isKeyPressed(Input.Keys.DOWN)) {
             if (keyboard.isKeyPressed(Input.Keys.LEFT)) {
-                gameCharacter.moves(Direction.DOWN_LEFT);
+                gameCharacter.moves(time, Direction.DOWN_LEFT);
             } else if (keyboard.isKeyPressed(Input.Keys.RIGHT)) {
-                gameCharacter.moves(Direction.DOWN_RIGHT);
+                gameCharacter.moves(time, Direction.DOWN_RIGHT);
             } else {
-                gameCharacter.moves(Direction.DOWN);
+                gameCharacter.moves(time, Direction.DOWN);
             }
         } else if (keyboard.isKeyPressed(Input.Keys.RIGHT)) {
-            gameCharacter.moves(Direction.RIGHT);
+            gameCharacter.moves(time, Direction.RIGHT);
         } else if (keyboard.isKeyPressed(Input.Keys.LEFT)) {
-            gameCharacter.moves(Direction.LEFT);
+            gameCharacter.moves(time, Direction.LEFT);
         }
     }
 
-    private void moveGameCharacter(GameCharacter gameCharacter, Controller controller) {
+    private void moveGameCharacter(int time, GameCharacter gameCharacter, Controller controller) {
         final PovDirection pov = padInput.getPovDirection(controller);
         switch (pov) {
             case east:
-                gameCharacter.moves(Direction.RIGHT);
+                gameCharacter.moves(time, Direction.RIGHT);
                 break;
             case north:
-                gameCharacter.moves(Direction.UP);
+                gameCharacter.moves(time, Direction.UP);
                 break;
             case south:
-                gameCharacter.moves(Direction.DOWN);
+                gameCharacter.moves(time, Direction.DOWN);
                 break;
             case west:
-                gameCharacter.moves(Direction.LEFT);
+                gameCharacter.moves(time, Direction.LEFT);
                 break;
             case northWest:
-                gameCharacter.moves(Direction.UP_LEFT);
+                gameCharacter.moves(time, Direction.UP_LEFT);
                 break;
             case southWest:
-                gameCharacter.moves(Direction.DOWN_LEFT);
+                gameCharacter.moves(time, Direction.DOWN_LEFT);
                 break;
             case northEast:
-                gameCharacter.moves(Direction.UP_RIGHT);
+                gameCharacter.moves(time, Direction.UP_RIGHT);
                 break;
             case southEast:
-                gameCharacter.moves(Direction.DOWN_RIGHT);
+                gameCharacter.moves(time, Direction.DOWN_RIGHT);
                 break;
             default:
-                gameCharacter.moves(Direction.STOP);
+                gameCharacter.moves(time, Direction.STOP);
                 break;
         }
     }
@@ -241,11 +241,11 @@ public class InputManager {
         for (Player p : players) {
             if (p.getPadControllerInput().isPresent()) {
                 final PadController padController = p.getPadControllerInput().get();
-                if(padController.hasJustPressed(padInput.buttonA())){
+                if (padController.hasJustPressed(padInput.buttonA())) {
                     return true;
                 }
             } else {
-                if(keyboard.isKeyJustPressed(Input.Keys.ENTER)){
+                if (keyboard.isKeyJustPressed(Input.Keys.ENTER)) {
                     return true;
                 }
             }

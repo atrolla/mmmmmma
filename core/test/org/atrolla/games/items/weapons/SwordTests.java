@@ -5,14 +5,12 @@ import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by MicroOnde on 15/03/2015.
@@ -33,72 +31,64 @@ public class SwordTests {
 
     @Test
     public void swordLastsFewTicksDefinedByTimeOut() throws Exception {
-        assertFalse(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT-1));
-        assertFalse(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT));
-        assertTrue(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT+1));
+        assertThat(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT-1)).isFalse();
+        assertThat(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT)).isFalse();
+        assertThat(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT+1));
     }
 
     @Test
-    public void swordIsRightToKnightWhenWalkingToTheRight() throws Exception {
-        knight.moves(Direction.RIGHT);
+    public void swordIsCenteredWhenWalkingToTheRight() throws Exception {
+        knight.moves(0,Direction.RIGHT);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsLeftToKnightWhenWalkingToTheLeft() throws Exception {
-        knight.moves(Direction.LEFT);
+    public void swordIsCenteredWhenWalkingToTheLeft() throws Exception {
+        knight.moves(0,Direction.LEFT);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() == sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsOnTopOfKnightWhenWalkingToTheTop() throws Exception {
-        knight.moves(Direction.UP);
+    public void swordIsCenteredWhenWalkingToTheTop() throws Exception {
+        knight.moves(0,Direction.UP);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsUnderKnightWhenWalkingDown() throws Exception {
-        knight.moves(Direction.DOWN);
+    public void swordIsCenteredWhenWalkingDown() throws Exception {
+        knight.moves(0,Direction.DOWN);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() == sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsUpRightToKnightWhenWalkingToTheUpRight() throws Exception {
-        knight.moves(Direction.UP_RIGHT);
+    public void swordIsCenteredWhenWalkingToTheUpRight() throws Exception {
+        knight.moves(0,Direction.UP_RIGHT);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsUpLeftToKnightWhenWalkingToTheUpLeft() throws Exception {
-        knight.moves(Direction.UP_LEFT);
+    public void swordIsCenteredWhenWalkingToTheUpLeft() throws Exception {
+        knight.moves(0,Direction.UP_LEFT);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() == sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() < sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsDownLeftToKnightWhenWalkingToTheDownLeft() throws Exception {
-        knight.moves(Direction.DOWN_LEFT);
+    public void swordIsCenteredWhenWalkingToTheDownLeft() throws Exception {
+        knight.moves(0,Direction.DOWN_LEFT);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() == sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() == sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
-    public void swordIsDownRightToKnightWhenWalkingDownRight() throws Exception {
-        knight.moves(Direction.DOWN_RIGHT);
+    public void swordIsCenteredWhenWalkingDownRight() throws Exception {
+        knight.moves(0,Direction.DOWN_RIGHT);
         sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
-        Assert.assertTrue(knight.getCoordinates().getX() < sword.getCoordinates().getX());
-        Assert.assertTrue(knight.getCoordinates().getY() == sword.getCoordinates().getY());
+        assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 }

@@ -20,10 +20,7 @@ import org.junit.Test;
 
 import java.util.function.Predicate;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -50,7 +47,7 @@ public class RoundTests {
     public void gameHasStage() throws Exception {
         Stage stage = new Stage();
         Round round = new Round(stage, inputManager, null);
-        assertEquals(stage, round.getStage());
+        assertThat(stage).isEqualTo(round.getStage());
     }
 
     /*@Test // NO MORE TRUE
@@ -64,7 +61,7 @@ public class RoundTests {
 
     @Test
     public void gameHasAIManager() throws Exception {
-        assertTrue(defaultRound.getAIManager() instanceof AIManager);
+        assertThat(defaultRound.getAIManager() instanceof AIManager);
     }
 
     @Test
@@ -73,17 +70,17 @@ public class RoundTests {
         // Down is default direction, so statistically, at least one should not be down after first update
         Predicate<GameCharacter> directionIsNotDown = gameCharacter -> !Direction.DOWN.equals(gameCharacter.getDirection());
 //		defaultGame.getCharacters().parallelStream().forEach(c -> System.out.println(c.getDirection()));
-        assertTrue(defaultRound.getCharacters().parallelStream().anyMatch(directionIsNotDown));
+        assertThat(defaultRound.getCharacters().parallelStream().anyMatch(directionIsNotDown));
     }
 
     @Test
     public void outOfBoundsCharStaysInBound() throws Exception {
         for (int i = 0; i < 10000; i++) {
-            firstBot.moves(Direction.DOWN);
+            firstBot.moves(0, Direction.DOWN);
         }
-        assertTrue(defaultRound.getStage().isOutOfBound(firstBot));
+        assertThat(defaultRound.getStage().isOutOfBound(firstBot));
         defaultRound.update();
-        assertFalse(defaultRound.getStage().isOutOfBound(firstBot));
+        assertThat(defaultRound.getStage().isOutOfBound(firstBot)).isFalse();
     }
 
     @Test
@@ -92,13 +89,13 @@ public class RoundTests {
         defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
         // t = 0
         defaultRound.update();
-        assertEquals(command, defaultRound.getAIManager().getCommands().get(firstBotIndex));
+        assertThat(command).isEqualTo(defaultRound.getAIManager().getCommands().get(firstBotIndex));
         // t = 1
         defaultRound.update();
-        assertEquals(command, defaultRound.getAIManager().getCommands().get(firstBotIndex));
+        assertThat(command).isEqualTo(defaultRound.getAIManager().getCommands().get(firstBotIndex));
         // t = 2
         defaultRound.update();
-        assertNotEquals(command, defaultRound.getAIManager().getCommands().get(firstBotIndex));
+        assertThat(command).isNotEqualTo(defaultRound.getAIManager().getCommands().get(firstBotIndex));
     }
 
     @Test
@@ -108,17 +105,17 @@ public class RoundTests {
             firstBot.teleports(resetCoord);
             // put char out of bound
             for (int i = 0; i < 10000; i++) {
-                firstBot.moves(Direction.UP);
+                firstBot.moves(0, Direction.UP);
             }
             // put direction that makes it still out of bound
             Command command = new Command(Direction.UP_RIGHT, 500);
             defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
             defaultRound.update();
-            assertFalse(defaultRound.getStage().isOutOfBound(firstBot));
+            assertThat(defaultRound.getStage().isOutOfBound(firstBot)).isFalse();
             final Command generatedCommand = defaultRound.getAIManager().getCommands().get(firstBotIndex);
-            assertNotEquals("bad direction found during iteration " + j, Direction.UP, generatedCommand.getDirection());
-            assertNotEquals("bad direction found during iteration " + j, Direction.UP_RIGHT, generatedCommand.getDirection());
-            assertNotEquals("bad direction found during iteration " + j, Direction.UP_LEFT, generatedCommand.getDirection());
+            assertThat(Direction.UP).isNotEqualTo(generatedCommand.getDirection()).as("bad direction found during iteration " + j);
+            assertThat(Direction.UP_RIGHT).isNotEqualTo(generatedCommand.getDirection()).as("bad direction found during iteration " + j);
+            assertThat(Direction.UP_LEFT).isNotEqualTo(generatedCommand.getDirection()).as("bad direction found during iteration " + j);
         }
     }
 
@@ -129,10 +126,10 @@ public class RoundTests {
         defaultRound.getAIManager().getCommands().set(firstBotIndex, command);
         defaultRound.update();
         final Coordinates coordinates2 = firstBot.getCoordinates();
-        assertNotEquals(baseCoordinates, coordinates2);
+        assertThat(baseCoordinates).isNotEqualTo(coordinates2);
         firstBot.hit(new Knight(Player.BOT));
         defaultRound.update();
-        assertEquals(coordinates2, firstBot.getCoordinates());
+        assertThat(coordinates2).isEqualTo(firstBot.getCoordinates());
     }
 
     @Test
@@ -143,16 +140,16 @@ public class RoundTests {
         final Coordinates baseCoordinates = firstBot.getCoordinates();
         Assert.assertTrue(firstBot.isAlive());
         firstBot.hit(new Knight(Player.BOT));
-        assertFalse(firstBot.isAlive());
+        assertThat(firstBot.isAlive()).isFalse();
         int i = 0;
         while (i++ < ConfigurationConstants.KNOCK_OUT_DURATION) {
             defaultRound.update();
-            assertFalse(firstBot.isAlive());
-            assertEquals(baseCoordinates, firstBot.getCoordinates());
+            assertThat(firstBot.isAlive()).isFalse();
+            assertThat(baseCoordinates).isEqualTo(firstBot.getCoordinates());
         }
         defaultRound.update();
-        assertTrue(firstBot.isAlive());
-        assertNotEquals(baseCoordinates, firstBot.getCoordinates());
+        assertThat(firstBot.isAlive());
+        assertThat(baseCoordinates).isNotEqualTo(firstBot.getCoordinates());
     }
 
     @Test

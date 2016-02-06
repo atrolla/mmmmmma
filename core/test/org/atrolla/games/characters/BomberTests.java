@@ -36,11 +36,11 @@ public class BomberTests {
     }
 
     @Test
-    public void bombIsCreatedAtCurrentBomberCoordinates() throws Exception {
+    public void bombIsCreatedAtCurrentBomberCenter() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         bomberPlayer.teleports(coordinates);
         final Bomb bomb = (Bomb) bomberPlayer.useAbility(ABILITY_USE_TIME).get();
-        assertThat(bomb.getCoordinates()).isEqualTo(coordinates);
+        assertThat(bomb.getCoordinates()).isEqualTo(bomberPlayer.getCenter());
     }
 
     @Test
