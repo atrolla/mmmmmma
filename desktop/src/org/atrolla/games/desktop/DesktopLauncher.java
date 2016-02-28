@@ -2,7 +2,7 @@ package org.atrolla.games.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.atrolla.games.game.Mmmmmma;
+import org.atrolla.games.desktop.game.Mmmmmma;
 
 public class DesktopLauncher {
 

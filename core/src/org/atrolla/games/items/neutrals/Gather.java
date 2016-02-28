@@ -29,4 +29,8 @@ public class Gather extends NeutralItem {
         }
     }
 
+    @Override
+    public boolean mustSound(int time) {
+        return false;
+    }
 }

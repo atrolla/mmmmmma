@@ -12,6 +12,7 @@ public class Bomb extends Item {
 
     private final Circle hitbox;
     private boolean explodes = false;
+    private boolean sound;
 
     public Bomb(Bomber bomber, int currentTime) {
         super(bomber.getCenter(), currentTime + ITEM_BOMB_COUNTDOWN_DURATION, bomber);
@@ -20,7 +21,6 @@ public class Bomb extends Item {
     }
 
     /**
-     *
      * Bomb explodes when time-out is reached, then can be removed
      */
     @Override
@@ -30,6 +30,7 @@ public class Bomb extends Item {
         }
         final boolean isDone = super.update(timeTick);
         if (isDone) { //explodes
+            sound = true;
             explodes = true;
         }
         return false;
@@ -40,7 +41,16 @@ public class Bomb extends Item {
         return hitbox;
     }
 
-    public boolean isExploding(){
+    @Override
+    public boolean mustSound(int time) {
+        if (sound) {
+            sound = false;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isExploding() {
         return explodes;
     }
 }

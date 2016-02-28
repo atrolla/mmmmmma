@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by MicroOnde on 24/02/2015.
@@ -26,104 +26,104 @@ public class GameCharacterTests {
 
     @Test
     public void thisAlwaysPasses() {
-        assertTrue(true);
+        assertThat(true);
     }
 
     @Test
     public void archerIsAGameCharacter() throws Exception {
-        assertTrue(defaultBotArcher instanceof GameCharacter);
+        assertThat(defaultBotArcher instanceof GameCharacter);
     }
 
     @Test
     public void bomberIsAGameCharacter() throws Exception {
         Bomber bomber = new Bomber(Player.BOT);
-        assertTrue(bomber instanceof GameCharacter);
+        assertThat(bomber instanceof GameCharacter);
     }
 
     @Test
     public void knightIsAGameCharacter() throws Exception {
         Knight knight = new Knight(Player.BOT);
-        assertTrue(knight instanceof GameCharacter);
+        assertThat(knight instanceof GameCharacter);
     }
 
     @Test
     public void mageIsAGameCharacter() throws Exception {
         Mage mage = new Mage(Player.BOT);
-        assertTrue(mage instanceof GameCharacter);
+        assertThat(mage instanceof GameCharacter);
     }
 
     @Test
     public void moveUpChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.UP);
-        assertEquals(Direction.UP, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.UP);
+        assertThat(Direction.UP).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveUpLeftChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.UP_LEFT);
-        assertEquals(Direction.UP_LEFT, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.UP_LEFT);
+        assertThat(Direction.UP_LEFT).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveUpRightChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.UP_RIGHT);
-        assertEquals(Direction.UP_RIGHT, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.UP_RIGHT);
+        assertThat(Direction.UP_RIGHT).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveLeftChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.LEFT);
-        assertEquals(Direction.LEFT, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.LEFT);
+        assertThat(Direction.LEFT).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveRightChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.RIGHT);
-        assertEquals(Direction.RIGHT, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.RIGHT);
+        assertThat(Direction.RIGHT).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveDownLeftChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.DOWN_LEFT);
-        assertEquals(Direction.DOWN_LEFT, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.DOWN_LEFT);
+        assertThat(Direction.DOWN_LEFT).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveDownChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.DOWN);
-        assertEquals(Direction.DOWN, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.DOWN);
+        assertThat(Direction.DOWN).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveDownRightChangesDirection() throws Exception {
-        defaultBotArcher.moves(0,Direction.DOWN_RIGHT);
-        assertEquals(Direction.DOWN_RIGHT, defaultBotArcher.getDirection());
+        defaultBotArcher.moves(0, Direction.DOWN_RIGHT);
+        assertThat(Direction.DOWN_RIGHT).isEqualTo(defaultBotArcher.getDirection());
     }
 
     @Test
     public void moveChangesCoordinates() throws Exception {
-        defaultBotArcher.moves(0,Direction.UP);
+        defaultBotArcher.moves(0, Direction.UP);
         Coordinates c1 = defaultBotArcher.getCoordinates();
-        defaultBotArcher.moves(0,Direction.UP);
-        assertNotEquals(c1, defaultBotArcher.getCoordinates());
+        defaultBotArcher.moves(0, Direction.UP);
+        assertThat(c1).isNotEqualTo(defaultBotArcher.getCoordinates());
     }
 
     @Test
     public void characterIsBotByDefault() throws Exception {
-        assertFalse(defaultBotArcher.isPlayer());
+        assertThat(defaultBotArcher.isPlayer()).isFalse();
     }
 
     @Test
     public void characterIsPlayedByPlayer() throws Exception {
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
-        assertTrue(archer.isPlayer());
-        assertEquals(player, archer.getPlayer());
+        assertThat(archer.isPlayer());
+        assertThat(player).isEqualTo(archer.getPlayer());
     }
 
     @Test
     public void characterIsInitiallyAlive() throws Exception {
-        assertEquals(CharacterState.ALIVE, defaultBotArcher.getState());
+        assertThat(CharacterState.ALIVE).isEqualTo(defaultBotArcher.getState());
     }
 
     @Test
@@ -131,21 +131,21 @@ public class GameCharacterTests {
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         archer.hit(new Knight(Player.BOT));
-        assertEquals(CharacterState.DEAD, archer.getState());
+        assertThat(CharacterState.DEAD).isEqualTo(archer.getState());
     }
 
     @Test
     public void botCharacterAfterHitIsKnockOut() throws Exception {
         defaultBotArcher.hit(new Knight(Player.BOT));
-        assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
+        assertThat(CharacterState.KNOCK_OUT).isEqualTo(defaultBotArcher.getState());
     }
 
     @Test
     public void knockOutCharacterAfterAwakeIsAlive() throws Exception {
         defaultBotArcher.hit(new Knight(Player.BOT));
-        assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
+        assertThat(CharacterState.KNOCK_OUT).isEqualTo(defaultBotArcher.getState());
         defaultBotArcher.awake();
-        assertEquals(CharacterState.ALIVE, defaultBotArcher.getState());
+        assertThat(CharacterState.ALIVE).isEqualTo(defaultBotArcher.getState());
     }
 
     @Test
@@ -153,23 +153,38 @@ public class GameCharacterTests {
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
         archer.hit(new Knight(Player.BOT));
-        assertEquals(CharacterState.DEAD, archer.getState());
+        assertThat(CharacterState.DEAD).isEqualTo(archer.getState());
         archer.awake();
-        assertEquals(CharacterState.DEAD, archer.getState());
+        assertThat(CharacterState.DEAD).isEqualTo(archer.getState());
     }
 
     @Test
     public void onlyAliveCharacterCanMove() throws Exception {
-        assertTrue(defaultBotArcher.isAlive());
+        assertThat(defaultBotArcher.isAlive());
         defaultBotArcher.hit(new Knight(Player.BOT));
-        assertEquals(CharacterState.KNOCK_OUT, defaultBotArcher.getState());
-        assertFalse(defaultBotArcher.isAlive());
+        assertThat(CharacterState.KNOCK_OUT).isEqualTo(defaultBotArcher.getState());
+        assertThat(defaultBotArcher.isAlive()).isFalse();
         Player player = new Player(Optional.empty(), Optional.empty());
         Archer archer = new Archer(player);
-        assertTrue(archer.isAlive());
+        assertThat(archer.isAlive());
         archer.hit(new Knight(Player.BOT));
-        assertEquals(CharacterState.DEAD, archer.getState());
-        assertFalse(archer.isAlive());
+        assertThat(CharacterState.DEAD).isEqualTo(archer.getState());
+        assertThat(archer.isAlive()).isFalse();
     }
 
+    @Test
+    public void nextCharacter() throws Exception {
+        assertThat(CharacterClasses.next(CharacterClasses.ARCHER)).isEqualTo(CharacterClasses.BOMBER);
+        assertThat(CharacterClasses.next(CharacterClasses.BOMBER)).isEqualTo(CharacterClasses.KNIGHT);
+        assertThat(CharacterClasses.next(CharacterClasses.KNIGHT)).isEqualTo(CharacterClasses.MAGE);
+        assertThat(CharacterClasses.next(CharacterClasses.MAGE)).isEqualTo(CharacterClasses.ARCHER);
+    }
+
+    @Test
+    public void previousCharacter() throws Exception {
+        assertThat(CharacterClasses.previous(CharacterClasses.ARCHER)).isEqualTo(CharacterClasses.MAGE);
+        assertThat(CharacterClasses.previous(CharacterClasses.BOMBER)).isEqualTo(CharacterClasses.ARCHER);
+        assertThat(CharacterClasses.previous(CharacterClasses.KNIGHT)).isEqualTo(CharacterClasses.BOMBER);
+        assertThat(CharacterClasses.previous(CharacterClasses.MAGE)).isEqualTo(CharacterClasses.KNIGHT);
+    }
 }

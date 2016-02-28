@@ -44,4 +44,6 @@ public abstract class Item {
         return timeout;
     }
     public abstract Circle getHitbox();
+
+    public abstract boolean mustSound(int time);
 }

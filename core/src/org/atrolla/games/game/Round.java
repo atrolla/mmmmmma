@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -148,7 +147,7 @@ public class Round {
         managePlayers();
         manageHitBoxes();
         reDisguiseMages();
-//        playSounds(); TODO: remove for sound
+        playSounds();// TODO: remove for sound
         postUpdate();
     }
 
@@ -174,10 +173,9 @@ public class Round {
             final Item item = iterator.next();
             if (item.update(time)) { //update the item state if needed (ex: Arrow moves)
                 iterator.remove();
-                if (soundManager != null) { // play item sound when it disappears.
-                    //TODO: i think this limits the sound to only 1 per item...
-                    soundManager.register(item);
-                }
+            }
+            if (soundManager != null && item.mustSound(time)) {
+                soundManager.register(item);
             }
         }
     }

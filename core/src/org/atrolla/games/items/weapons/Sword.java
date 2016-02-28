@@ -17,9 +17,11 @@ import org.atrolla.games.system.Coordinates;
 public class Sword extends Item {
 
     private final Circle hitbox;
+    private boolean sound;
 
     private Sword(Coordinates coordinates, int timeout, GameCharacter character) {
         super(coordinates, timeout, character);
+        sound = true;
         this.hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.SWORD_SIZE);
     }
 
@@ -30,5 +32,14 @@ public class Sword extends Item {
     @Override
     public Circle getHitbox() {
         return hitbox;
+    }
+
+    @Override
+    public boolean mustSound(int time) {
+        if (sound) {
+            sound = false;
+            return true;
+        }
+        return false;
     }
 }

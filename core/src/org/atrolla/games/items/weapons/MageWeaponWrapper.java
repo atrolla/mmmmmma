@@ -25,4 +25,9 @@ public class MageWeaponWrapper extends Item {
     public Circle getHitbox() {
         return weapon.getHitbox();
     }
+
+    @Override
+    public boolean mustSound(int time) {
+        return weapon.mustSound(time);
+    }
 }

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by MicroOnde on 22/03/2015.
@@ -39,6 +39,8 @@ public class MageTests {
     @Test
      public void mageTurnsIntoAnotherClass() throws Exception {
         mage.turnsInto(CharacterClasses.BOMBER);
+        assertThat(mage.getDisguisedCharacter()).isPresent();
+        assertThat(mage.getDisguisedCharacter().get() instanceof Bomber);
         assertThat(mage.getCharacterClass().isPresent()).isTrue();
         assertThat(mage.getCharacterClass().get()).isEqualTo(Bomber.class);
     }

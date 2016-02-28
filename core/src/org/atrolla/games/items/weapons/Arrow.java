@@ -11,9 +11,11 @@ public class Arrow extends Item {
 
     private final Direction direction;
     private final Circle hitbox;
+    private boolean sound;
 
     public Arrow(Archer archer, int time) {
         super(archer.getCenter(), time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT, archer);
+        sound = true;
         this.direction = archer.getDirection();
         this.hitbox = new Circle((float) archer.getCoordinates().getX(), (float) archer.getCoordinates().getY(), ConfigurationConstants.ARROW_HITBOX_SIZE);
     }
@@ -44,5 +46,14 @@ public class Arrow extends Item {
     @Override
     public Circle getHitbox() {
         return hitbox;
+    }
+
+    @Override
+    public boolean mustSound(int time) {
+        if (sound) {
+            sound = false;
+            return true;
+        }
+        return false;
     }
 }
