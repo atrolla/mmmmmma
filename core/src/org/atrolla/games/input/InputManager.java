@@ -139,7 +139,7 @@ public class InputManager {
                 final Input input = player.getKeyboardInput().get();
                 moveGameCharacter(time, character, input);
                 if (keyboard.isKeyJustPressed(Input.Keys.CONTROL_RIGHT)) {
-                    character.useAbility(time).ifPresent(items::add);
+                    character.useAbility(time).forEach(items::add);
                 }
                 if (keyboard.isKeyJustPressed(Input.Keys.SHIFT_RIGHT)) {
                     character.useNeutralItem(time).ifPresent(items::add);
@@ -148,7 +148,7 @@ public class InputManager {
                 final PadController padController = player.getPadControllerInput().get();
                 moveGameCharacter(time, character, padController.getController());
                 if (padController.hasJustPressed(padInput.buttonA())) {
-                    character.useAbility(time).ifPresent(items::add);
+                    character.useAbility(time).forEach(items::add);
                 }
                 if (padController.hasJustPressed(padInput.buttonX())) {
                     character.useNeutralItem(time).ifPresent(items::add);

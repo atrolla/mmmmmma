@@ -8,8 +8,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by MicroOnde on 15/03/2015.
@@ -28,11 +27,11 @@ public class KnightTests {
     @Test
     public void knightBotCannotUseHisAbility() throws Exception {
         Knight knightBot = new Knight(Player.BOT);
-        assertFalse(knightBot.useAbility(ABILITY_USE_TIME).isPresent());
+        assertThat(knightBot.useAbility(ABILITY_USE_TIME)).isEmpty();
     }
 
     @Test
     public void knightAbilityIsToUseHisSword() throws Exception {
-        assertTrue(knightPlayer.useAbility(ABILITY_USE_TIME).get() instanceof Sword);
+        assertThat(knightPlayer.useAbility(ABILITY_USE_TIME).iterator().next()).isInstanceOf(Sword.class);
     }
 }

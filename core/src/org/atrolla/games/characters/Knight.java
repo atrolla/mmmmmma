@@ -5,7 +5,8 @@ import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.system.Player;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Knight extends GameCharacter {
     public Knight(Player player) {
@@ -18,12 +19,12 @@ public class Knight extends GameCharacter {
     }
 
     @Override
-    public Optional<Item> useAbility(int time) {
+    public Collection<Item> useAbility(int time) {
         if (!isAlive() || !isPlayer() || abilityIsCoolingDown(time)) {
-            return Optional.empty();
+            return Collections.emptySet();
         }
         coolDownAbility(time);
-        return Optional.of(Sword.generates(this, time));
+        return Collections.singleton(Sword.generates(this, time));
     }
 
     private boolean abilityIsCoolingDown(int time){

@@ -34,14 +34,14 @@ public class ArcherTests {
 
     @Test
     public void archerAbilityIsToThrowArrow() throws Exception {
-        assertThat(archerPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Arrow.class);
+        assertThat(archerPlayer.useAbility(ABILITY_USE_TIME).iterator().next()).isInstanceOf(Arrow.class);
     }
 
     @Test
     public void arrowSpawnsAtPlayerCenter() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         archerPlayer.teleports(coordinates);
-        final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME).get();
+        final Item arrow = archerPlayer.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(arrow.getCoordinates()).isEqualTo(archerPlayer.getCenter());
     }
 
@@ -49,7 +49,7 @@ public class ArcherTests {
     public void archerCannotMoveAfterThrowingArrow() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         archerPlayer.teleports(coordinates);
-        archerPlayer.useAbility(ABILITY_USE_TIME).get();
+        archerPlayer.useAbility(ABILITY_USE_TIME).iterator().next();
         archerPlayer.moves(1, Direction.DOWN);
         assertThat(archerPlayer.getCoordinates()).isEqualTo(coordinates);
     }

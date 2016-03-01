@@ -24,7 +24,6 @@ import org.atrolla.games.game.Mmmmmma;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Bomb;
-import org.atrolla.games.items.weapons.MageWeaponWrapper;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
@@ -235,10 +234,6 @@ public class RoundScreen implements Screen {
             final Coordinates coordinates = item.getCoordinates();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             showItem(item, coordinates);
-            if (item instanceof MageWeaponWrapper) {
-                final Item weapon = ((MageWeaponWrapper) item).getWeapon();
-                showItem(weapon, weapon.getCoordinates());
-            }
             shapeRenderer.end();
         }
         itemSpriteManager.render(spriteBatch);
@@ -258,7 +253,7 @@ public class RoundScreen implements Screen {
 //                shapeRenderer.setColor(Color.DARK_GRAY);
 //                shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
 
-                itemSpriteManager.makeExplosion(bomb,coordinates);
+                itemSpriteManager.makeExplosion(bomb, coordinates);
             }
         }
 //        else if (item instanceof Arrow) {
@@ -272,6 +267,10 @@ public class RoundScreen implements Screen {
 //        } else if (item instanceof NeutralItem) {
 //            shapeRenderer.setColor(Color.MAGENTA);
 //            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.ITEM_NEUTRAL_SIZE);
+//        }
+//        else if (item instanceof MageSpell) {
+//            shapeRenderer.setColor(Color.MAGENTA);
+//            shapeRenderer.circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.MAGE_SPELL_SIZE);
 //        }
     }
 

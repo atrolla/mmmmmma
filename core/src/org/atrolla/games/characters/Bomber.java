@@ -5,7 +5,8 @@ import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.system.Player;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Bomber extends GameCharacter {
 
@@ -19,12 +20,12 @@ public class Bomber extends GameCharacter {
     }
 
     @Override
-    public Optional<Item> useAbility(int currentTime) {
+    public Collection<Item> useAbility(int currentTime) {
         if (!isAlive() || !isPlayer() || abilityIsCoolingDown(currentTime)) {
-            return Optional.empty();
+            return Collections.emptySet();
         }
         coolDownAbility(currentTime);
-        return Optional.of(new Bomb(this, currentTime));
+        return Collections.singleton(new Bomb(this, currentTime));
     }
 
     private boolean abilityIsCoolingDown(int time){

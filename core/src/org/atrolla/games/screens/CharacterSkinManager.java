@@ -40,6 +40,7 @@ public class CharacterSkinManager {
         classSkins.put(Bomber.class, getRandomSkin(baseSkinList));
         classSkins.put(Knight.class, getRandomSkin(baseSkinList));
         classSkins.put(Archer.class, getRandomSkin(baseSkinList));
+        classSkins.put(Mage.class, getRandomSkin(baseSkinList));
 
     }
 
@@ -54,9 +55,6 @@ public class CharacterSkinManager {
 
     public TextureRegion getFrame(GameCharacter gameCharacter) {
         Class<? extends GameCharacter> gameCharacterClass = gameCharacter.getClass();
-        if (gameCharacter instanceof Mage) {
-            gameCharacterClass = ((Mage) gameCharacter).getDisguisedCharacter().get().getClass();
-        }
         final CharacterSkin characterSkin = classSkins.get(gameCharacterClass);
         return characterSkin.getFrame(gameCharacter, stateTime);
     }

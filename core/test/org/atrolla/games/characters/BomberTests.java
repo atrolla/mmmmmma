@@ -32,27 +32,27 @@ public class BomberTests {
 
     @Test
     public void bomberAbilityIsToCreateBomb() throws Exception {
-        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Bomb.class);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).iterator().next()).isInstanceOf(Bomb.class);
     }
 
     @Test
     public void bombIsCreatedAtCurrentBomberCenter() throws Exception {
         final Coordinates coordinates = new Coordinates(42, 1337);
         bomberPlayer.teleports(coordinates);
-        final Bomb bomb = (Bomb) bomberPlayer.useAbility(ABILITY_USE_TIME).get();
+        final Bomb bomb = (Bomb) bomberPlayer.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(bomb.getCoordinates()).isEqualTo(bomberPlayer.getCenter());
     }
 
     @Test
     public void bomberCanOnlyPlaceOneBomb() throws Exception {
-        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Bomb.class);
-        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).isPresent()).isFalse();
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).iterator().next()).isInstanceOf(Bomb.class);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME)).isEmpty();
     }
 
     @Test
     public void bomberCanReplaceBombOnlyAfterItsCooldownTime() throws Exception {
-        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).get()).isInstanceOf(Bomb.class);
-        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).isPresent()).isFalse();
-        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME +1 + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).get()).isInstanceOf(Bomb.class);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME).iterator().next()).isInstanceOf(Bomb.class);
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION)).isEmpty();
+        assertThat(bomberPlayer.useAbility(ABILITY_USE_TIME +1 + ConfigurationConstants.BOMBER_ABILITY_COOLDOWN_DURATION).iterator().next()).isInstanceOf(Bomb.class);
     }
 }

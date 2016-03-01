@@ -6,7 +6,8 @@ import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Archer extends GameCharacter {
 
@@ -30,13 +31,13 @@ public class Archer extends GameCharacter {
     }
 
     @Override
-    public Optional<Item> useAbility(int time) {
+    public Collection<Item> useAbility(int time) {
         if (!isAlive() || !isPlayer() || abilityIsCoolingDown(time)) {
-            return Optional.empty();
+            return Collections.emptySet();
         }
         coolDownAbility(time);
         abilityIsCoolingDown = true;
-        return Optional.of(new Arrow(this, time));
+        return Collections.singleton(new Arrow(this, time));
     }
 
     private boolean abilityIsCoolingDown(int time){

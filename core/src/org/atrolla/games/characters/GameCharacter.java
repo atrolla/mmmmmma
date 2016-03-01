@@ -7,6 +7,8 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.atrolla.games.characters.CharacterState.*;
@@ -95,14 +97,7 @@ public abstract class GameCharacter {
         //if it is a player and it has same class as the disguised mage class
         //or if it is a mage
         if (isPlayer()) {
-            if (!Mage.class.isAssignableFrom(this.getClass())
-                    && Mage.class.isAssignableFrom(gameCharacter.getClass())
-                    && !((Mage) gameCharacter).getDisguisedCharacter().get().getClass()
-                    .isAssignableFrom(this.getClass())) {
-                state = KNOCK_OUT;
-            } else {
-                state = DEAD;
-            }
+            state = DEAD;
         } else {
             state = KNOCK_OUT;
         }
@@ -142,8 +137,8 @@ public abstract class GameCharacter {
         return id;
     }
 
-    public Optional<Item> useAbility(int time) {
-        return Optional.empty();
+    public Collection<Item> useAbility(int time) {
+        return Collections.emptySet();
     }
 
     public void pick(NeutralItem item) {

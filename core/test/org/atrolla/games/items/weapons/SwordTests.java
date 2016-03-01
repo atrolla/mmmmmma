@@ -25,7 +25,7 @@ public class SwordTests {
     public void setUp() throws Exception {
         this.knight = new Knight(new Player(Optional.empty(), Optional.empty()));
         this.knight.teleports(new Coordinates(42,1337));
-        this.sword = (Sword) knight.useAbility(0).get();
+        this.sword = (Sword) knight.useAbility(0).iterator().next();
         this.ABILITY_USE_TIME = ConfigurationConstants.KNIGHT_ABILITY_COOLDOWN_DURATION+1;
     }
 
@@ -39,56 +39,56 @@ public class SwordTests {
     @Test
     public void swordIsCenteredWhenWalkingToTheRight() throws Exception {
         knight.moves(0,Direction.RIGHT);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingToTheLeft() throws Exception {
         knight.moves(0,Direction.LEFT);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingToTheTop() throws Exception {
         knight.moves(0,Direction.UP);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingDown() throws Exception {
         knight.moves(0,Direction.DOWN);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingToTheUpRight() throws Exception {
         knight.moves(0,Direction.UP_RIGHT);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingToTheUpLeft() throws Exception {
         knight.moves(0,Direction.UP_LEFT);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingToTheDownLeft() throws Exception {
         knight.moves(0,Direction.DOWN_LEFT);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 
     @Test
     public void swordIsCenteredWhenWalkingDownRight() throws Exception {
         knight.moves(0,Direction.DOWN_RIGHT);
-        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).get();
+        sword = (Sword) knight.useAbility(ABILITY_USE_TIME).iterator().next();
         assertThat(knight.getCenter()).isEqualTo(sword.getCoordinates());
     }
 }

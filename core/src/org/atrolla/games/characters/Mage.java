@@ -1,75 +1,44 @@
 package org.atrolla.games.characters;
 
+import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
-import org.atrolla.games.items.weapons.MageWeaponWrapper;
+import org.atrolla.games.items.weapons.MageSpell;
 import org.atrolla.games.system.Player;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+
+import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_MAGE_SPELL_COUNTDOWN_DURATION;
+import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET;
 
 public class Mage extends GameCharacter {
-    private Optional<GameCharacter> disguisedCharacter;
 
     public Mage(Player player) {
         super(player);
-        disguisedCharacter = Optional.empty();
     }
 
     @Override
     public void coolDownAbility(int time) {
-        // nocooldown
+        abilityReadyTime = time + ConfigurationConstants.MAGE_ABILITY_COOLDOWN_DURATION;
     }
 
     @Override
-    public Optional<Item> useAbility(int time) {
-        if (isAlive() && disguisedCharacter.isPresent()) {
-            final GameCharacter gameCharacter = disguisedCharacter.get();
-            gameCharacter.teleports(this.getCoordinates(), getDirection()); //so we use the ability at the mage place
-            final Optional<Item> weapon = gameCharacter.useAbility(time);
-            return weapon.map(w -> new MageWeaponWrapper(w,this));
+    public Collection<Item> useAbility(int time) {
+        if (!isAlive() || !isPlayer() || abilityIsCoolingDown(time)) {
+            return Collections.emptySet();
         }
-        return super.useAbility(time); //empty
+        coolDownAbility(time);
+        final HashSet<Item> items = new HashSet<>();
+        items.add(new MageSpell(this.getCenter().translateXandY(-ITEM_MAGE_SPELL_OFFSET, -ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(-ITEM_MAGE_SPELL_OFFSET, ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(ITEM_MAGE_SPELL_OFFSET, -ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(ITEM_MAGE_SPELL_OFFSET, ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
+        return items;
     }
 
-    public void turnsInto(CharacterClasses characterClass) {
-        this.disguisedCharacter = Optional.of(characterClass.createCharacter(getPlayer()));
+    private boolean abilityIsCoolingDown(int time) {
+        return abilityReadyTime >= time;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        /**
-         * Hack to be able to have equality between a GameCharacter and the disguisedCharacter of mage
-         */
-        if(getClass() != o.getClass()) {
-            return GameCharacter.class.isAssignableFrom(o.getClass())
-                    && disguisedCharacter.isPresent()
-                    && disguisedCharacter.get().getClass() == o.getClass()
-                    && disguisedCharacter.get().equals(o);
-        }
-        if (!super.equals(o)) return false;
-
-        Mage mage = (Mage) o;
-
-        return !(disguisedCharacter != null ? !disguisedCharacter.equals(mage.disguisedCharacter) : mage.disguisedCharacter != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (disguisedCharacter != null ? disguisedCharacter.hashCode() : 0);
-        return result;
-    }
-
-    public Optional<GameCharacter> getDisguisedCharacter() {
-        return disguisedCharacter;
-    }
-
-    public void setDisguisedCharacter(GameCharacter disguisedCharacter) {
-        this.disguisedCharacter = Optional.of(disguisedCharacter);
-    }
-
-    public Optional<Class> getCharacterClass() {
-        return disguisedCharacter.map(Object::getClass);
-    }
 }
