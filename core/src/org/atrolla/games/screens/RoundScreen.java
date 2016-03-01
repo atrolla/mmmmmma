@@ -85,11 +85,11 @@ public class RoundScreen implements Screen {
         spriteBatch.setShader(shader);
         stage = new Stage(new ScalingViewport(Scaling.fit, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()),
                 spriteBatch);
-//        stage.setDebugAll(true);
         skinManager = new CharacterSkinManager();
-        itemSpriteManager = new ItemSpriteManager();
         FileHandle skinFile = Gdx.files.internal("skins/skin.json");
         Skin skin = new Skin(skinFile);
+//        stage.setDebugAll(true);
+        itemSpriteManager = new ItemSpriteManager();
         final int playersNumber = round.getPlayers().size();
         if (playersNumber == 1) {
             topLeftText = new Label("(ALONE)", skin);
