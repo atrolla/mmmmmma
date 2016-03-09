@@ -3,7 +3,9 @@ package org.atrolla.games.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -14,16 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.Mmmmmma;
 import org.atrolla.games.input.InputManager;
-import org.atrolla.games.screens.demo.DemoScreen;
-import org.atrolla.games.screens.demo.KnightDemo;
+import org.atrolla.games.items.weapons.Bomb;
+import org.atrolla.games.screens.demo.*;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
@@ -52,6 +54,7 @@ public class MainMenuScreen implements Screen {
     private int currentChosenButtonIndex;
     private final Collection<DemoScreen> demoScreens;
     private int timeElapsed;
+    private final ItemSpriteManager itemSpriteManager;
 
     //TODO : many things in common with RoundScreen -> REFACTO
 
@@ -59,46 +62,67 @@ public class MainMenuScreen implements Screen {
         //important since we aren't using some uniforms and attributes that SpriteBatch expects
         ShaderProgram.pedantic = false;
 
-        shader = new ShaderProgram(GLShaders.VERT, GLShaders.FRAG);
-        if (!shader.isCompiled()) {
-            System.err.println(shader.getLog());
-            System.exit(0);
-        }
-        if (shader.getLog().length() != 0)
-            System.out.println(shader.getLog());
+//        shader = new ShaderProgram(GLShaders.VERT, GLShaders.FRAG);
+//        if (!shader.isCompiled()) {
+//            System.err.println(shader.getLog());
+//            System.exit(0);
+//        }
+//        if (shader.getLog().length() != 0)
+//            System.out.println(shader.getLog());
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getCamera().combined);
         spriteBatch = new SpriteBatch(1000, shader);
         spriteBatch.setShader(shader);
         stage = new Stage(new ScalingViewport(Scaling.fit, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()), spriteBatch);
         skinManager = new CharacterSkinManager();
+
         FileHandle skinFile = Gdx.files.internal("skins/skin.json");
         skin = new Skin(skinFile);
+        BitmapFont labelFont = skin.get("default-font", BitmapFont.class);
+        labelFont.getData().markupEnabled = true;
+//        this.skin.getFont("nolife").getData().setScale(0.6f, 0.6f);
+        itemSpriteManager = new ItemSpriteManager();
+
         this.game = game;
         table = new Table();
         playersTable = new Table();
         buttonPlay = new Label("Play", skin);
+//        buttonPlay = new Label("<<[BLUE]M[RED]u[YELLOW]l[GREEN]t[OLIVE]ic[]o[]l[]o[]r[]*[MAROON]Label[][] [Unknown Color]>>", skin);
+        setStyle(buttonPlay);
         buttonResetPlayers = new Label("Reset Players", skin);
+        setStyle(buttonResetPlayers);
 //        buttonExit = new Label("Exit", skin);
-        title = new Label("Multiplayer Multi Mortal Mix Melee Mashup Arena", skin);
+        title = new Label(" [BLUE]M[BLACK]ultiplayer [YELLOW]M[BLACK]ulti [BLACK]M[BLACK]ysterious\n" +
+                "[RED]M[BLACK]erciless [GREEN]M[BLACK]agic [ROYAL]M[BLACK]ashup [BLACK]Arena", skin);
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
         addElementsToTable();
         addButtonListeners();
 
-        demoScreens = Arrays.asList(new KnightDemo(new Coordinates(180, 320)));
+        demoScreens = Arrays.asList(new KnightDemo(new Coordinates(180, 320))
+                , new ArcherDemo(new Coordinates(470, 380))
+                , new BomberDemo(new Coordinates(770, 330))
+                , new MageDemo(new Coordinates(1070, 320))
+        );
         timeElapsed = 0;
 //        stage.setDebugAll(true);
+
+
+    }
+
+    private void setStyle(Label label) {
+        label.setColor(Color.BLACK);
+        label.setFontScale(0.6f);
     }
 
     private void addElementsToTable() {
         //The elements are displayed in the order you add them.
         //The first appear on top, the last at the bottom.
-        table.add(title).center().padTop(40).padBottom(40).row();
+        table.add(title).center().padTop(10).padBottom(20).row();
         table.add(buttonPlay).center().padBottom(20).row();
         table.add(buttonResetPlayers).center().padBottom(20).row();
 //        table.add(buttonExit).center().padBottom(20).row();
-        table.add(playersTable).expand().padTop(200).row();
+        table.add(playersTable).expand().padTop(350).row();
         table.setFillParent(true);
     }
 
@@ -130,8 +154,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void startNewRound() {
-        //FIXME : when 0 players
-//        game.setScreen(new RoundScreen(game));
+        game.setScreen(new RoundScreen(game));
     }
 
     private void exitGame() {
@@ -148,6 +171,7 @@ public class MainMenuScreen implements Screen {
         stage.act(delta);
         // clear the screen with the given RGB color (black)
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
+//        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // draw the actors
         inputManager.assignPlayers();
@@ -163,6 +187,7 @@ public class MainMenuScreen implements Screen {
             }
             Label label = new Label(labelText, skin);
             label.setAlignment(Align.center);
+            setStyle(label);
             playersTable.add(label).width(300).expand().uniform();
         }
         if (size > 0) {
@@ -199,6 +224,7 @@ public class MainMenuScreen implements Screen {
     private void renderDemo(int timeElapsed) {
         spriteBatch.begin();
         skinManager.updateTime();
+        skinManager.assignSkins();
         final List<GameCharacter> gameCharacters = demoScreens.stream()
                 .peek(d -> d.update(timeElapsed))
                 .map(DemoScreen::getCharacters)
@@ -224,6 +250,27 @@ public class MainMenuScreen implements Screen {
             shapeRenderer.end();
         });
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        spriteBatch.begin();
+        demoScreens.stream()
+                .map(DemoScreen::getItems)
+                .flatMap(Collection::stream)
+                .sequential()
+                .forEach(item -> {
+                    if (item instanceof Bomb) {
+                        final Bomb bomb = (Bomb) item;
+                        if (bomb.isExploding()) {
+                            itemSpriteManager.makeExplosion(bomb, bomb.getCoordinates());
+                        }
+                    }
+                });
+        itemSpriteManager.render(spriteBatch);
+        spriteBatch.end();
+//        if (mlol != null) {
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//            shapeRenderer.setColor(Color.LIGHT_GRAY);
+//            shapeRenderer.circle((float) mlol.getX(), (float) mlol.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+//            shapeRenderer.end();
+//        }
     }
 
     private void focusChosenButton() {

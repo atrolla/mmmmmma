@@ -34,16 +34,6 @@ public class InputManager {
         this.padInput = PadInput.getPadInput();
     }
 
-    //TODO : remove
-    public void test() {
-        System.out.println("Controllers: " + controllers.size);
-        int i = 0;
-        for (Controller controller : controllers) {
-            System.out.println("#" + i++ + ": " + controller.getName());
-        }
-        if (controllers.size == 0) System.out.println("No controllers attached");
-    }
-
     public void unAssignPlayers() {
         players.clear();
     }

@@ -100,7 +100,12 @@ public class Round {
         visibleClasses = characters.stream()
                 .map(c -> c.getPlayer().getGameCharacterClass())
                 .distinct()
-                .collect(Collectors.toList());// Get all playing classes that are not mage
+                .collect(Collectors.toList());
+        if (visibleClasses.size() == 0) {
+            final int i = org.apache.commons.lang3.RandomUtils.nextInt(0, 3);
+            /** Mage must be last enum in CharacterClasses */
+            visibleClasses.add(CharacterClasses.values()[i]);
+        }
     }
 
     private void placeCharactersOnStage() {

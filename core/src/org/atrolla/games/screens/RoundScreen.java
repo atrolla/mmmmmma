@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.GameCharacter;
@@ -232,9 +232,9 @@ public class RoundScreen implements Screen {
         final List<Item> gameObjects = round.getGameItems();
         for (Item item : gameObjects) {
             final Coordinates coordinates = item.getCoordinates();
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             showItem(item, coordinates);
-            shapeRenderer.end();
+//            shapeRenderer.end();
         }
         itemSpriteManager.render(spriteBatch);
         spriteBatch.end();

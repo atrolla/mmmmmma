@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.atrolla.games.characters.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CharacterSkinManager {
@@ -17,31 +14,40 @@ public class CharacterSkinManager {
      */
 
     float stateTime;
+    float lastSkinAssignTime;
     private final Map<Class, CharacterSkin> classSkins;
+    private Collection<BaseSkin> baseSkins;
 
     public CharacterSkinManager() {
         stateTime = 0f;
+        lastSkinAssignTime = 0f;
         classSkins = new HashMap<>();
         initClassSkins();
     }
 
     private void initClassSkins() {
-        List<BaseSkin> baseSkinList = new ArrayList<>();
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/asagi.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/etna.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/castille.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/flonne.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/archer.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/priest.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/warrior.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/swordman.png")));
-        baseSkinList.add(new BaseSkin(Gdx.files.internal("skins/babylon.png")));
+        baseSkins = new ArrayList<>();
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/asagi.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/etna.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/castille.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/flonne.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/archer.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/priest.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/warrior.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/swordman.png")));
+        baseSkins.add(new BaseSkin(Gdx.files.internal("skins/babylon.png")));
+        assignSkins();
+    }
 
-        classSkins.put(Bomber.class, getRandomSkin(baseSkinList));
-        classSkins.put(Knight.class, getRandomSkin(baseSkinList));
-        classSkins.put(Archer.class, getRandomSkin(baseSkinList));
-        classSkins.put(Mage.class, getRandomSkin(baseSkinList));
-
+    public void assignSkins() {
+        if (classSkins.isEmpty() || stateTime - lastSkinAssignTime > 3) {
+            lastSkinAssignTime = stateTime;
+            List<BaseSkin> baseSkinList = new ArrayList<>(baseSkins);
+            classSkins.put(Bomber.class, getRandomSkin(baseSkinList));
+            classSkins.put(Knight.class, getRandomSkin(baseSkinList));
+            classSkins.put(Archer.class, getRandomSkin(baseSkinList));
+            classSkins.put(Mage.class, getRandomSkin(baseSkinList));
+        }
     }
 
     private CharacterSkin getRandomSkin(List<BaseSkin> baseSkinList) {

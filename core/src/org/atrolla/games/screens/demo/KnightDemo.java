@@ -4,11 +4,13 @@ import org.atrolla.games.characters.Archer;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.characters.Knight;
 import org.atrolla.games.configuration.ConfigurationConstants;
+import org.atrolla.games.items.Item;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 public class KnightDemo implements DemoScreen {
@@ -28,6 +30,11 @@ public class KnightDemo implements DemoScreen {
     @Override
     public Collection<GameCharacter> getCharacters() {
         return Arrays.asList(knight, victim);
+    }
+
+    @Override
+    public Collection<Item> getItems() {
+        return Collections.emptyList();
     }
 
     @Override

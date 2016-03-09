@@ -1,4 +1,5 @@
 Multiplayer Multi Mortal Mix Melee Mashup Arena
+Merciless Multiplayer Mysterious Multi Magic Mashup Arena
 
 run on IntelliJ:
 
