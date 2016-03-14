@@ -31,9 +31,9 @@ public class SwordTests {
 
     @Test
     public void swordLastsFewTicksDefinedByTimeOut() throws Exception {
-        assertThat(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT-1)).isFalse();
-        assertThat(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT)).isFalse();
-        assertThat(sword.update(ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT+1));
+        assertThat(sword.update(ConfigurationConstants.SWORD_ACTION_TIME_OUT -1)).isFalse();
+        assertThat(sword.update(ConfigurationConstants.SWORD_ACTION_TIME_OUT)).isFalse();
+        assertThat(sword.update(ConfigurationConstants.SWORD_ACTION_TIME_OUT +1));
     }
 
     @Test

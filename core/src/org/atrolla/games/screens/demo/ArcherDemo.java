@@ -23,7 +23,7 @@ public class ArcherDemo implements DemoScreen {
         this.victim = new Knight(Player.BOT);
         this.archer = new Archer(new Player(Optional.empty(), Optional.empty()));
         archer.teleports(coordinates);
-        victim.teleports(coordinates.translateXandY(0, -ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT * ConfigurationConstants.ITEM_ARROW_MOVE_STEP + 1));
+        victim.teleports(coordinates.translateXandY(0, -ConfigurationConstants.ARROW_RANGE_TIME_OUT * ConfigurationConstants.ARROW_MOVE_STEP + 1));
     }
 
 

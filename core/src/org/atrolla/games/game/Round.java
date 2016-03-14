@@ -3,7 +3,6 @@ package org.atrolla.games.game;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.ai.AIManager;
-import org.atrolla.games.characters.CharacterClasses;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.input.InputManager;
@@ -16,16 +15,11 @@ import org.atrolla.games.items.weapons.MageSpell;
 import org.atrolla.games.items.weapons.Sword;
 import org.atrolla.games.sounds.SoundManager;
 import org.atrolla.games.system.Coordinates;
-import org.atrolla.games.system.Player;
 import org.atrolla.games.world.Stage;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Created by MicroOnde on 25/02/2015.
@@ -35,17 +29,12 @@ import java.util.stream.IntStream;
  */
 public class Round {
     private final Stage stage;
-    private final List<GameCharacter> characters;
-    private final List<GameCharacter> players;
-    private final List<GameCharacter> bots;
-    private List<CharacterClasses> visibleClasses;
+    private final RoundCharacters characters;
     private final AIManager aiManager;
     private final InputManager inputManager;
     private int time;
-    /**
-     * all items that are currently in the round
-     */
-    private final List<Item> gameItems;
+
+    private final GameItems gameItems;
     private final SoundManager soundManager;
     private final NeutralItemManager neutralItemManager;
 
@@ -53,14 +42,12 @@ public class Round {
         this.stage = stage;
         this.inputManager = inputManager;
         this.soundManager = soundManager;
-        this.characters = new ArrayList<>(ConfigurationConstants.GAME_CHARACTERS);
+        this.characters = new RoundCharacters(ConfigurationConstants.GAME_CHARACTERS, inputManager.getPlayers());
+        this.gameItems = new GameItems();
         this.time = 0;
-        initCharacters();
-        this.bots = characters.stream().filter(c -> !c.isPlayer()).collect(Collectors.toList());
-        this.players = characters.stream().filter(GameCharacter::isPlayer).collect(Collectors.toList());
-        this.aiManager = new AIManager(bots.size());
-        this.gameItems = new ArrayList<>();
+        this.aiManager = new AIManager(characters.bots.size());
         this.neutralItemManager = new NeutralItemManager();
+        characters.placeCharactersOnStage();
     }
 
     public Round(InputManager inputManager, SoundManager soundManager) {
@@ -69,59 +56,6 @@ public class Round {
 
     public Stage getStage() {
         return stage;
-    }
-
-    public List<GameCharacter> getCharacters() {
-        return characters;
-    }
-
-    /**
-     * creates bots with same classes as players and place characters randomly on screen
-     */
-    private void initCharacters() {
-        inputManager.getPlayers().forEach(p -> characters.add(p.getGameCharacterClass().createCharacter(p)));
-        addBotsToCharactersCollection();
-        Collections.shuffle(characters);
-        placeCharactersOnStage();
-    }
-
-    private void addBotsToCharactersCollection() {
-        initVisibleClasses();
-        final int players = characters.size();
-        for (int i = players; i < ConfigurationConstants.GAME_CHARACTERS; i++) {
-            characters.add(visibleClasses.get(i % visibleClasses.size()).createCharacter(Player.BOT));
-        }
-    }
-
-    /**
-     * get which classes players chose
-     */
-    private void initVisibleClasses() {
-        visibleClasses = characters.stream()
-                .map(c -> c.getPlayer().getGameCharacterClass())
-                .distinct()
-                .collect(Collectors.toList());
-        if (visibleClasses.size() == 0) {
-            final int i = org.apache.commons.lang3.RandomUtils.nextInt(0, 3);
-            /** Mage must be last enum in CharacterClasses */
-            visibleClasses.add(CharacterClasses.values()[i]);
-        }
-    }
-
-    private void placeCharactersOnStage() {
-        final int endInclusive = ConfigurationConstants.GAME_CHARACTERS / 4;
-        final double xStep = ConfigurationConstants.STAGE_WIDTH / 5;
-        final double yStep = ConfigurationConstants.STAGE_HEIGHT / (endInclusive + 1);
-        IntStream
-                .rangeClosed(1, endInclusive)
-                .forEach(i -> IntStream
-                        .rangeClosed(1, 4)
-                        .forEach(j -> {
-                                    final GameCharacter gameCharacter = characters.get((i - 1) * 4 + j - 1);
-                                    gameCharacter.teleports(new Coordinates(xStep * j, yStep * i));
-                                }
-                        )
-                );
     }
 
     /**
@@ -147,15 +81,17 @@ public class Round {
      * @see NeutralItem
      */
     private void manageItems() {
+        gameItems.update(time);
         //TODO : uncomment this to add neutral items + randomly... + max neutral displayed
-//        neutralItemManager.addItem(time).ifPresent(gameItems::add);
+        neutralItemManager.addItem(time).ifPresent(i -> gameItems.registerItem(i, time));
+        //TODO : remove timeout items && usedItems
+        getGameItems().stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast)
+                .filter(NeutralItem::isUsed)
+                .forEach(ni -> ni.applyEffect(this, gameItems));
         // TODO : should not exists, neutral items effect is triggered when the player uses it
-        gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast)
-                .forEach(
-                        ni -> ni.applyEffect(this)
-                );
         //
-        final Iterator<Item> iterator = gameItems.iterator();
+        final Iterator<Item> iterator = getGameItems().iterator();
+        final int time1 = this.time + 1;
         while (iterator.hasNext()) {
             final Item item = iterator.next();
             if (item.update(time)) { //update the item state if needed (ex: Arrow moves)
@@ -164,6 +100,8 @@ public class Round {
                     //TODO: i think this limits the sound to only 1 per item...
                     soundManager.register(item);
                 }
+            } else {
+                gameItems.registerItem(item, time1);
             }
         }
     }
@@ -176,15 +114,15 @@ public class Round {
      */
     private void manageBots() {
         //TODO : refactor as its not only bots anymore
-        aiManager.updateKOCharactersState(characters, time);
-        aiManager.updateBotsMove(time, bots);
+        aiManager.updateKOCharactersState(characters.characters, time);
+        aiManager.updateBotsMove(time, characters.bots);
     }
 
     /**
-     * Update players and add the newly created item to gameItems list
+     * Update players and add the newly created item to gameItems list for the next time
      */
     private void managePlayers() {
-        gameItems.addAll(inputManager.updatePlayers(time, players));
+        gameItems.registerItem(inputManager.updatePlayers(time, characters.players), time + 1);
     }
 
     /**
@@ -223,8 +161,8 @@ public class Round {
      * @see NeutralItem#isPicked(GameCharacter)
      */
     private void neutralItemsPick() {
-        gameItems.stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(
-                item -> players.stream()
+        getGameItems().stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(
+                item -> characters.players.stream()
                         .filter(player -> Intersector.overlaps(item.getHitbox(), player.getHitbox()))
                         .findFirst()
                         .ifPresent(item::isPicked)
@@ -241,12 +179,12 @@ public class Round {
     private void knockOutCharactersBeingHitByWeapons() {
         //TODO : sword must not kill now but after a while (considered like poison)
         //manage sword and arrow hit
-        gameItems.stream().filter(i -> Sword.class.isInstance(i) || Arrow.class.isInstance(i))
+        getGameItems().stream().filter(i -> Sword.class.isInstance(i) || Arrow.class.isInstance(i))
                 .forEach(weaponHitConsumer(false));
-        gameItems.stream().filter(Bomb.class::isInstance).map(Bomb.class::cast)
+        getGameItems().stream().filter(Bomb.class::isInstance).map(Bomb.class::cast)
                 .filter(Bomb::isExploding) // only exploding bombs will hit characters
                 .forEach(weaponHitConsumer(true));
-        gameItems.stream().filter(MageSpell.class::isInstance).map(MageSpell.class::cast)
+        getGameItems().stream().filter(MageSpell.class::isInstance).map(MageSpell.class::cast)
                 .filter(MageSpell::isTriggered) // only triggered mage spell will hit characters
                 .forEach(weaponHitConsumer(true));
     }
@@ -256,7 +194,7 @@ public class Round {
     }
 
     private void weaponHitConsumer(boolean canKillUser, Item weapon, final GameCharacter user) {
-        characters.stream()
+        characters.characters.stream()
                 .filter(GameCharacter::isAlive) // never hit a KO chacacter
                 .filter(c -> canKillUser || !c.equals(weapon.getUser())) // if canKillUser = false, then must not kill its user
                 .filter(c -> Intersector.overlaps(weapon.getHitbox(), c.getHitbox()))
@@ -274,7 +212,7 @@ public class Round {
         final double height = stage.getHeight();
         final double width = stage.getWidth();
         int botIndex = 0;
-        for (GameCharacter character : characters) {
+        for (GameCharacter character : characters.characters) {
             // TODO : merge for perf ?
             if (stage.isOutOfBound(character)) {
                 Rectangle hitbox = character.getHitbox();
@@ -297,10 +235,10 @@ public class Round {
     }
 
     public boolean isFinished() {
-        if (players.size() < 2) {
+        if (characters.players.size() < 2) {
             return false;
         } else {
-            return players.stream().filter(GameCharacter::isAlive).count() <= 1;
+            return characters.players.stream().filter(GameCharacter::isAlive).count() <= 1;
         }
     }
 
@@ -309,15 +247,14 @@ public class Round {
     }
 
     public List<Item> getGameItems() {
-        return gameItems;
+        return gameItems.getEvents(time);
     }
 
     public int getTime() {
         return time;
     }
 
-    public List<GameCharacter> getPlayers() {
-        return players;
+    public RoundCharacters getCharacters() {
+        return characters;
     }
-
 }

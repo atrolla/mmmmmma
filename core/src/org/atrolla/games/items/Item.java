@@ -6,7 +6,7 @@ import org.atrolla.games.system.Coordinates;
 
 public abstract class Item {
     private Coordinates coordinates;
-    private final int timeout;
+    protected int timeout;
     private GameCharacter user;
 
     public Item(Coordinates coordinates, int timeout, GameCharacter user) {
@@ -16,8 +16,8 @@ public abstract class Item {
     }
 
     /**
-     *  update the item state if needed
-     *  each item has a lifetime and if reached, return true so it can be removed from game
+     * update the item state if needed
+     * each item has a lifetime and if reached, return true so it can be removed from game
      */
     public boolean update(int timeTick) {
         //does nothing
@@ -40,8 +40,5 @@ public abstract class Item {
         return user;
     }
 
-    public int getTimeout() {
-        return timeout;
-    }
     public abstract Circle getHitbox();
 }

@@ -24,31 +24,31 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by MicroOnde on 15/03/2015.
  */
-public class GatherTests {
+public class SwitchTests {
 
-    private Gather gather;
+    private Switch aSwitch;
 
     @Before
     public void setUp() throws Exception {
-        gather = new Gather(getRandomCoordinates(NEUTRAL_ITEM_SIZE, NEUTRAL_ITEM_SIZE));
+        aSwitch = new Switch(getRandomCoordinates(NEUTRAL_ITEM_SIZE, NEUTRAL_ITEM_SIZE),Integer.MAX_VALUE);
     }
 
     @Test
-    public void gatherCanOnlyBePickedByAPlayer() throws Exception {
-        assertFalse(gather.isPicked(new Archer(Player.BOT)));
-        assertTrue(gather.isPicked(new Archer(new Player(Optional.empty(), Optional.empty()))));
+    public void aSwitchCanOnlyBePickedByAPlayer() throws Exception {
+        assertFalse(aSwitch.isPicked(new Archer(Player.BOT)));
+        assertTrue(aSwitch.isPicked(new Archer(new Player(Optional.empty(), Optional.empty()))));
     }
 
     @Test
-    public void pickerPlayerCanUseGather() throws Exception {
+    public void pickerPlayerCanUseaSwitch() throws Exception {
         final Archer player = new Archer(new Player(Optional.empty(), Optional.empty()));
-        gather.isPicked(player);
-        assertTrue(player.useNeutralItem(42).get() instanceof Gather);
+        aSwitch.isPicked(player);
+        assertTrue(player.useNeutralItem(42).get() instanceof Switch);
     }
 
     @Test
     @Ignore
-    public void usedGatherTeleportsAllSamePickerClassAtTheSameArea() throws Exception {
+    public void usedSwitchSwitchesCoordinatesBetweenAPlayerAndABotOfSameClass() throws Exception {
         final Array<Controller> controllers = new Array<>();
         controllers.add(new MockController());
         final InputManager inputManager = new InputManager(controllers, null);
@@ -56,7 +56,7 @@ public class GatherTests {
         Round defaultRound = new Round(inputManager, null);
         GameCharacter firstPlayer = defaultRound.getCharacters().characters.stream().filter(GameCharacter::isPlayer).findFirst().get();
         defaultRound.update();
-        final NeutralItem item = (NeutralItem) defaultRound.getGameItems().stream().filter(Gather.class::isInstance).findFirst().get();
+        final NeutralItem item = (NeutralItem) defaultRound.getGameItems().stream().filter(Switch.class::isInstance).findFirst().get();
         item.isPicked(firstPlayer);
         final Coordinates initCoordinates = firstPlayer.getCoordinates();
         //first is picked
@@ -66,16 +66,5 @@ public class GatherTests {
         final Coordinates coordinates = firstPlayer.getCoordinates();
 //        System.out.println("COORD : x=" + coordinates.getX() + " - y=" + coordinates.getY());
         assertNotEquals(initCoordinates, coordinates);
-        assertTrue(defaultRound.getCharacters().characters.stream().filter(firstPlayer.getClass()::isInstance).allMatch(c -> {
-            final double x = c.getCoordinates().getX();
-            final double y = c.getCoordinates().getY();
-            if ((x > coordinates.getX() - 5) && (x < coordinates.getX() + 5) && (y > coordinates.getY() - 5) && (y < coordinates.getY() + 5)) {
-                return true;
-            }
-//            System.out.println("NOT IN SAME AREA :" + c + "\n x=" + x + " - y=" + y);
-            return false;
-        }));
-        assertTrue(defaultRound.getGameItems().stream().noneMatch(Gather.class::isInstance));
-
     }
 }

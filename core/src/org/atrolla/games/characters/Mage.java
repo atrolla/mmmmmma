@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_MAGE_SPELL_COUNTDOWN_DURATION;
-import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET;
+import static org.atrolla.games.configuration.ConfigurationConstants.MAGE_SPELL_COUNTDOWN_DURATION;
+import static org.atrolla.games.configuration.ConfigurationConstants.MAGE_SPELL_OFFSET;
 
 public class Mage extends GameCharacter {
 
@@ -30,10 +30,10 @@ public class Mage extends GameCharacter {
         }
         coolDownAbility(time);
         final HashSet<Item> items = new HashSet<>();
-        items.add(new MageSpell(this.getCenter().translateXandY(-ITEM_MAGE_SPELL_OFFSET, -ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
-        items.add(new MageSpell(this.getCenter().translateXandY(-ITEM_MAGE_SPELL_OFFSET, ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
-        items.add(new MageSpell(this.getCenter().translateXandY(ITEM_MAGE_SPELL_OFFSET, -ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
-        items.add(new MageSpell(this.getCenter().translateXandY(ITEM_MAGE_SPELL_OFFSET, ITEM_MAGE_SPELL_OFFSET), time + ITEM_MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(-MAGE_SPELL_OFFSET, -MAGE_SPELL_OFFSET), time + MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(-MAGE_SPELL_OFFSET, MAGE_SPELL_OFFSET), time + MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(MAGE_SPELL_OFFSET, -MAGE_SPELL_OFFSET), time + MAGE_SPELL_COUNTDOWN_DURATION, this));
+        items.add(new MageSpell(this.getCenter().translateXandY(MAGE_SPELL_OFFSET, MAGE_SPELL_OFFSET), time + MAGE_SPELL_COUNTDOWN_DURATION, this));
         return items;
     }
 

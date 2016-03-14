@@ -12,7 +12,7 @@ import org.atrolla.games.system.Coordinates;
  * Every Character hit by it during the time it exists is knocked out / killed.
  *
  * @see org.atrolla.games.characters.Knight
- * @see ConfigurationConstants#ITEM_SWORD_ACTION_TIME_OUT
+ * @see ConfigurationConstants#SWORD_ACTION_TIME_OUT
  */
 public class Sword extends Item {
 
@@ -24,7 +24,7 @@ public class Sword extends Item {
     }
 
     public static Item generates(GameCharacter character, int time) {
-        return new Sword(character.getCenter(), time + ConfigurationConstants.ITEM_SWORD_ACTION_TIME_OUT, character);
+        return new Sword(character.getCenter(), time + ConfigurationConstants.SWORD_ACTION_TIME_OUT, character);
     }
 
     @Override

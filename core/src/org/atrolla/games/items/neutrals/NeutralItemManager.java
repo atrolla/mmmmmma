@@ -2,10 +2,11 @@ package org.atrolla.games.items.neutrals;
 
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
+import org.atrolla.games.utils.RandomUtils;
 
 import java.util.Optional;
 
-import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_NEUTRAL_SIZE;
+import static org.atrolla.games.configuration.ConfigurationConstants.NEUTRAL_ITEM_SIZE;
 import static org.atrolla.games.utils.RandomUtils.getRandomCoordinates;
 
 /**
@@ -13,10 +14,15 @@ import static org.atrolla.games.utils.RandomUtils.getRandomCoordinates;
  */
 public class NeutralItemManager {
 
-
     public Optional<Item> addItem(int time) {
-        if (time % ConfigurationConstants.ITEM_NEUTRAL_SPAWN_FREQUENCY_TIME == 0) {
-            return Optional.of(new Gather(getRandomCoordinates(ITEM_NEUTRAL_SIZE, ITEM_NEUTRAL_SIZE)));
+        if (time > 0 && time % ConfigurationConstants.NEUTRAL_ITEM_SPAWN_FREQUENCY_TIME == 0) {
+            final int i = RandomUtils.between0AndExcluded(2);
+            switch (i) {
+                case 0:
+                    return Optional.of(new Switch(getRandomCoordinates(NEUTRAL_ITEM_SIZE, NEUTRAL_ITEM_SIZE), time + ConfigurationConstants.NEUTRAL_ITEM_DESPAWN));
+                case 1:
+                    return Optional.of(new Locator(getRandomCoordinates(NEUTRAL_ITEM_SIZE, NEUTRAL_ITEM_SIZE), time + ConfigurationConstants.NEUTRAL_ITEM_DESPAWN));
+            }
         }
         return Optional.empty();
     }

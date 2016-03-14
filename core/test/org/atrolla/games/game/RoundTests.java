@@ -39,7 +39,7 @@ public class RoundTests {
         inputManager = new InputManager(controllers, null);
         inputManager.assignPlayers();
         defaultRound = new Round(inputManager, null);
-        firstBot = defaultRound.getCharacters().stream().filter(c -> !c.isPlayer()).findFirst().get();
+        firstBot = defaultRound.getCharacters().characters.stream().filter(c -> !c.isPlayer()).findFirst().get();
         firstBotIndex = 0;
     }
 
@@ -70,7 +70,7 @@ public class RoundTests {
         // Down is default direction, so statistically, at least one should not be down after first update
         Predicate<GameCharacter> directionIsNotDown = gameCharacter -> !Direction.DOWN.equals(gameCharacter.getDirection());
 //		defaultGame.getCharacters().parallelStream().forEach(c -> System.out.println(c.getDirection()));
-        assertThat(defaultRound.getCharacters().parallelStream().anyMatch(directionIsNotDown));
+        assertThat(defaultRound.getCharacters().characters.parallelStream().anyMatch(directionIsNotDown));
     }
 
     @Test
@@ -168,9 +168,9 @@ public class RoundTests {
         inputManager = new InputManager(controllers, null);
         inputManager.assignPlayers();
         Round round = new Round(inputManager, null);
-        Assert.assertEquals(round.getPlayers().size(), 2);
+        Assert.assertEquals(round.getCharacters().players.size(), 2);
         Assert.assertFalse(round.isFinished());
-        round.getPlayers().get(0).hit(new Knight(null));
+        round.getCharacters().players.get(0).hit(new Knight(null));
         Assert.assertTrue(round.isFinished());
     }
 
@@ -181,7 +181,7 @@ public class RoundTests {
         inputManager = new InputManager(controllers, null);
         inputManager.assignPlayers();
         Round round = new Round(inputManager, null);
-        Assert.assertEquals(round.getPlayers().size(), 1);
+        Assert.assertEquals(round.getCharacters().players.size(), 1);
         Assert.assertFalse(round.isFinished());
     }
 }

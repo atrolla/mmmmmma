@@ -48,14 +48,14 @@ public class BomberDemo implements DemoScreen {
                 bomber.moves(time, Direction.DOWN);
                 lastUpdate = time;
             } else {
-                if (isCooldownReached(time, ConfigurationConstants.ITEM_BOMB_COUNTDOWN_DURATION)) {
+                if (isCooldownReached(time, ConfigurationConstants.BOMB_COUNTDOWN_DURATION)) {
                     victim.hit(bomber);
                     lastUpdate = time;
                     bomb.update(time);
                 } else {
                     if (isOutsideExplosionRadius()) {
                         if (bomb == null) {
-                            bomb = new Bomb(bomber, time - ConfigurationConstants.ITEM_BOMB_COUNTDOWN_DURATION - 10);
+                            bomb = new Bomb(bomber, time - ConfigurationConstants.BOMB_COUNTDOWN_DURATION - 10);
                         }
                         bomber.moves(time, Direction.UP);
                         mustGoDown = false;
@@ -74,7 +74,7 @@ public class BomberDemo implements DemoScreen {
     }
 
     private boolean isOutsideExplosionRadius() {
-        return bomber.getCenter().getY() - victim.getCenter().getY() - ConfigurationConstants.GAME_CHARACTER_HEIGHT <= ConfigurationConstants.EXPLOSION_RADIUS_SIZE * 2 + 1;
+        return bomber.getCenter().getY() - victim.getCenter().getY() - ConfigurationConstants.GAME_CHARACTER_HEIGHT <= ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE * 2 + 1;
     }
 
 
@@ -83,6 +83,6 @@ public class BomberDemo implements DemoScreen {
     }
 
     private boolean canExplodeVictim() {
-        return bomber.getCoordinates().getY() - victim.getCoordinates().getY() > ConfigurationConstants.EXPLOSION_RADIUS_SIZE;
+        return bomber.getCoordinates().getY() - victim.getCoordinates().getY() > ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE;
     }
 }

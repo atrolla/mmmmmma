@@ -6,7 +6,7 @@ import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.system.Coordinates;
 
-import static org.atrolla.games.configuration.ConfigurationConstants.ITEM_BOMB_COUNTDOWN_DURATION;
+import static org.atrolla.games.configuration.ConfigurationConstants.BOMB_COUNTDOWN_DURATION;
 
 public class Bomb extends Item {
 
@@ -14,9 +14,9 @@ public class Bomb extends Item {
     private boolean explodes = false;
 
     public Bomb(Bomber bomber, int currentTime) {
-        super(bomber.getCenter(), currentTime + ITEM_BOMB_COUNTDOWN_DURATION, bomber);
+        super(bomber.getCenter(), currentTime + BOMB_COUNTDOWN_DURATION, bomber);
         final Coordinates coordinates = bomber.getCenter();
-        this.hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+        this.hitbox = new Circle((float) coordinates.getX(), (float) coordinates.getY(), ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE);
     }
 
     /**

@@ -31,24 +31,25 @@ public final class ConfigurationConstants {
 
     public static final int MAX_PLAYERS = 4;
 
-    public static final int ITEM_BOMB_COUNTDOWN_DURATION = 150;
-    public static final int ITEM_MAGE_SPELL_COUNTDOWN_DURATION = 10;
-    public static final double ITEM_MAGE_SPELL_OFFSET = 60;
+    public static final double ARROW_MOVE_STEP = 4d;
+    public static final int ARROW_RANGE_TIME_OUT = 30;
+    public static final int ARROW_HITBOX_SIZE = 1;
+    public static final int SWORD_ACTION_TIME_OUT = 1;
+    public static final int SWORD_SIZE = 10;
+    public static final int BOMB_COUNTDOWN_DURATION = 150;
+    public static final int BOMB_EXPLOSION_RADIUS_SIZE = 50;
+    public static final int MAGE_SPELL_COUNTDOWN_DURATION = 10;
+    public static final double MAGE_SPELL_OFFSET = 60;
+    public static final int MAGE_SPELL_SIZE = 5;
 
     public static final int ARCHER_ABILITY_COOLDOWN_DURATION = 150;
-    public static final int BOMBER_ABILITY_COOLDOWN_DURATION = ITEM_BOMB_COUNTDOWN_DURATION + 10;
+    public static final int BOMBER_ABILITY_COOLDOWN_DURATION = BOMB_COUNTDOWN_DURATION + 10;
     public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 50;
     public static final int MAGE_ABILITY_COOLDOWN_DURATION = 70;
 
-
-    public static final double ITEM_ARROW_MOVE_STEP = 4d;
-    public static final int ITEM_ARROW_RANGE_TIME_OUT = 30;
-    public static final int ITEM_SWORD_ACTION_TIME_OUT = 1;
-    public static final int ITEM_NEUTRAL_SPAWN_FREQUENCY_TIME = 300;
-    public static final int ITEM_NEUTRAL_SIZE = 5;
-
-    public static final int SWORD_SIZE = 10;
-    public static final int EXPLOSION_RADIUS_SIZE = 50;
-    public static final int ARROW_HITBOX_SIZE = 1;
-    public static final int MAGE_SPELL_SIZE = 5;
+    public static final int NEUTRAL_ITEM_SPAWN_FREQUENCY_TIME = 750;
+    public static final int NEUTRAL_ITEM_SIZE = 32;
+    public static final int NEUTRAL_ITEM_PICK_SHOW_DELAY = 350;
+    public static final int NEUTRAL_ITEM_DESPAWN = 1000;
+    public static final int NEUTRAL_ITEM_LOCATOR_DELAY_BEGIN = 100;
 }

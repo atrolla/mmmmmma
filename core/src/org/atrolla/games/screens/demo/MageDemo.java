@@ -29,10 +29,10 @@ public class MageDemo implements DemoScreen {
         this.victim4 = new Mage(Player.BOT);
         this.mage = new Mage(new Player(Optional.empty(), Optional.empty()));
         mage.teleports(coordinates);
-        victim1.teleports(coordinates.translateXandY(ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET, ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET));
-        victim2.teleports(coordinates.translateXandY(ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET, -ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET));
-        victim3.teleports(coordinates.translateXandY(-ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET, ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET));
-        victim4.teleports(coordinates.translateXandY(-ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET, -ConfigurationConstants.ITEM_MAGE_SPELL_OFFSET));
+        victim1.teleports(coordinates.translateXandY(ConfigurationConstants.MAGE_SPELL_OFFSET, ConfigurationConstants.MAGE_SPELL_OFFSET));
+        victim2.teleports(coordinates.translateXandY(ConfigurationConstants.MAGE_SPELL_OFFSET, -ConfigurationConstants.MAGE_SPELL_OFFSET));
+        victim3.teleports(coordinates.translateXandY(-ConfigurationConstants.MAGE_SPELL_OFFSET, ConfigurationConstants.MAGE_SPELL_OFFSET));
+        victim4.teleports(coordinates.translateXandY(-ConfigurationConstants.MAGE_SPELL_OFFSET, -ConfigurationConstants.MAGE_SPELL_OFFSET));
     }
 
 

@@ -21,6 +21,10 @@ public final class RandomUtils {
     private static final Random RANDOM = new Random();
     private static final int DIRECTIONS_NUMBER = Direction.values().length - 1;
 
+    public static int between0AndExcluded(int bound) {
+        return RANDOM.nextInt(bound);
+    }
+
     public static int getRandomMoveTime(int time) {
         return RANDOM.nextInt(ConfigurationConstants.BOT_MAX_MOVE_COMMAND_TIME) + 1 + time;
     }

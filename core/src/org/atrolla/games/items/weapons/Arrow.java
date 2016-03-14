@@ -13,7 +13,7 @@ public class Arrow extends Item {
     private final Circle hitbox;
 
     public Arrow(Archer archer, int time) {
-        super(archer.getCenter(), time + ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT, archer);
+        super(archer.getCenter(), time + ConfigurationConstants.ARROW_RANGE_TIME_OUT, archer);
         this.direction = archer.getDirection();
         this.hitbox = new Circle((float) archer.getCoordinates().getX(), (float) archer.getCoordinates().getY(), ConfigurationConstants.ARROW_HITBOX_SIZE);
     }
@@ -23,7 +23,7 @@ public class Arrow extends Item {
      */
     @Override
     public boolean update(int timeTick) {
-        final Coordinates coordinates = direction.move(getCoordinates(), ConfigurationConstants.ITEM_ARROW_MOVE_STEP);
+        final Coordinates coordinates = direction.move(getCoordinates(), ConfigurationConstants.ARROW_MOVE_STEP);
         move(coordinates);
         updateHitbox(coordinates);
         return super.update(timeTick);

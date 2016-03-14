@@ -46,8 +46,8 @@ public class ArrowTests {
 
     @Test
     public void arrowHasMaxRangeDefinedByTimeOut() throws Exception {
-        assertThat(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT - 1)).isFalse();
-        assertThat(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT)).isFalse();
-        assertThat(arrow.update(ConfigurationConstants.ITEM_ARROW_RANGE_TIME_OUT + 1)).isTrue();
+        assertThat(arrow.update(ConfigurationConstants.ARROW_RANGE_TIME_OUT - 1)).isFalse();
+        assertThat(arrow.update(ConfigurationConstants.ARROW_RANGE_TIME_OUT)).isFalse();
+        assertThat(arrow.update(ConfigurationConstants.ARROW_RANGE_TIME_OUT + 1)).isTrue();
     }
 }

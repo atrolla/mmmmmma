@@ -48,7 +48,6 @@ public class MainMenuScreen implements Screen {
     private final CharacterSkinManager skinManager;
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch spriteBatch;
-    private ShaderProgram shader;
     private Stage stage;
     private final InputManager inputManager;
     private int currentChosenButtonIndex;
@@ -62,17 +61,9 @@ public class MainMenuScreen implements Screen {
         //important since we aren't using some uniforms and attributes that SpriteBatch expects
         ShaderProgram.pedantic = false;
 
-//        shader = new ShaderProgram(GLShaders.VERT, GLShaders.FRAG);
-//        if (!shader.isCompiled()) {
-//            System.err.println(shader.getLog());
-//            System.exit(0);
-//        }
-//        if (shader.getLog().length() != 0)
-//            System.out.println(shader.getLog());
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getCamera().combined);
-        spriteBatch = new SpriteBatch(1000, shader);
-        spriteBatch.setShader(shader);
+        spriteBatch = new SpriteBatch(1000);
         stage = new Stage(new ScalingViewport(Scaling.fit, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()), spriteBatch);
         skinManager = new CharacterSkinManager();
 
@@ -80,19 +71,17 @@ public class MainMenuScreen implements Screen {
         skin = new Skin(skinFile);
         BitmapFont labelFont = skin.get("default-font", BitmapFont.class);
         labelFont.getData().markupEnabled = true;
-//        this.skin.getFont("nolife").getData().setScale(0.6f, 0.6f);
         itemSpriteManager = new ItemSpriteManager();
 
         this.game = game;
         table = new Table();
         playersTable = new Table();
         buttonPlay = new Label("Play", skin);
-//        buttonPlay = new Label("<<[BLUE]M[RED]u[YELLOW]l[GREEN]t[OLIVE]ic[]o[]l[]o[]r[]*[MAROON]Label[][] [Unknown Color]>>", skin);
         setStyle(buttonPlay);
         buttonResetPlayers = new Label("Reset Players", skin);
         setStyle(buttonResetPlayers);
 //        buttonExit = new Label("Exit", skin);
-        title = new Label(" [BLUE]M[BLACK]ultiplayer [YELLOW]M[BLACK]ulti [BLACK]M[BLACK]ysterious\n" +
+        title = new Label(" [BLUE]M[BLACK]ultiplayer [YELLOW]M[BLACK]ulti [OLIVE]M[BLACK]ysterious\n" +
                 "[RED]M[BLACK]erciless [GREEN]M[BLACK]agic [ROYAL]M[BLACK]ashup [BLACK]Arena", skin);
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
@@ -259,7 +248,7 @@ public class MainMenuScreen implements Screen {
                     if (item instanceof Bomb) {
                         final Bomb bomb = (Bomb) item;
                         if (bomb.isExploding()) {
-                            itemSpriteManager.makeExplosion(bomb, bomb.getCoordinates());
+                            itemSpriteManager.registerAnimation(bomb, bomb.getCoordinates());
                         }
                     }
                 });
@@ -268,16 +257,16 @@ public class MainMenuScreen implements Screen {
 //        if (mlol != null) {
 //            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 //            shapeRenderer.setColor(Color.LIGHT_GRAY);
-//            shapeRenderer.circle((float) mlol.getX(), (float) mlol.getY(), ConfigurationConstants.EXPLOSION_RADIUS_SIZE);
+//            shapeRenderer.circle((float) mlol.getX(), (float) mlol.getY(), ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE);
 //            shapeRenderer.end();
 //        }
     }
 
     private void focusChosenButton() {
-        buttonPlay.setFontScale(1);
-        buttonResetPlayers.setFontScale(1);
+        buttonPlay.setColor(Color.BLACK);
+        buttonResetPlayers.setColor(Color.BLACK);
 //        buttonExit.setFontScale(1);
-        getChoosenTextButton().setFontScale(1.5f);
+        getChoosenTextButton().setColor(Color.ROYAL);
     }
 
     private Label getChoosenTextButton() {

@@ -148,7 +148,7 @@ public abstract class GameCharacter {
     public Optional<NeutralItem> useNeutralItem(int time) {
         Optional<NeutralItem> usedItem = neutralItem;
         neutralItem = Optional.empty();
-        return usedItem.map(nItem -> nItem.isUsed(time));
+        return usedItem.map(nItem -> nItem.used(time));
     }
 
     public boolean isMoving() {
