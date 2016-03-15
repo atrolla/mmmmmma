@@ -2,7 +2,6 @@ package org.atrolla.games.desktop.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -64,8 +63,6 @@ public class RoundScreen implements Screen {
 
     private List<ScreenElement> screenElements;
 
-    private Music roundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/05-eric_prydz-last_dragon-43bf64.mp3"));
-
     public RoundScreen(Mmmmmma game) {
         this.game = game;
         round = new Round(game.getInputManager(), game.getSoundManager());
@@ -114,9 +111,7 @@ public class RoundScreen implements Screen {
             stage.addActor(topLeftText);
         }
         Gdx.input.setInputProcessor(stage);
-        roundMusic.setLooping(true);
-        roundMusic.play();
-        roundMusic.setVolume(0.5f);
+        game.getMusicManager().playRoundMusic();
     }
 
     private void renderTrees() {
@@ -149,7 +144,7 @@ public class RoundScreen implements Screen {
 
         stage.draw();
         if (winDelay < 0) {
-            roundMusic.stop();
+            game.getMusicManager().stop();
             game.switchToMenuScreen();
         }
 
@@ -343,6 +338,5 @@ public class RoundScreen implements Screen {
         spriteBatch.dispose();
         shapeRenderer.dispose();
         shader.dispose();
-        roundMusic.dispose();
     }
 }
