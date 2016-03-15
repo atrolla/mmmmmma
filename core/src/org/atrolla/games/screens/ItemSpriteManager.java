@@ -101,7 +101,7 @@ public class ItemSpriteManager {
         final TextureRegion keyFrame = explosion.getKeyFrame(value, false);
         if (keyFrame != null) {
             spriteBatch.draw(keyFrame,
-                    (float) coordinates.getX() - EXPLOSION_SIZE, (float) coordinates.getY() - OFFSET_EXPLOSION,
+                    (float) coordinates.getX() - OFFSET_EXPLOSION, (float) coordinates.getY() - OFFSET_EXPLOSION,
                     RADIUS_SIZE, RADIUS_SIZE);
             itemFloatEntry.setValue(value + Gdx.graphics.getDeltaTime());
         } else {

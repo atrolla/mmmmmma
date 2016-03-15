@@ -26,6 +26,7 @@ public abstract class GameCharacter {
     private final Rectangle hitbox;
     private Optional<NeutralItem> neutralItem;
     protected int abilityReadyTime;
+    protected int lives;
     private boolean isMoving = false;
 
     protected GameCharacter(Player player) {
@@ -93,10 +94,14 @@ public abstract class GameCharacter {
         return hitbox;
     }
 
+    public int removeLife() {
+        return --lives;
+    }
+
     public final void hit(GameCharacter gameCharacter) {
         //if it is a player and it has same class as the disguised mage class
         //or if it is a mage
-        if (isPlayer()) {
+        if (isPlayer() && removeLife() <= 0) {
             state = DEAD;
         } else {
             state = KNOCK_OUT;
@@ -149,6 +154,10 @@ public abstract class GameCharacter {
         Optional<NeutralItem> usedItem = neutralItem;
         neutralItem = Optional.empty();
         return usedItem.map(nItem -> nItem.used(time));
+    }
+
+    public boolean isNotDead() {
+        return lives > 0;
     }
 
     public boolean isMoving() {

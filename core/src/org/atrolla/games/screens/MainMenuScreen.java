@@ -88,10 +88,10 @@ public class MainMenuScreen implements Screen {
         addElementsToTable();
         addButtonListeners();
 
-        demoScreens = Arrays.asList(new KnightDemo(new Coordinates(180, 320))
+        demoScreens = Arrays.asList(new KnightDemo(new Coordinates(140, 260))
                 , new ArcherDemo(new Coordinates(470, 380))
-                , new BomberDemo(new Coordinates(770, 330))
-                , new MageDemo(new Coordinates(1070, 320))
+                , new BomberDemo(new Coordinates(780, 330))
+                , new MageDemo(new Coordinates(1100, 260))
         );
         timeElapsed = 0;
 //        stage.setDebugAll(true);
@@ -107,11 +107,28 @@ public class MainMenuScreen implements Screen {
     private void addElementsToTable() {
         //The elements are displayed in the order you add them.
         //The first appear on top, the last at the bottom.
-        table.add(title).center().padTop(10).padBottom(20).row();
-        table.add(buttonPlay).center().padBottom(20).row();
-        table.add(buttonResetPlayers).center().padBottom(20).row();
+        table.add(title).center().padTop(10).padBottom(20).colspan(4).row();
+        table.add(buttonPlay).center().padBottom(20).colspan(4).row();
+        table.add(buttonResetPlayers).center().padBottom(20).colspan(4).row();
 //        table.add(buttonExit).center().padBottom(20).row();
-        table.add(playersTable).expand().padTop(350).row();
+        final Label knight = new Label(" [#00000088]Knight\n("+ConfigurationConstants.KNIGHT_LIVES+" lives) ", skin);
+        setStyle(knight);
+        table.add(knight).padTop(130).center();
+        final Label archer = new Label("[#00000088]Archer\n" +
+                "  ("+ConfigurationConstants.ARCHER_LIVES+" life) ", skin);
+        setStyle(archer);
+        table.add(archer).padTop(130).center();
+        final Label bomber = new Label("[#00000088]Bomber\n" +
+                "("+ConfigurationConstants.BOMBER_LIVES+" lives) ", skin);
+        setStyle(bomber);
+        table.add(bomber).padTop(130).center();
+        final Label mage = new Label("   [#00000088]Mage\n" +
+                "("+ConfigurationConstants.MAGE_LIVES+" lives) ", skin);
+        setStyle(mage);
+        table.add(mage).padTop(10).center();
+
+        table.row();
+        table.add(playersTable).expand().padTop(200).colspan(4).row();
         table.setFillParent(true);
     }
 
@@ -177,7 +194,7 @@ public class MainMenuScreen implements Screen {
             Label label = new Label(labelText, skin);
             label.setAlignment(Align.center);
             setStyle(label);
-            playersTable.add(label).width(300).expand().uniform();
+            playersTable.add(label).width(ConfigurationConstants.STAGE_WIDTH / 4).expand().uniform();
         }
         if (size > 0) {
             if (currentChosenButtonIndex == -1 && size > 0) {

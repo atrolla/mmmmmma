@@ -30,9 +30,7 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class RoundScreen implements Screen {
 
@@ -55,8 +53,6 @@ public class RoundScreen implements Screen {
     private float opacity;
     private Label winnerText;
     private float winDelay;
-
-    private Set<Item> itemsToHide;
 
     private final Sprite backgroundSprite;
     private final List<Sprite> trees;
@@ -101,7 +97,6 @@ public class RoundScreen implements Screen {
         winnerText = new Label("", skin);
         opacity = 0f;
         winDelay = 2f;
-        itemsToHide = new HashSet<>();
         backgroundSprite = new Sprite(new Texture("background/level.png"));
         trees = new ArrayList<>();
         trees.add(new Sprite(new Texture("trees/tree1.png")));
@@ -219,7 +214,7 @@ public class RoundScreen implements Screen {
         gameObjects.stream().filter(item -> item instanceof NeutralItem).forEach(item -> {
             if (item instanceof Locator && ((Locator) item).mustRegister()) {
                 itemSpriteManager.registerAnimation(item, ((Locator) item).getVictimCoordinates());
-            } else if (!(item instanceof Locator && ((Locator) item).getPicker().isPresent())) {
+            } else if (((NeutralItem) item).mustDisplay()) {
                 itemSpriteManager.registerItem(item);
             }
         });

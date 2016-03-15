@@ -16,6 +16,7 @@ public class Mage extends GameCharacter {
 
     public Mage(Player player) {
         super(player);
+        lives = ConfigurationConstants.MAGE_LIVES;
     }
 
     @Override

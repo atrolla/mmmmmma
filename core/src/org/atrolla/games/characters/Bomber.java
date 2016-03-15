@@ -12,6 +12,7 @@ public class Bomber extends GameCharacter {
 
     public Bomber(Player player) {
         super(player);
+        lives = ConfigurationConstants.BOMBER_LIVES;
     }
 
     @Override

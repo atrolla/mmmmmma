@@ -238,7 +238,8 @@ public class Round {
         if (characters.players.size() < 2) {
             return false;
         } else {
-            return characters.players.stream().filter(GameCharacter::isAlive).count() <= 1;
+            final long count = characters.players.stream().filter(GameCharacter::isNotDead).count();
+            return count <= 1;
         }
     }
 

@@ -13,6 +13,7 @@ public class Archer extends GameCharacter {
 
     public Archer(Player player) {
         super(player);
+        lives = ConfigurationConstants.ARCHER_LIVES;
     }
 
     private boolean abilityIsCoolingDown = false;

@@ -2,6 +2,8 @@ package org.atrolla.games.characters;
 
 import org.atrolla.games.system.Player;
 
+import java.util.List;
+
 public enum CharacterClasses {
 
     ARCHER {
@@ -22,7 +24,7 @@ public enum CharacterClasses {
         }
 
     }, MAGE {
-        /** @see org.atrolla.games.game.Round#addBotsToCharactersCollection() */
+        /** @see org.atrolla.games.game.RoundCharacters#addBotsToCharactersCollection(List, int) */
         @Override
         public GameCharacter createCharacter(Player player) {
             return new Mage(player);

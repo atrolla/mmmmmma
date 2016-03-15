@@ -11,6 +11,7 @@ import java.util.Collections;
 public class Knight extends GameCharacter {
     public Knight(Player player) {
         super(player);
+        lives = ConfigurationConstants.KNIGHT_LIVES;
     }
 
     @Override
@@ -27,7 +28,7 @@ public class Knight extends GameCharacter {
         return Collections.singleton(Sword.generates(this, time));
     }
 
-    private boolean abilityIsCoolingDown(int time){
+    private boolean abilityIsCoolingDown(int time) {
         return abilityReadyTime >= time;
     }
 }
