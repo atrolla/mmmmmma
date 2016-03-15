@@ -57,6 +57,11 @@ public abstract class NeutralItem extends Item {
     }
 
     @Override
+    public boolean mustSound(int time) {
+        return false;
+    }
+
+    @Override
     public boolean update(int timeTick) {
         if (pickedTime==Integer.MAX_VALUE && picker.isPresent()) {
             pickedTime = timeTick + ConfigurationConstants.NEUTRAL_ITEM_PICK_SHOW_DELAY;

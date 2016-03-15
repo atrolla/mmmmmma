@@ -11,6 +11,7 @@ public class MageSpell extends Item {
 
     private final Circle hitbox;
     private boolean triggers = false;
+    private boolean sound;
 
     public MageSpell(Coordinates coordinates, int timeout, Mage user) {
         super(coordinates, timeout, user);
@@ -29,6 +30,15 @@ public class MageSpell extends Item {
         final boolean isDone = super.update(timeTick);
         if (isDone) { //triggered
             triggers = true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mustSound(int time) {
+        if (sound) {
+            sound = false;
+            return true;
         }
         return false;
     }

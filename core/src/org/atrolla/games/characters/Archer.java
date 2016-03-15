@@ -20,9 +20,10 @@ public class Archer extends GameCharacter {
 
     @Override
     public void moves(int time, Direction direction) {
-        abilityIsCoolingDown = abilityReadyTime >= time;
-        if(!abilityIsCoolingDown) {
+        if (!abilityIsCoolingDown(time)) {
             super.moves(time, direction);
+        } else {
+            super.moves(time, Direction.STOP);
         }
     }
 
@@ -41,7 +42,9 @@ public class Archer extends GameCharacter {
         return Collections.singleton(new Arrow(this, time));
     }
 
-    private boolean abilityIsCoolingDown(int time){
+    private boolean abilityIsCoolingDown(int time) {
+        abilityIsCoolingDown = abilityReadyTime != ConfigurationConstants.GAME_CHARACTER_INITIAL_READY_TIME
+                && abilityReadyTime >= time;
         return abilityIsCoolingDown;
     }
 }

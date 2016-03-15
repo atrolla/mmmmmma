@@ -41,4 +41,6 @@ public abstract class Item {
     }
 
     public abstract Circle getHitbox();
+
+    public abstract boolean mustSound(int time);
 }

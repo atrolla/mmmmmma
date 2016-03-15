@@ -1,7 +1,8 @@
-package org.atrolla.games.screens;
+package org.atrolla.games.desktop.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
-import org.atrolla.games.game.Mmmmmma;
+import org.atrolla.games.desktop.game.Mmmmmma;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.neutrals.Locator;
@@ -59,9 +60,11 @@ public class RoundScreen implements Screen {
 
     private ShaderProgram shader;
 
-    private float startGameDelay = 3;
+    private float startGameDelay = 4;
 
     private List<ScreenElement> screenElements;
+
+    private Music roundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/05-eric_prydz-last_dragon-43bf64.mp3"));
 
     public RoundScreen(Mmmmmma game) {
         this.game = game;
@@ -71,12 +74,12 @@ public class RoundScreen implements Screen {
         ShaderProgram.pedantic = false;
 
         shader = new ShaderProgram(GLShaders.VERT, GLShaders.FRAG);
-        if (!shader.isCompiled()) {
-            System.err.println(shader.getLog());
-            System.exit(0);
-        }
-        if (shader.getLog().length() != 0)
-            System.out.println(shader.getLog());
+//        if (!shader.isCompiled()) {
+//            System.err.println(shader.getLog());
+//            System.exit(0);
+//        }
+//        if (shader.getLog().length() != 0)
+//            System.out.println(shader.getLog());
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getCamera().combined);
         spriteBatch = new SpriteBatch(1000, shader);
@@ -111,6 +114,9 @@ public class RoundScreen implements Screen {
             stage.addActor(topLeftText);
         }
         Gdx.input.setInputProcessor(stage);
+        roundMusic.setLooping(true);
+        roundMusic.play();
+        roundMusic.setVolume(0.5f);
     }
 
     private void renderTrees() {
@@ -143,6 +149,7 @@ public class RoundScreen implements Screen {
 
         stage.draw();
         if (winDelay < 0) {
+            roundMusic.stop();
             game.switchToMenuScreen();
         }
 
@@ -336,5 +343,6 @@ public class RoundScreen implements Screen {
         spriteBatch.dispose();
         shapeRenderer.dispose();
         shader.dispose();
+        roundMusic.dispose();
     }
 }

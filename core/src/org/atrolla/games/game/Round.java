@@ -68,7 +68,7 @@ public class Round {
         manageBots();
         managePlayers();
         manageHitBoxes();
-//        playSounds(); TODO: remove for sound
+        playSounds(); //TODO: remove for sound
         postUpdate();
     }
 

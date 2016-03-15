@@ -1,7 +1,8 @@
-package org.atrolla.games.screens;
+package org.atrolla.games.desktop.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -22,7 +23,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
-import org.atrolla.games.game.Mmmmmma;
+import org.atrolla.games.desktop.game.Mmmmmma;
 import org.atrolla.games.input.InputManager;
 import org.atrolla.games.items.weapons.Bomb;
 import org.atrolla.games.screens.demo.*;
@@ -56,6 +57,7 @@ public class MainMenuScreen implements Screen {
     private final ItemSpriteManager itemSpriteManager;
 
     //TODO : many things in common with RoundScreen -> REFACTO
+    private Music mainMenuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Welcome.mp3"));
 
     public MainMenuScreen(Mmmmmma game) {
         //important since we aren't using some uniforms and attributes that SpriteBatch expects
@@ -136,6 +138,9 @@ public class MainMenuScreen implements Screen {
     public void show() {
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
+        mainMenuMusic.setLooping(true);
+        mainMenuMusic.play();
+        mainMenuMusic.setVolume(0.5f);
     }
 
     private void addButtonListeners() {
@@ -160,6 +165,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void startNewRound() {
+        mainMenuMusic.stop();
         game.setScreen(new RoundScreen(game));
     }
 
@@ -323,5 +329,6 @@ public class MainMenuScreen implements Screen {
 //        System.out.println("MainMenuScreen disposed");
         stage.dispose();
         skin.dispose();
+        mainMenuMusic.dispose();
     }
 }

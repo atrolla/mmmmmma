@@ -59,7 +59,7 @@ public class InputManager {
         }
         int controllerIndex = 0;
         for (Controller controller : controllers) {
-            if (controller.getButton(padInput.buttonStart())) {
+            if (controller.getButton(padInput.buttonB())) {
                 addPlayerIfNotPresent(controller);
             }
             if (PovDirection.west == padInput.getPovDirection(controller)) {
@@ -231,7 +231,7 @@ public class InputManager {
         for (Player p : players) {
             if (p.getPadControllerInput().isPresent()) {
                 final PadController padController = p.getPadControllerInput().get();
-                if (padController.hasJustPressed(padInput.buttonA())) {
+                if (padController.hasJustPressed(padInput.buttonStart())) {
                     return true;
                 }
             } else {
