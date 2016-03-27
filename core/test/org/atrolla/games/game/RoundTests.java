@@ -121,6 +121,7 @@ public class RoundTests {
     @Test
     public void knockOutBotMovesAfterSomeTime() throws Exception {
         Command command = new Command(Direction.DOWN_RIGHT, 500);
+        firstBot.teleports(new Coordinates(ConfigurationConstants.STAGE_WIDTH/2,ConfigurationConstants.STAGE_HEIGHT/2));
         aiManager.getCommands().set(firstBotIndex, command);
         defaultRound.update();
         final Coordinates baseCoordinates = firstBot.getCoordinates();
