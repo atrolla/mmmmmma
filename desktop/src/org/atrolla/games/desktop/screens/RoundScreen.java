@@ -24,6 +24,7 @@ import org.atrolla.games.system.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RoundScreen implements Screen {
 
@@ -84,7 +85,7 @@ public class RoundScreen implements Screen {
         }
         winnerText = new Label("", skin);
         opacity = 0f;
-        winDelay = 2f;
+        winDelay = 3f;
         backgroundSprite = new Sprite(new Texture("background/level.png"));
         trees = new ArrayList<>();
         trees.add(new Sprite(new Texture("trees/tree1.png")));
@@ -167,11 +168,13 @@ public class RoundScreen implements Screen {
             stage.addActor(winnerText);
             Gdx.gl.glEnable(GL20.GL_BLEND);
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            final GameCharacter winner = round.getCharacters().players.stream().filter(GameCharacter::isAlive).findFirst().get();
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0f, 1f, 0f, 0.5f);
-            shapeRenderer.circle((float) winner.getCenter().getX(), (float) winner.getCenter().getY(), WINNER_AURA);
-            shapeRenderer.end();
+            if (index > 0) {
+                final GameCharacter winner = round.getCharacters().players.stream().filter(GameCharacter::isAlive).findFirst().get();
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(0f, 1f, 0f, 0.5f);
+                shapeRenderer.circle((float) winner.getCenter().getX(), (float) winner.getCenter().getY(), WINNER_AURA);
+                shapeRenderer.end();
+            }
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0.9f, 0.9f, 0.9f, opacity);
             shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());
@@ -181,12 +184,15 @@ public class RoundScreen implements Screen {
     }
 
     private int getWinningPlayerIndex() {
-        final Player player = round.getCharacters().players.stream().filter(GameCharacter::isAlive).map(GameCharacter::getPlayer).findFirst().get();
-        final List<Player> playerList = game.getInputManager().getPlayers();
-        for (int i = 0; i < playerList.size(); i++) {
-            final Player playerI = playerList.get(i);
-            if (player.equals(playerI)) {
-                return i + 1;
+        final Optional<Player> winner = round.getCharacters().players.stream().filter(GameCharacter::isAlive).map(GameCharacter::getPlayer).findFirst();
+        if (winner.isPresent()) {
+            final Player player = winner.get();
+            final List<Player> playerList = game.getInputManager().getPlayers();
+            for (int i = 0; i < playerList.size(); i++) {
+                final Player playerI = playerList.get(i);
+                if (player.equals(playerI)) {
+                    return i + 1;
+                }
             }
         }
         return 0;

@@ -217,7 +217,6 @@ public class MainMenuScreen implements Screen {
             }
         }
 
-//        renderDemo(timeElapsed++);
         demo.update();
         roundRender.clearScreenElements();
         skinManager.assignSkins();
@@ -225,66 +224,6 @@ public class MainMenuScreen implements Screen {
 
         stage.draw();
     }
-
-//    private void renderDemo(int timeElapsed) {
-//        demo.update();
-//        spriteBatch.begin();
-//        skinManager.updateTime();
-//        skinManager.assignSkins();
-//        final List<GameCharacter> gameCharacters = demoScreens.stream()
-//                .peek(d -> d.update(timeElapsed))
-//                .map(DemoScreen::getCharacters)
-//                .flatMap(Collection::stream)
-//                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
-//                .sequential()
-//                .collect(Collectors.toList());
-//        gameCharacters.forEach(c -> {
-//            final Rectangle hitbox = c.getHitbox();
-//            final TextureRegion frame = skinManager.getFrame(c);
-//            spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
-//                    (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
-//                    (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
-//        });
-//        spriteBatch.end();
-//        Gdx.gl.glEnable(GL20.GL_BLEND);
-//        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-//        gameCharacters.forEach(c -> {
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//            shapeRenderer.setColor(0f, 0f, 0f, 0.25f);
-//            shapeRenderer.ellipse(c.getHitbox().getX() + RoundScreen.PADDING_SHADOW_WIDTH, c.getHitbox().getY() - RoundScreen.PADDING_SHADOW_HEIGHT,
-//                    RoundScreen.ELLIPSE_WIDTH, RoundScreen.ELLIPSE_HEIGHT);
-//            shapeRenderer.end();
-//        });
-//        Gdx.gl.glDisable(GL20.GL_BLEND);
-//        spriteBatch.begin();
-//        demoScreens.stream()
-//                .map(DemoScreen::getItems)
-//                .flatMap(Collection::stream)
-//                .sequential()
-//                .forEach(item -> {
-//                    if (item instanceof Bomb) {
-//                        final Bomb bomb = (Bomb) item;
-//                        if (bomb.isExploding()) {
-//                            itemSpriteManager.registerAnimation(bomb, bomb.getCoordinates());
-//                        }
-//                    }
-//                    if (item instanceof Arrow) {
-//                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//                        shapeRenderer.setColor(Color.PINK);
-//                        shapeRenderer.circle((float) item.getCoordinates().getX(), (float) item.getCoordinates().getY(), 5);
-//                        shapeRenderer.end();
-//                    }
-//                    item.update(timeElapsed);
-//                });
-//        itemSpriteManager.render(spriteBatch);
-//        spriteBatch.end();
-////        if (mlol != null) {
-////            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-////            shapeRenderer.setColor(Color.LIGHT_GRAY);
-////            shapeRenderer.circle((float) mlol.getX(), (float) mlol.getY(), ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE);
-////            shapeRenderer.end();
-////        }
-//    }
 
     private void focusChosenButton() {
         buttonPlay.setColor(Color.BLACK);
