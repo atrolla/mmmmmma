@@ -70,8 +70,8 @@ public class MainMenuScreen implements Screen {
         buttonResetPlayers = new Label("Reset Players", skin);
         setStyle(buttonResetPlayers);
 //        buttonExit = new Label("Exit", skin);
-        title = new Label(" [BLUE]M[BLACK]ultiplayer [YELLOW]M[BLACK]ulti [OLIVE]M[BLACK]ysterious\n" +
-                "[RED]M[BLACK]erciless [GREEN]M[BLACK]agic [ROYAL]M[BLACK]ashup [BLACK]Arena", skin);
+        title = new Label("[BLUE]M[WHITE]ultiplayer [ORANGE]M[WHITE]ulti [GREEN]M[WHITE]ysterious\n" +
+                "[SCARLET]M[WHITE]erciless [OLIVE]M[WHITE]agic [ROYAL]M[WHITE]ashup [YELLOW]A[WHITE]rena", skin);
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
         addElementsToTable();
@@ -86,8 +86,8 @@ public class MainMenuScreen implements Screen {
     }
 
     private void setStyle(Label label) {
-        label.setColor(Color.BLACK);
-        label.setFontScale(0.6f);
+        label.setColor(Color.WHITE);
+        label.setFontScale(2f);
         label.setAlignment(Align.center);
     }
 
@@ -96,29 +96,33 @@ public class MainMenuScreen implements Screen {
         //The first appear on top, the last at the bottom.
         final int colspan = 5;
         title.setAlignment(Align.center);
-        table.add(title).center().padTop(10).padBottom(20).colspan(colspan).row();
+        title.setFontScale(3f);
+//        title.setText("[BLUE]D[WHITE]evoxx [YELLOW]D[WHITE]eadline [OLIVE]D[WHITE]riven [RED]D[WHITE]evelopment\n" +
+//                "[SALMON]D[WHITE]irected & [ROYAL]D[WHITE]esigned by [GREEN]A[WHITE]rolla");
+        table.add(title).center().padTop(40).padBottom(20).colspan(colspan).row();
         table.add(buttonPlay).center().padBottom(20).colspan(colspan).row();
         table.add(buttonResetPlayers).center().padBottom(20).colspan(colspan).row();
 //        table.add(buttonExit).center().padBottom(20).row();
-        final Label knight = new Label(" [#00000088]Knight\n(" + ConfigurationConstants.KNIGHT_LIVES + " lives)", skin);
+        final String Color = "[#FFFFFF88]";
+        final Label knight = new Label(Color+"Knight\n(" + ConfigurationConstants.KNIGHT_LIVES + " lives)", skin);
         setStyle(knight);
         table.add(knight);
-        final Label archer = new Label("[#00000088]Archer\n" +
+        final Label archer = new Label(Color + "Archer\n" +
                 "(" + ConfigurationConstants.ARCHER_LIVES + " life)", skin);
         setStyle(archer);
-        table.add(archer).spaceBottom(80);
-        final Label weapon = new Label("[#00000088]Demo Class has\ngreen shadow\n\n\nWeapons \n-Magenta Dots-\n" +
-                " are invisibles\n in game", skin);
+        table.add(archer).spaceBottom(120);
+        final Label weapon = new Label(Color+"Demo Class has\ngreen shadow\n\n\nWeapons \n(Magenta Dots)\n" +
+                " are invisible\n in game", skin);
         setStyle(weapon);
-        table.add(weapon).spaceTop(100);
-        final Label bomber = new Label("[#00000088]Bomber\n" +
+        table.add(weapon).spaceTop(70);
+        final Label bomber = new Label(Color+"Bomber\n" +
                 "(" + ConfigurationConstants.BOMBER_LIVES + " lives)", skin);
         setStyle(bomber);
-        table.add(bomber);
-        final Label mage = new Label("[#00000088]Mage\n" +
+        table.add(bomber).spaceBottom(30);
+        final Label mage = new Label(Color+"Mage\n" +
                 "(" + ConfigurationConstants.MAGE_LIVES + " lives)", skin);
         setStyle(mage);
-        table.add(mage).spaceBottom(80);
+        table.add(mage).spaceBottom(120);
 
         table.row();
         table.add(playersTable).expand().padTop(100).colspan(colspan).row();
@@ -181,7 +185,7 @@ public class MainMenuScreen implements Screen {
         List<Player> players = inputManager.getPlayers();
         int size = players.size();
         for (int i = 0; i < 4; i++) {
-            String labelText = "Press\nright ctrl\nor\nstart";
+            String labelText = "Press\nstart";
             if (i < size) {
                 Player player = players.get(i);
                 labelText = "Player " + (i + 1) + "\n" + player.getGameCharacterClass().name();
@@ -226,8 +230,8 @@ public class MainMenuScreen implements Screen {
     }
 
     private void focusChosenButton() {
-        buttonPlay.setColor(Color.BLACK);
-        buttonResetPlayers.setColor(Color.BLACK);
+        buttonPlay.setColor(Color.WHITE);
+        buttonResetPlayers.setColor(Color.WHITE);
 //        buttonExit.setFontScale(1);
         getChoosenTextButton().setColor(Color.ROYAL);
     }

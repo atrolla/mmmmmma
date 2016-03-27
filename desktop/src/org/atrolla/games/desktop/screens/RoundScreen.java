@@ -98,7 +98,6 @@ public class RoundScreen implements Screen {
     public void show() {
         if (round.getCharacters().players.size() < 2) {
             topLeftText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.3f));
-            topLeftText.setFontScale(0.5f);
             stage.addActor(topLeftText);
         }
         Gdx.input.setInputProcessor(stage);
@@ -161,9 +160,10 @@ public class RoundScreen implements Screen {
             } else {
                 winnerText.setText("Well... All that for a draw !?");
             }
-            winnerText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.2f + opacity));
+            winnerText.setColor(new Color(0.85f, 0.85f, 0.85f, 0.2f + opacity));
             winnerText.setAlignment(Align.center);
             winnerText.setWidth(stage.getWidth());
+            winnerText.setFontScale(4f);
             winnerText.setY(stage.getHeight() / 2);
             stage.addActor(winnerText);
             Gdx.gl.glEnable(GL20.GL_BLEND);

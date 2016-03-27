@@ -1,6 +1,6 @@
 {
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
-    default-font: { file: fonts/nolife.fnt } },
+    default-font: { file: fonts/good_neighbors_unity.fnt } },
   com.badlogic.gdx.graphics.Color: {
     white: {
       r: 1,

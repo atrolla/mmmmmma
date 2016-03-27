@@ -10,7 +10,9 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.utils.RandomUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by MicroOnde on 20/03/2016.
@@ -33,12 +35,15 @@ public class BubbleSpeechManager {
 
     public void updateBubbleSpeech() {
         if (RandomUtils.between0AndExcluded(SPEECH_DURATION) > TALK_CHANCE) {
-            System.out.println("new Speech ! @" + round.getTime());
-            final int randomChar = RandomUtils.between0AndExcluded(round.getCharacters().characters.size());
-            final GameCharacter gameCharacter = round.getCharacters().characters.get(randomChar);
+            final List<GameCharacter> characters = round.getCharacters().characters.stream().filter(GameCharacter::isAlive).collect(Collectors.toList());
+            final int randomChar = RandomUtils.between0AndExcluded(characters.size());
+            final GameCharacter gameCharacter = characters.get(randomChar);
             final int roundTime = round.getTime();
             final int timeOut = roundTime + SPEECH_DURATION;
-            speechIntegerMap.put(new BubbleSpeech(gameCharacter, "hello world !"), timeOut);
+            final boolean isAlreadySpeaking = speechIntegerMap.keySet().stream().map(k -> k.gameCharacter).anyMatch(c -> c.equals(gameCharacter));
+            if (!isAlreadySpeaking) {
+                speechIntegerMap.put(new BubbleSpeech(gameCharacter, "hello world !"), timeOut);
+            }
         }
         drawBubbles();
     }

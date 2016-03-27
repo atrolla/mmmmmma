@@ -235,8 +235,8 @@ public class Round {
     }
 
     public boolean isFinished() {
-        if (characters.players.size() < 2) {
-            return false;
+        if (characters.players.size() == 1) {
+            return !characters.players.stream().anyMatch(GameCharacter::isNotDead);
         } else {
             final long count = characters.players.stream().filter(GameCharacter::isNotDead).count();
             return count <= 1;
