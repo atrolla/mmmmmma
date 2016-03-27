@@ -3,11 +3,10 @@ package org.atrolla.games.characters;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Arrow;
-import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class Archer extends GameCharacter {
 
@@ -18,14 +17,14 @@ public class Archer extends GameCharacter {
 
     private boolean abilityIsCoolingDown = false;
 
-    @Override
-    public void moves(int time, Direction direction) {
-        if (!abilityIsCoolingDown(time)) {
-            super.moves(time, direction);
-        } else {
-            super.moves(time, Direction.STOP);
-        }
-    }
+//    @Override
+//    public void moves(int time, Direction direction) {
+//        if (!isAbilityCoolingDown(time)) {
+//            super.moves(time, direction);
+//        } else {
+//            super.moves(time, Direction.STOP);
+//        }
+//    }
 
     @Override
     public void coolDownAbility(int time) {
@@ -33,16 +32,17 @@ public class Archer extends GameCharacter {
     }
 
     @Override
-    public Collection<Item> useAbility(int time) {
-        if (!isAlive() || !isPlayer() || abilityIsCoolingDown(time)) {
-            return Collections.emptySet();
+    public List<Item> useAbility(int time) {
+        if (!isAlive() || !isPlayer() || isAbilityCoolingDown(time)) {
+            return Collections.emptyList();
         }
         coolDownAbility(time);
         abilityIsCoolingDown = true;
-        return Collections.singleton(new Arrow(this, time));
+        return Collections.singletonList(new Arrow(this, time));
     }
 
-    private boolean abilityIsCoolingDown(int time) {
+    @Override
+    public  boolean isAbilityCoolingDown(int time) {
         abilityIsCoolingDown = abilityReadyTime != ConfigurationConstants.GAME_CHARACTER_INITIAL_READY_TIME
                 && abilityReadyTime >= time;
         return abilityIsCoolingDown;

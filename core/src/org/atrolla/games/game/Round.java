@@ -19,6 +19,7 @@ import org.atrolla.games.world.Stage;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -30,28 +31,35 @@ import java.util.function.Consumer;
 public class Round {
     private final Stage stage;
     private final RoundCharacters characters;
-    private final AIManager aiManager;
-    private final InputManager inputManager;
-    private int time;
+    private final Optional<AIManager> aiManager;
+    private final Optional<InputManager> inputManager;
+    protected int time;
 
-    private final GameItems gameItems;
-    private final SoundManager soundManager;
-    private final NeutralItemManager neutralItemManager;
+    protected final GameItems gameItems;
+    private final Optional<SoundManager> soundManager;
+    private final Optional<NeutralItemManager> neutralItemManager;
 
-    public Round(Stage stage, InputManager inputManager, SoundManager soundManager) {
-        this.stage = stage;
-        this.inputManager = inputManager;
-        this.soundManager = soundManager;
+    public Round(InputManager inputManager, SoundManager soundManager) {
+        this.stage = new Stage();
+        this.inputManager = Optional.ofNullable(inputManager);
+        this.soundManager = Optional.ofNullable(soundManager);
         this.characters = new RoundCharacters(ConfigurationConstants.GAME_CHARACTERS, inputManager.getPlayers());
         this.gameItems = new GameItems();
         this.time = 0;
-        this.aiManager = new AIManager(characters.bots.size());
-        this.neutralItemManager = new NeutralItemManager();
+        this.aiManager = Optional.of(new AIManager(characters.bots.size()));
+        this.neutralItemManager = Optional.of(new NeutralItemManager());
         characters.placeCharactersOnStage();
     }
 
-    public Round(InputManager inputManager, SoundManager soundManager) {
-        this(new Stage(), inputManager, soundManager);
+    public Round(RoundCharacters roundCharacters, AIManager aiManager) {
+        this.stage = new Stage();
+        this.inputManager = Optional.empty();
+        this.soundManager = Optional.empty();
+        this.characters = roundCharacters;
+        this.gameItems = new GameItems();
+        this.time = 0;
+        this.aiManager = Optional.ofNullable(aiManager);
+        this.neutralItemManager = Optional.empty();
     }
 
     public Stage getStage() {
@@ -82,24 +90,17 @@ public class Round {
      */
     private void manageItems() {
         gameItems.update(time);
-        //TODO : uncomment this to add neutral items + randomly... + max neutral displayed
-        neutralItemManager.addItem(time).ifPresent(i -> gameItems.registerItem(i, time));
-        //TODO : remove timeout items && usedItems
+        neutralItemManager.ifPresent(ni -> ni.addItem(time).ifPresent(i -> gameItems.registerItem(i, time)));
         getGameItems().stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast)
                 .filter(NeutralItem::isUsed)
                 .forEach(ni -> ni.applyEffect(this, gameItems));
-        // TODO : should not exists, neutral items effect is triggered when the player uses it
-        //
         final Iterator<Item> iterator = getGameItems().iterator();
         final int time1 = this.time + 1;
         while (iterator.hasNext()) {
             final Item item = iterator.next();
             if (item.update(time)) { //update the item state if needed (ex: Arrow moves)
                 iterator.remove();
-                if (soundManager != null) { // play item sound when it disappears.
-                    //TODO: i think this limits the sound to only 1 per item...
-                    soundManager.register(item);
-                }
+                soundManager.ifPresent(sm -> sm.register(item));  // play item sound when it disappears.
             } else {
                 gameItems.registerItem(item, time1);
             }
@@ -113,16 +114,15 @@ public class Round {
      * </ol>
      */
     private void manageBots() {
-        //TODO : refactor as its not only bots anymore
-        aiManager.updateKOCharactersState(characters.characters, time);
-        aiManager.updateBotsMove(time, characters.bots);
+        characters.updateKOCharactersState(time);
+        aiManager.ifPresent(ai -> ai.updateBotsMove(time, characters.bots));
     }
 
     /**
      * Update players and add the newly created item to gameItems list for the next time
      */
     private void managePlayers() {
-        gameItems.registerItem(inputManager.updatePlayers(time, characters.players), time + 1);
+        inputManager.ifPresent(im -> gameItems.registerItem(im.updatePlayers(time, characters.players), time + 1));
     }
 
     /**
@@ -141,9 +141,7 @@ public class Round {
      * Play sounds if a soundManager is present
      */
     private void playSounds() {
-        if (soundManager != null) {
-            soundManager.playAllSounds();
-        }
+        soundManager.ifPresent(SoundManager::playAllSounds);
     }
 
     /**
@@ -151,7 +149,7 @@ public class Round {
      */
     private void postUpdate() {
         time++;
-        aiManager.updateCommands(time);
+        aiManager.ifPresent(ai -> ai.updateCommands(time));
     }
 
     /**
@@ -223,10 +221,12 @@ public class Round {
                 final Coordinates coordinates = new Coordinates(x, y);
                 character.teleports(coordinates);
                 // bots that are prevented must choose another valid direction = command.
-                if (!character.isPlayer()) {
-                    aiManager.goAwayFromWall(botIndex, time, coordinates);
-
-                }
+                final int botIndexz = botIndex;
+                aiManager.ifPresent(ai -> {
+                    if (!character.isPlayer()) {
+                        ai.goAwayFromWall(botIndexz, time, coordinates);
+                    }
+                });
             }
             if (!character.isPlayer()) {
                 botIndex++;
@@ -241,10 +241,6 @@ public class Round {
             final long count = characters.players.stream().filter(GameCharacter::isNotDead).count();
             return count <= 1;
         }
-    }
-
-    public AIManager getAIManager() {
-        return aiManager;
     }
 
     public List<Item> getGameItems() {

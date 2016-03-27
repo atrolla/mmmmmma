@@ -3,7 +3,6 @@ package org.atrolla.games.characters;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.weapons.Arrow;
 import org.atrolla.games.system.Coordinates;
-import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,12 +44,12 @@ public class ArcherTests {
         assertThat(arrow.getCoordinates()).isEqualTo(archerPlayer.getCenter());
     }
 
-    @Test
-    public void archerCannotMoveAfterThrowingArrow() throws Exception {
-        final Coordinates coordinates = new Coordinates(42, 1337);
-        archerPlayer.teleports(coordinates);
-        archerPlayer.useAbility(ABILITY_USE_TIME).iterator().next();
-        archerPlayer.moves(1, Direction.DOWN);
-        assertThat(archerPlayer.getCoordinates()).isEqualTo(coordinates);
-    }
+//    @Test
+//    public void archerCannotMoveAfterThrowingArrow() throws Exception {
+//        final Coordinates coordinates = new Coordinates(42, 1337);
+//        archerPlayer.teleports(coordinates);
+//        archerPlayer.useAbility(ABILITY_USE_TIME).iterator().next();
+//        archerPlayer.moves(1, Direction.DOWN);
+//        assertThat(archerPlayer.getCoordinates()).isEqualTo(coordinates);
+//    }
 }

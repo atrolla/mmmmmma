@@ -21,6 +21,12 @@ public class Player {
         this.gameCharacterClass = CharacterClasses.BOMBER;
     }
 
+    public Player(CharacterClasses gameCharacterClass) {
+        this.keyboardInput = Optional.empty();
+        this.padControllerInput = Optional.empty();
+        this.gameCharacterClass = gameCharacterClass;
+    }
+
     public boolean isSameInput(Input keyboard) {
         return keyboardInput.isPresent();// assume there can only be one keyboard
     }

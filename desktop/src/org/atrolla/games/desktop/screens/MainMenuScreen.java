@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -20,19 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
+import org.atrolla.games.desktop.game.Demo;
 import org.atrolla.games.desktop.game.Mmmmmma;
+import org.atrolla.games.game.Round;
 import org.atrolla.games.input.InputManager;
-import org.atrolla.games.items.weapons.Bomb;
-import org.atrolla.games.screens.demo.*;
-import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MainMenuScreen implements Screen {
 
@@ -46,14 +39,11 @@ public class MainMenuScreen implements Screen {
     private final Label buttonResetPlayers;
     private final Label title;
     private final CharacterSkinManager skinManager;
-    private final ShapeRenderer shapeRenderer;
-    private final SpriteBatch spriteBatch;
+    private final RoundRender roundRender;
     private Stage stage;
     private final InputManager inputManager;
     private int currentChosenButtonIndex;
-    private final Collection<DemoScreen> demoScreens;
-    private int timeElapsed;
-    private final ItemSpriteManager itemSpriteManager;
+    private Round demo;
 
     //TODO : many things in common with RoundScreen -> REFACTO
 
@@ -61,9 +51,9 @@ public class MainMenuScreen implements Screen {
         //important since we aren't using some uniforms and attributes that SpriteBatch expects
         ShaderProgram.pedantic = false;
 
-        shapeRenderer = new ShapeRenderer();
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getCamera().combined);
-        spriteBatch = new SpriteBatch(1000);
+        SpriteBatch spriteBatch = new SpriteBatch(1000);
         stage = new Stage(new ScalingViewport(Scaling.fit, ConfigurationConstants.STAGE_WIDTH, ConfigurationConstants.STAGE_HEIGHT, game.getCamera()), spriteBatch);
         skinManager = new CharacterSkinManager();
 
@@ -71,7 +61,6 @@ public class MainMenuScreen implements Screen {
         skin = new Skin(skinFile);
         BitmapFont labelFont = skin.get("default-font", BitmapFont.class);
         labelFont.getData().markupEnabled = true;
-        itemSpriteManager = new ItemSpriteManager();
 
         this.game = game;
         table = new Table();
@@ -88,47 +77,51 @@ public class MainMenuScreen implements Screen {
         addElementsToTable();
         addButtonListeners();
 
-        demoScreens = Arrays.asList(new KnightDemo(new Coordinates(140, 260))
-                , new ArcherDemo(new Coordinates(470, 380))
-                , new BomberDemo(new Coordinates(780, 330))
-                , new MageDemo(new Coordinates(1100, 260))
-        );
-        timeElapsed = 0;
+        demo = new Demo.Builder().build();
+
+        roundRender = new RoundRender(shapeRenderer, spriteBatch, demo, new ItemSpriteManager(), skinManager);
+        roundRender.setDemo(true);
+
 //        stage.setDebugAll(true);
-
-
     }
 
     private void setStyle(Label label) {
         label.setColor(Color.BLACK);
         label.setFontScale(0.6f);
+        label.setAlignment(Align.center);
     }
 
     private void addElementsToTable() {
         //The elements are displayed in the order you add them.
         //The first appear on top, the last at the bottom.
-        table.add(title).center().padTop(10).padBottom(20).colspan(4).row();
-        table.add(buttonPlay).center().padBottom(20).colspan(4).row();
-        table.add(buttonResetPlayers).center().padBottom(20).colspan(4).row();
+        final int colspan = 5;
+        title.setAlignment(Align.center);
+        table.add(title).center().padTop(10).padBottom(20).colspan(colspan).row();
+        table.add(buttonPlay).center().padBottom(20).colspan(colspan).row();
+        table.add(buttonResetPlayers).center().padBottom(20).colspan(colspan).row();
 //        table.add(buttonExit).center().padBottom(20).row();
-        final Label knight = new Label(" [#00000088]Knight\n("+ConfigurationConstants.KNIGHT_LIVES+" lives) ", skin);
+        final Label knight = new Label(" [#00000088]Knight\n(" + ConfigurationConstants.KNIGHT_LIVES + " lives)", skin);
         setStyle(knight);
-        table.add(knight).padTop(130).center();
+        table.add(knight);
         final Label archer = new Label("[#00000088]Archer\n" +
-                "  ("+ConfigurationConstants.ARCHER_LIVES+" life) ", skin);
+                "(" + ConfigurationConstants.ARCHER_LIVES + " life)", skin);
         setStyle(archer);
-        table.add(archer).padTop(130).center();
+        table.add(archer).spaceBottom(80);
+        final Label weapon = new Label("[#00000088]Demo Class has\ngreen shadow\n\n\nWeapons \n-Magenta Dots-\n" +
+                " are invisibles\n in game", skin);
+        setStyle(weapon);
+        table.add(weapon).spaceTop(100);
         final Label bomber = new Label("[#00000088]Bomber\n" +
-                "("+ConfigurationConstants.BOMBER_LIVES+" lives) ", skin);
+                "(" + ConfigurationConstants.BOMBER_LIVES + " lives)", skin);
         setStyle(bomber);
-        table.add(bomber).padTop(130).center();
-        final Label mage = new Label("   [#00000088]Mage\n" +
-                "("+ConfigurationConstants.MAGE_LIVES+" lives) ", skin);
+        table.add(bomber);
+        final Label mage = new Label("[#00000088]Mage\n" +
+                "(" + ConfigurationConstants.MAGE_LIVES + " lives)", skin);
         setStyle(mage);
-        table.add(mage).padTop(10).center();
+        table.add(mage).spaceBottom(80);
 
         table.row();
-        table.add(playersTable).expand().padTop(200).colspan(4).row();
+        table.add(playersTable).expand().padTop(100).colspan(colspan).row();
         table.setFillParent(true);
     }
 
@@ -224,62 +217,74 @@ public class MainMenuScreen implements Screen {
             }
         }
 
-        renderDemo(timeElapsed++);
+//        renderDemo(timeElapsed++);
+        demo.update();
+        roundRender.clearScreenElements();
+        skinManager.assignSkins();
+        roundRender.renderRound();
 
         stage.draw();
     }
 
-    private void renderDemo(int timeElapsed) {
-        spriteBatch.begin();
-        skinManager.updateTime();
-        skinManager.assignSkins();
-        final List<GameCharacter> gameCharacters = demoScreens.stream()
-                .peek(d -> d.update(timeElapsed))
-                .map(DemoScreen::getCharacters)
-                .flatMap(Collection::stream)
-                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
-                .sequential()
-                .collect(Collectors.toList());
-        gameCharacters.forEach(c -> {
-            final Rectangle hitbox = c.getHitbox();
-            final TextureRegion frame = skinManager.getFrame(c);
-            spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
-                    (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
-                    (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
-        });
-        spriteBatch.end();
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        gameCharacters.forEach(c -> {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0f, 0f, 0f, 0.25f);
-            shapeRenderer.ellipse(c.getHitbox().getX() + RoundScreen.PADDING_SHADOW_WIDTH, c.getHitbox().getY() - RoundScreen.PADDING_SHADOW_HEIGHT,
-                    RoundScreen.ELLIPSE_WIDTH, RoundScreen.ELLIPSE_HEIGHT);
-            shapeRenderer.end();
-        });
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-        spriteBatch.begin();
-        demoScreens.stream()
-                .map(DemoScreen::getItems)
-                .flatMap(Collection::stream)
-                .sequential()
-                .forEach(item -> {
-                    if (item instanceof Bomb) {
-                        final Bomb bomb = (Bomb) item;
-                        if (bomb.isExploding()) {
-                            itemSpriteManager.registerAnimation(bomb, bomb.getCoordinates());
-                        }
-                    }
-                });
-        itemSpriteManager.render(spriteBatch);
-        spriteBatch.end();
-//        if (mlol != null) {
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//            shapeRenderer.setColor(Color.LIGHT_GRAY);
-//            shapeRenderer.circle((float) mlol.getX(), (float) mlol.getY(), ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE);
+//    private void renderDemo(int timeElapsed) {
+//        demo.update();
+//        spriteBatch.begin();
+//        skinManager.updateTime();
+//        skinManager.assignSkins();
+//        final List<GameCharacter> gameCharacters = demoScreens.stream()
+//                .peek(d -> d.update(timeElapsed))
+//                .map(DemoScreen::getCharacters)
+//                .flatMap(Collection::stream)
+//                .sorted((c1, c2) -> Double.compare(c2.getCoordinates().getY(), c1.getCoordinates().getY()))
+//                .sequential()
+//                .collect(Collectors.toList());
+//        gameCharacters.forEach(c -> {
+//            final Rectangle hitbox = c.getHitbox();
+//            final TextureRegion frame = skinManager.getFrame(c);
+//            spriteBatch.draw(frame, hitbox.getX(), hitbox.getY(),
+//                    (float) ConfigurationConstants.GAME_CHARACTER_WIDTH,
+//                    (float) ConfigurationConstants.GAME_CHARACTER_HEIGHT);
+//        });
+//        spriteBatch.end();
+//        Gdx.gl.glEnable(GL20.GL_BLEND);
+//        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//        gameCharacters.forEach(c -> {
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//            shapeRenderer.setColor(0f, 0f, 0f, 0.25f);
+//            shapeRenderer.ellipse(c.getHitbox().getX() + RoundScreen.PADDING_SHADOW_WIDTH, c.getHitbox().getY() - RoundScreen.PADDING_SHADOW_HEIGHT,
+//                    RoundScreen.ELLIPSE_WIDTH, RoundScreen.ELLIPSE_HEIGHT);
 //            shapeRenderer.end();
-//        }
-    }
+//        });
+//        Gdx.gl.glDisable(GL20.GL_BLEND);
+//        spriteBatch.begin();
+//        demoScreens.stream()
+//                .map(DemoScreen::getItems)
+//                .flatMap(Collection::stream)
+//                .sequential()
+//                .forEach(item -> {
+//                    if (item instanceof Bomb) {
+//                        final Bomb bomb = (Bomb) item;
+//                        if (bomb.isExploding()) {
+//                            itemSpriteManager.registerAnimation(bomb, bomb.getCoordinates());
+//                        }
+//                    }
+//                    if (item instanceof Arrow) {
+//                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//                        shapeRenderer.setColor(Color.PINK);
+//                        shapeRenderer.circle((float) item.getCoordinates().getX(), (float) item.getCoordinates().getY(), 5);
+//                        shapeRenderer.end();
+//                    }
+//                    item.update(timeElapsed);
+//                });
+//        itemSpriteManager.render(spriteBatch);
+//        spriteBatch.end();
+////        if (mlol != null) {
+////            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+////            shapeRenderer.setColor(Color.LIGHT_GRAY);
+////            shapeRenderer.circle((float) mlol.getX(), (float) mlol.getY(), ConfigurationConstants.BOMB_EXPLOSION_RADIUS_SIZE);
+////            shapeRenderer.end();
+////        }
+//    }
 
     private void focusChosenButton() {
         buttonPlay.setColor(Color.BLACK);

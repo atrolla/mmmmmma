@@ -1,11 +1,13 @@
 package org.atrolla.games.ai;
 
 import org.atrolla.games.characters.GameCharacter;
-import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
@@ -23,12 +25,10 @@ import static org.atrolla.games.ai.Command.RandomCommand;
 public class AIManager {
 
     private final List<Command> commands;
-    private final Map<GameCharacter, Integer> knockOutAwakeTime;
 
 
     public AIManager(int botNumber) {
         commands = new ArrayList<>(botNumber);
-        knockOutAwakeTime = new HashMap<>();
         initCommands(botNumber);
     }
 
@@ -85,22 +85,4 @@ public class AIManager {
         commands.set(index, RandomCommand(time, coordinates));
     }
 
-    /**
-     * Each new KO character is put in a map so that after a time, they will awake and move again.
-     *
-     * @see GameCharacter#isKnockOut()
-     * @see ConfigurationConstants#KNOCK_OUT_DURATION
-     */
-    public void updateKOCharactersState(final Collection<GameCharacter> characters, final int time) {
-        characters.stream().filter(GameCharacter::isKnockOut).forEach(character -> {
-            if (knockOutAwakeTime.containsKey(character)) {
-                if (time >= knockOutAwakeTime.get(character)) {
-                    knockOutAwakeTime.remove(character);
-                    character.awake();
-                }
-            } else {
-                knockOutAwakeTime.put(character, time + ConfigurationConstants.KNOCK_OUT_DURATION);
-            }
-        });
-    }
 }

@@ -7,8 +7,8 @@ import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Direction;
 import org.atrolla.games.system.Player;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.atrolla.games.characters.CharacterState.*;
@@ -61,7 +61,7 @@ public abstract class GameCharacter {
         updateHitbox();
     }
 
-    protected final void teleports(Coordinates coordinates, Direction direction) {
+    public final void teleports(Coordinates coordinates, Direction direction) {
         this.direction = direction;
         teleports(coordinates);
     }
@@ -126,6 +126,8 @@ public abstract class GameCharacter {
 
     public abstract void coolDownAbility(int time);
 
+    public abstract boolean isAbilityCoolingDown(int time);
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -142,8 +144,8 @@ public abstract class GameCharacter {
         return id;
     }
 
-    public Collection<Item> useAbility(int time) {
-        return Collections.emptySet();
+    public List<Item> useAbility(int time) {
+        return Collections.emptyList();
     }
 
     public void pick(NeutralItem item) {

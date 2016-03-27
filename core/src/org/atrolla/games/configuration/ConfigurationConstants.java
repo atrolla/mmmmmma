@@ -22,7 +22,7 @@ public final class ConfigurationConstants {
     public static final int BOT_MAX_MOVE_COMMAND_TIME = 100;
     public static final int BOT_STOP_PROBABILITY = 75;
     public static final int BOT_MAX_STOP_COMMAND_TIME = 20;
-    public static final int KNOCK_OUT_DURATION = 100;
+    public static final int KNOCK_OUT_DURATION = 90;
 
     public static final double ARROW_MOVE_STEP = 4d;
     public static final int ARROW_RANGE_TIME_OUT = 30;
@@ -40,10 +40,10 @@ public final class ConfigurationConstants {
     public static final int KNIGHT_LIVES = 3;
     public static final int MAGE_LIVES = 2;
 
-    public static final int ARCHER_ABILITY_COOLDOWN_DURATION = 150;
+    public static final int ARCHER_ABILITY_COOLDOWN_DURATION = 220;
     public static final int BOMBER_ABILITY_COOLDOWN_DURATION = BOMB_COUNTDOWN_DURATION + 10;
-    public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 50;
-    public static final int MAGE_ABILITY_COOLDOWN_DURATION = 70;
+    public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 150;
+    public static final int MAGE_ABILITY_COOLDOWN_DURATION = 150;
 
     public static final int NEUTRAL_ITEM_SPAWN_FREQUENCY_TIME = 750;
     public static final int NEUTRAL_ITEM_SIZE = 32;

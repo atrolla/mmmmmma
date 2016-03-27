@@ -7,9 +7,7 @@ import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.system.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -20,6 +18,7 @@ public class RoundCharacters {
     public final List<GameCharacter> characters;
     public final List<GameCharacter> players;
     public final List<GameCharacter> bots;
+    private final Map<GameCharacter, Integer> knockOutAwakeTime;
 
     public RoundCharacters(int size, List<Player> players) {
         List<GameCharacter> gameCharacters = new ArrayList<>(size);
@@ -29,6 +28,14 @@ public class RoundCharacters {
         this.characters = ImmutableList.copyOf(gameCharacters);
         this.bots = characters.stream().filter(c -> !c.isPlayer()).collect(collectingAndThen(toList(), ImmutableList::copyOf));
         this.players = characters.stream().filter(GameCharacter::isPlayer).collect(collectingAndThen(toList(), ImmutableList::copyOf));
+        knockOutAwakeTime = new HashMap<>();
+    }
+
+    public RoundCharacters(List<GameCharacter> characters) {
+        this.characters = ImmutableList.copyOf(characters);
+        this.bots = characters.stream().filter(c -> !c.isPlayer()).collect(collectingAndThen(toList(), ImmutableList::copyOf));
+        this.players = characters.stream().filter(GameCharacter::isPlayer).collect(collectingAndThen(toList(), ImmutableList::copyOf));
+        knockOutAwakeTime = new HashMap<>();
     }
 
     /**
@@ -75,5 +82,24 @@ public class RoundCharacters {
                                 }
                         )
                 );
+    }
+
+    /**
+     * Each new KO character is put in a map so that after a time, they will awake and move again.
+     *
+     * @see GameCharacter#isKnockOut()
+     * @see ConfigurationConstants#KNOCK_OUT_DURATION
+     */
+    public void updateKOCharactersState(final int time) {
+        characters.stream().filter(GameCharacter::isKnockOut).forEach(character -> {
+            if (knockOutAwakeTime.containsKey(character)) {
+                if (time >= knockOutAwakeTime.get(character)) {
+                    knockOutAwakeTime.remove(character);
+                    character.awake();
+                }
+            } else {
+                knockOutAwakeTime.put(character, time + ConfigurationConstants.KNOCK_OUT_DURATION);
+            }
+        });
     }
 }
