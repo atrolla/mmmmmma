@@ -159,7 +159,8 @@ public class Round {
      * @see NeutralItem#isPicked(GameCharacter)
      */
     private void neutralItemsPick() {
-        getGameItems().stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast).forEach(
+        getGameItems().stream().filter(NeutralItem.class::isInstance).map(NeutralItem.class::cast)
+                .filter(item -> !item.getPicker().isPresent()).forEach(
                 item -> characters.players.stream()
                         .filter(player -> Intersector.overlaps(item.getHitbox(), player.getHitbox()))
                         .findFirst()
