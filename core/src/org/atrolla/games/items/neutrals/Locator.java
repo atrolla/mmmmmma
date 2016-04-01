@@ -19,7 +19,7 @@ public class Locator extends NeutralItem {
 
     @Override
     public void applyEffect(Round round, GameItems gameItems) {
-        if (!mustRegister() && isUsed() && getPicker().isPresent()) {
+        if (round.getCharacters().players.size() > 1 && !mustRegister() && isUsed() && getPicker().isPresent()) {
             round.getCharacters().players.stream()
                     .filter(c -> !c.equals(getPicker().get()) && c.isAlive())
                     .skip(RandomUtils.between0AndExcluded(round.getCharacters().players.size() - 1))
