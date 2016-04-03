@@ -11,6 +11,7 @@ import org.atrolla.games.game.Round;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.utils.RandomUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class BubbleSpeechManager {
 
     public static final int SPEECH_DURATION = 500;
-    public static final int TALK_CHANCE = 497;
+    public static final int TALK_CHANCE = 490;
     private final Round round;
     private final SpriteBatch spriteBatch;
     private final BitmapFont font;
@@ -42,7 +43,7 @@ public class BubbleSpeechManager {
     private void initTexts() {
         FileHandle file = Gdx.files.local("conf/bubblespeech.txt");
         if (file.exists()) {
-            final List<String> strings = file.reader(1024).lines().filter(s -> s.length() < 15).collect(Collectors.toList());
+            final List<String> strings = file.reader(1024, StandardCharsets.UTF_8.name()).lines().filter(s -> s.length() < 40).collect(Collectors.toList());
             texts.addAll(strings);
         }
         texts.add("hello world !");
