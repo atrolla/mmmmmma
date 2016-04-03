@@ -1,5 +1,7 @@
-package org.atrolla.games.desktop.screens;
+package org.atrolla.games.desktop.screens.render;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +11,7 @@ import org.atrolla.games.game.Round;
 import org.atrolla.games.system.Coordinates;
 import org.atrolla.games.utils.RandomUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +28,24 @@ public class BubbleSpeechManager {
     private final SpriteBatch spriteBatch;
     private final BitmapFont font;
     private final Map<BubbleSpeech, Integer> speechIntegerMap;
+    private final List<String> texts;
 
     public BubbleSpeechManager(Round round, SpriteBatch spriteBatch) {
         this.round = round;
         this.spriteBatch = spriteBatch;
         font = new BitmapFont();
         speechIntegerMap = new HashMap<>();
+        texts = new ArrayList<>();
+        initTexts();
+    }
+
+    private void initTexts() {
+        FileHandle file = Gdx.files.local("conf/bubblespeech.txt");
+        if (file.exists()) {
+            final List<String> strings = file.reader(1024).lines().filter(s -> s.length() < 15).collect(Collectors.toList());
+            texts.addAll(strings);
+        }
+        texts.add("hello world !");
     }
 
     public void updateBubbleSpeech() {
@@ -42,10 +57,14 @@ public class BubbleSpeechManager {
             final int timeOut = roundTime + SPEECH_DURATION;
             final boolean isAlreadySpeaking = speechIntegerMap.keySet().stream().map(k -> k.gameCharacter).anyMatch(c -> c.equals(gameCharacter));
             if (!isAlreadySpeaking) {
-                speechIntegerMap.put(new BubbleSpeech(gameCharacter, "hello world !"), timeOut);
+                speechIntegerMap.put(new BubbleSpeech(gameCharacter, getText()), timeOut);
             }
         }
         drawBubbles();
+    }
+
+    private String getText() {
+        return texts.get(RandomUtils.between0AndExcluded(texts.size()));
     }
 
     private void drawBubbles() {

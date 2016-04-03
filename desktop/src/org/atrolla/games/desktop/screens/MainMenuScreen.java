@@ -17,10 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.desktop.game.Demo;
 import org.atrolla.games.desktop.game.Mmmmmma;
+import org.atrolla.games.desktop.screens.render.ItemSpriteManager;
+import org.atrolla.games.desktop.screens.render.RoundRender;
+import org.atrolla.games.desktop.screens.render.skins.CharacterSkinManager;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.input.InputManager;
 import org.atrolla.games.system.Player;
@@ -29,7 +33,10 @@ import java.util.List;
 
 public class MainMenuScreen implements Screen {
 
-    public static final float PAD_BOTTOM = 12f;
+    public static final String TITLE = "[BLUE]M[WHITE]ultiplayer [ORANGE]M[WHITE]ulti [GREEN]M[WHITE]ysterious\n" +
+            "[SCARLET]M[WHITE]erciless [OLIVE]M[WHITE]agic [ROYAL]M[WHITE]ashup [YELLOW]A[WHITE]rena";
+    public static final String AROLLA_TITLE = "[BLUE]D[WHITE]evoxx [YELLOW]D[WHITE]eadline [OLIVE]D[WHITE]riven [RED]D[WHITE]evelopment\n" +
+            "[SALMON]D[WHITE]irected & [ROYAL]D[WHITE]esigned for [GREEN]A[WHITE]rolla";
     private final Mmmmmma game;
     private final Table table;
     private final Table playersTable;
@@ -40,10 +47,11 @@ public class MainMenuScreen implements Screen {
     private final Label title;
     private final CharacterSkinManager skinManager;
     private final RoundRender roundRender;
-    private Stage stage;
+    private final Stage stage;
     private final InputManager inputManager;
+    private final Round demo;
     private int currentChosenButtonIndex;
-    private Round demo;
+    private long arollaTime;
 
     //TODO : many things in common with RoundScreen -> REFACTO
 
@@ -70,8 +78,7 @@ public class MainMenuScreen implements Screen {
         buttonResetPlayers = new Label("Reset Players", skin);
         setStyle(buttonResetPlayers);
 //        buttonExit = new Label("Exit", skin);
-        title = new Label("[BLUE]M[WHITE]ultiplayer [ORANGE]M[WHITE]ulti [GREEN]M[WHITE]ysterious\n" +
-                "[SCARLET]M[WHITE]erciless [OLIVE]M[WHITE]agic [ROYAL]M[WHITE]ashup [YELLOW]A[WHITE]rena", skin);
+        title = new Label(TITLE, skin);
         inputManager = game.getInputManager();
         currentChosenButtonIndex = -1;
         addElementsToTable();
@@ -83,6 +90,7 @@ public class MainMenuScreen implements Screen {
         roundRender.setDemo(true);
 
 //        stage.setDebugAll(true);
+        arollaTime = TimeUtils.millis();
     }
 
     private void setStyle(Label label) {
@@ -91,38 +99,48 @@ public class MainMenuScreen implements Screen {
         label.setAlignment(Align.center);
     }
 
+    private void arollaDevoxxEdition() {
+        if (TimeUtils.timeSinceMillis(arollaTime) > 10000) {
+            arollaTime = TimeUtils.millis();
+            if (AROLLA_TITLE.equals(title.getText().toString())) {
+                title.setText(TITLE);
+            } else {
+                title.setText(AROLLA_TITLE);
+            }
+        }
+    }
+
     private void addElementsToTable() {
         //The elements are displayed in the order you add them.
         //The first appear on top, the last at the bottom.
         final int colspan = 5;
         title.setAlignment(Align.center);
         title.setFontScale(3f);
-//        title.setText("[BLUE]D[WHITE]evoxx [YELLOW]D[WHITE]eadline [OLIVE]D[WHITE]riven [RED]D[WHITE]evelopment\n" +
-//                "[SALMON]D[WHITE]irected & [ROYAL]D[WHITE]esigned by [GREEN]A[WHITE]rolla");
         table.add(title).center().padTop(40).padBottom(20).colspan(colspan).row();
         table.add(buttonPlay).center().padBottom(20).colspan(colspan).row();
         table.add(buttonResetPlayers).center().padBottom(20).colspan(colspan).row();
 //        table.add(buttonExit).center().padBottom(20).row();
         final String Color = "[#FFFFFF88]";
-        final Label knight = new Label(Color+"Knight\n(" + ConfigurationConstants.KNIGHT_LIVES + " lives)", skin);
+        final Label knight = new Label(Color + "Knight\n(" + ConfigurationConstants.KNIGHT_LIVES + " lives)", skin);
         setStyle(knight);
-        table.add(knight);
+        table.add(knight).center();
         final Label archer = new Label(Color + "Archer\n" +
                 "(" + ConfigurationConstants.ARCHER_LIVES + " life)", skin);
         setStyle(archer);
-        table.add(archer).spaceBottom(120);
-        final Label weapon = new Label(Color+"Demo Class has\ngreen shadow\n\n\nWeapons \n(Magenta Dots)\n" +
-                " are invisible\n in game", skin);
+        table.add(archer).center().spaceBottom(120);
+        final Label weapon = new Label(Color + "Demo Class has\ngreen shadow\n\nWeapons \n(Magenta Dots)\n" +
+                " are invisible\n in game\n" +
+                "\nReal cooldowns", skin);
         setStyle(weapon);
-        table.add(weapon).spaceTop(70);
-        final Label bomber = new Label(Color+"Bomber\n" +
+        table.add(weapon).center().spaceTop(50);
+        final Label bomber = new Label(Color + "Bomber\n" +
                 "(" + ConfigurationConstants.BOMBER_LIVES + " lives)", skin);
         setStyle(bomber);
-        table.add(bomber).spaceBottom(30);
-        final Label mage = new Label(Color+"Mage\n" +
+        table.add(bomber).center().spaceBottom(120);
+        final Label mage = new Label(Color + "Mage\n" +
                 "(" + ConfigurationConstants.MAGE_LIVES + " lives)", skin);
         setStyle(mage);
-        table.add(mage).spaceBottom(120);
+        table.add(mage).center().spaceBottom(120);
 
         table.row();
         table.add(playersTable).expand().padTop(100).colspan(colspan).row();
@@ -226,6 +244,7 @@ public class MainMenuScreen implements Screen {
         skinManager.assignSkins();
         roundRender.renderRound();
 
+//        arollaDevoxxEdition();
         stage.draw();
     }
 

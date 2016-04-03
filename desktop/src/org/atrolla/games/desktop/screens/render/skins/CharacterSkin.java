@@ -1,4 +1,4 @@
-package org.atrolla.games.desktop.screens;
+package org.atrolla.games.desktop.screens.render.skins;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.atrolla.games.characters.GameCharacter;

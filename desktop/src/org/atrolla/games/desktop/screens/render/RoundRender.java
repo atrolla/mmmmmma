@@ -1,4 +1,4 @@
-package org.atrolla.games.desktop.screens;
+package org.atrolla.games.desktop.screens.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
+import org.atrolla.games.desktop.screens.render.skins.CharacterSkinManager;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.items.Item;
 import org.atrolla.games.items.neutrals.Locator;
@@ -37,6 +38,7 @@ public class RoundRender {
     private List<ScreenElement> screenElements;
     private boolean demo;
 
+
     public RoundRender(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Round round, ItemSpriteManager itemSpriteManager, CharacterSkinManager skinManager) {
         this.shapeRenderer = shapeRenderer;
         this.spriteBatch = spriteBatch;
@@ -54,7 +56,7 @@ public class RoundRender {
         screenElements.add(screenElement);
     }
 
-    protected void renderRound() {
+    public void renderRound() {
         renderCharacters();
         renderItems();
     }
@@ -147,7 +149,7 @@ public class RoundRender {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                     if (demo && c.isPlayer()) {
                         shapeRenderer.setColor(0f, 50f, 0f, 0.75f);
-                    }else {
+                    } else {
                         shapeRenderer.setColor(0f, 0f, 0f, 0.25f);
                     }
                     shapeRenderer.ellipse(c.getHitbox().getX() + PADDING_SHADOW_WIDTH, c.getHitbox().getY() - PADDING_SHADOW_HEIGHT, ELLIPSE_WIDTH, ELLIPSE_HEIGHT);

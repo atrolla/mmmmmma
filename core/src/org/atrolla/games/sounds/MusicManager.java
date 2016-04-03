@@ -3,61 +3,88 @@ package org.atrolla.games.sounds;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import org.atrolla.games.utils.RandomUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by MicroOnde on 16/03/2016.
  */
-public class MusicManager {
+public class MusicManager implements Music.OnCompletionListener {
 
-    private Music mainMenuMusic;
-    private Music roundMusic;
-    private Music current;
+    private Optional<Music> mainMenuMusic;
+    private Optional<Music> current;
+    private final List<Music> musics;
 
     public MusicManager() {
-        mainMenuMusic = newMusicFrom("sounds/Welcome.mp3");
-        roundMusic = newMusicFrom("sounds/05-eric_prydz-last_dragon-43bf64.mp3");
+        musics = new ArrayList<>();
+        extractMusics();
     }
 
-    private Music newMusicFrom(String path) {
-        final FileHandle internal = Gdx.files.internal(path);
-        if (internal.exists()) {
-            return Gdx.audio.newMusic(internal);
-        }
-        return null;
+    private void extractMusics() {
+        //Any MP3 files in conf/music/menu
+        final List<Music> musicList = Stream.of(Gdx.files.local("conf/music/ingame"))
+                .filter(FileHandle::exists)
+                .map(fh -> fh.list(".mp3"))
+                .flatMap(Stream::of)
+                .filter(fh -> !fh.name().contains("menu"))
+                .map(fh -> Gdx.audio.newMusic(fh))
+                .collect(Collectors.toList());
+        musics.addAll(musicList);
+        //First MP3 file in conf/music/menu
+        mainMenuMusic = Stream.of(Gdx.files.local("conf/music/menu"))
+                .filter(FileHandle::exists)
+                .map(fh -> fh.list(".mp3"))
+                .flatMap(Stream::of)
+                .findFirst()
+                .map(fh -> Gdx.audio.newMusic(fh));
+//        FileHandle[] files = Gdx.files.local("conf/music/").list();
+//        for (FileHandle file : files) {
+//            // do something interesting here
+//            System.out.println(file.name());
+//            logFile.writeString(file.name(), true);
+//            logFile.writeString("\n", true);
+//        }
     }
 
     public void playMenuMusic() {
         current = mainMenuMusic;
-        play(current);
+        play(current, true);
     }
 
     public void playRoundMusic() {
-        current = roundMusic;
-        play(current);
+        if (!musics.isEmpty()) {
+            final int i = RandomUtils.between0AndExcluded(musics.size());
+            play(Optional.of(musics.get(i)), false);
+        }
     }
 
-    private void play(Music music) {
-        if (music != null) {
-            music.setLooping(true);
-            music.play();
-            music.setVolume(0.5f);
-        }
+    private void play(Optional<Music> music, boolean loop) {
+        music.ifPresent(m -> {
+            m.setLooping(loop);
+            m.play();
+            m.setVolume(0.5f);
+            if (!loop) {
+                m.setOnCompletionListener(this);
+            }
+        });
     }
 
     public void stop() {
-        if (current != null) {
-            current.stop();
-        }
+        current.ifPresent(Music::stop);
     }
 
     public void dispose() {
-        dispose(mainMenuMusic);
-        dispose(roundMusic);
+        mainMenuMusic.ifPresent(Music::dispose);
+        musics.forEach(Music::dispose);
     }
 
-    private void dispose(Music music) {
-        if (music != null) {
-            music.dispose();
-        }
+    @Override
+    public void onCompletion(Music music) {
+
     }
 }

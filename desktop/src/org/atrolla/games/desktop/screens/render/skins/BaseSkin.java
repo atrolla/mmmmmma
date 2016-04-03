@@ -1,4 +1,4 @@
-package org.atrolla.games.desktop.screens;
+package org.atrolla.games.desktop.screens.render.skins;
 
 
 import com.badlogic.gdx.files.FileHandle;

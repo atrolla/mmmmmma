@@ -19,6 +19,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.atrolla.games.characters.GameCharacter;
 import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.desktop.game.Mmmmmma;
+import org.atrolla.games.desktop.screens.render.BubbleSpeechManager;
+import org.atrolla.games.desktop.screens.render.ItemSpriteManager;
+import org.atrolla.games.desktop.screens.render.RoundRender;
+import org.atrolla.games.desktop.screens.render.ScreenElement;
+import org.atrolla.games.desktop.screens.render.skins.CharacterSkinManager;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.system.Player;
 
@@ -59,12 +64,6 @@ public class RoundScreen implements Screen {
         ShaderProgram.pedantic = false;
 
         shader = new ShaderProgram(GLShaders.VERT, GLShaders.FRAG);
-//        if (!shader.isCompiled()) {
-//            System.err.println(shader.getLog());
-//            System.exit(0);
-//        }
-//        if (shader.getLog().length() != 0)
-//            System.out.println(shader.getLog());
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getCamera().combined);
         spriteBatch = new SpriteBatch(1000, shader);

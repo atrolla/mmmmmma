@@ -1,4 +1,4 @@
-package org.atrolla.games.desktop.screens;
+package org.atrolla.games.desktop.screens.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

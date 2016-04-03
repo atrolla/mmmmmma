@@ -29,7 +29,7 @@ public final class ConfigurationConstants {
     public static final int ARROW_HITBOX_SIZE = 1;
     public static final int SWORD_ACTION_TIME_OUT = 1;
     public static final int SWORD_SIZE = 10;
-    public static final int BOMB_COUNTDOWN_DURATION = 150;
+    public static final int BOMB_COUNTDOWN_DURATION = 80;
     public static final int BOMB_EXPLOSION_RADIUS_SIZE = 50;
     public static final int MAGE_SPELL_COUNTDOWN_DURATION = 10;
     public static final double MAGE_SPELL_OFFSET = 60;
@@ -49,5 +49,5 @@ public final class ConfigurationConstants {
     public static final int NEUTRAL_ITEM_SIZE = 32;
     public static final int NEUTRAL_ITEM_PICK_SHOW_DELAY = 600;
     public static final int NEUTRAL_ITEM_DESPAWN = 1500;
-    public static final int NEUTRAL_ITEM_LOCATOR_DELAY_BEGIN = 100;
+    public static final int NEUTRAL_ITEM_LOCATOR_DELAY_BEGIN = 65;
 }
