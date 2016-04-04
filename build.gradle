@@ -9,7 +9,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '0.2'
+    version = '0.3'
     ext {
         appName = 'mmmmmma'
 //        gdxVersion = '1.5.4'
@@ -42,6 +42,7 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
         testCompile "junit:junit:+"
     }
@@ -58,6 +59,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "org.apache.commons:commons-lang3:3.3.2"
         compile "com.google.guava:guava:19.0"
 
@@ -70,6 +72,7 @@ project(":core") {
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         testCompile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+
     }
 }
 
