@@ -244,7 +244,7 @@ public class MainMenuScreen implements Screen {
         skinManager.assignSkins();
         roundRender.renderRound();
 
-//        arollaDevoxxEdition();
+        arollaDevoxxEdition();
         stage.draw();
     }
 

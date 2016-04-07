@@ -1,0 +1,1 @@
+java -jar desktop-0.3.jar >> logfile.txt 2>&1
