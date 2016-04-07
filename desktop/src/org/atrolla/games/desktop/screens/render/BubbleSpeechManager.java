@@ -36,7 +36,7 @@ public class BubbleSpeechManager {
     private final BitmapFont font;
 
     public BubbleSpeechManager(Round round, SpriteBatch spriteBatch) {
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/DejaVuSans.TTF"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/DejaVuSans.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.color = Color.BLACK;
         parameter.characters = getCharacters();
