@@ -35,7 +35,7 @@ public class ItemSpriteManager {
     public ItemSpriteManager() {
         itemAnimationProgress = new HashMap<>();
         itemsToPick = new HashSet<>();
-        explosion = buildAnimation("effects/explosion03.png", EXPLOSION_FRAME_DURATION);
+        explosion = buildAnimation("effects/Explosion03.png", EXPLOSION_FRAME_DURATION);
         locator = buildAnimation("effects/Effect95.png", 0.1f);
         switchItem = new Sprite(new Texture(Gdx.files.internal("effects/switch.png")));
         locatorItem = new Sprite(new Texture(Gdx.files.internal("effects/locator.png")));
