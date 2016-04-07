@@ -223,6 +223,7 @@ public class RoundScreen implements Screen {
 
     @Override
     public void dispose() {
+        bubbleSpeechManager.dispose();
         spriteBatch.dispose();
         shapeRenderer.dispose();
         shader.dispose();

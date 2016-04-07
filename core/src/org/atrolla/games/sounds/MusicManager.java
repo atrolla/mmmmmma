@@ -85,6 +85,7 @@ public class MusicManager implements Music.OnCompletionListener {
 
     @Override
     public void onCompletion(Music music) {
-
+        System.out.println("playing another music");
+        playRoundMusic();
     }
 }
