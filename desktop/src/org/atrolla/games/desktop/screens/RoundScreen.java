@@ -87,8 +87,12 @@ public class RoundScreen implements Screen {
         winDelay = 3f;
         backgroundSprite = new Sprite(new Texture("background/level.png"));
         trees = new ArrayList<>();
-        trees.add(new Sprite(new Texture("trees/tree1.png")));
-        trees.add(new Sprite(new Texture("trees/tree1s.png")));
+        final Texture texture = new Texture("trees/tree1.png");
+        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Linear);
+        trees.add(new Sprite(texture));
+        final Texture texture1 = new Texture("trees/tree1s.png");
+        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Linear);
+        trees.add(new Sprite(texture1));
 
         bubbleSpeechManager = new BubbleSpeechManager(round, spriteBatch);
     }

@@ -124,6 +124,11 @@ public abstract class GameCharacter {
         return coordinates.translateXandY(GAME_CHARACTER_WIDTH / 2, GAME_CHARACTER_HEIGHT / 2);
     }
 
+    public final void rageQuit(){
+        state = DEAD;
+        lives = 0;
+    }
+
     public abstract void coolDownAbility(int time);
 
     public abstract boolean isAbilityCoolingDown(int time);

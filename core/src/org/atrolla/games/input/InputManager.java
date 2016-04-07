@@ -134,14 +134,21 @@ public class InputManager {
                 if (keyboard.isKeyJustPressed(Input.Keys.SHIFT_RIGHT)) {
                     character.useNeutralItem(time).ifPresent(items::add);
                 }
+                if (keyboard.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                    character.rageQuit();
+                }
             } else if (player.getPadControllerInput().isPresent()) {
                 final PadController padController = player.getPadControllerInput().get();
-                moveGameCharacter(time, character, padController.getController());
+                final Controller controller = padController.getController();
+                moveGameCharacter(time, character, controller);
                 if (padController.hasJustPressed(padInput.buttonA())) {
                     character.useAbility(time).forEach(items::add);
                 }
                 if (padController.hasJustPressed(padInput.buttonX())) {
                     character.useNeutralItem(time).ifPresent(items::add);
+                }
+                if (controller.getButton(padInput.buttonBack()) && controller.getButton(padInput.buttonStart())) {
+                    character.rageQuit();
                 }
             }
         }

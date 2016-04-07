@@ -22,7 +22,7 @@ public class BaseSkin implements CharacterSkin {
 
     public BaseSkin(FileHandle textureFile) {
         Texture walkSheet = new Texture(textureFile);
-//        walkSheet.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        walkSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Linear);
         TextureRegion[] regions = new TextureRegion[50];
         int k = 0;
         for (int i = 0; i < 5; i++) {
