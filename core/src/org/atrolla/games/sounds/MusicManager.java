@@ -52,8 +52,7 @@ public class MusicManager implements Music.OnCompletionListener {
     }
 
     public void playMenuMusic() {
-        current = mainMenuMusic;
-        play(current, true);
+        play(mainMenuMusic, true);
     }
 
     public void playRoundMusic() {
@@ -64,6 +63,7 @@ public class MusicManager implements Music.OnCompletionListener {
     }
 
     private void play(Optional<Music> music, boolean loop) {
+        current = music;
         music.ifPresent(m -> {
             m.setLooping(loop);
             m.play();
