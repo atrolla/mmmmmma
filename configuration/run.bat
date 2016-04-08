@@ -1,1 +1,1 @@
-java -jar desktop-0.3.jar >> logfile.txt 2>&1
+java -jar mmmmmma-0.3.1.jar >> logfile.txt 2>&1

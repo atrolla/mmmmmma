@@ -30,6 +30,7 @@ import org.atrolla.games.system.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RoundScreen implements Screen {
 
@@ -81,6 +82,11 @@ public class RoundScreen implements Screen {
             topLeftText = new Label("(ALONE)", skin);
         } else if (playersNumber == 0) {
             topLeftText = new Label("(DEMO)", skin);
+        } else {
+            final String classes = game.getInputManager().getPlayers().stream()
+                    .map(p -> p.getGameCharacterClass().name())
+                    .collect(Collectors.joining(" vs. ", " [ ", " ]"));
+            topLeftText = new Label(classes, skin);
         }
         winnerText = new Label("", skin);
         opacity = 0f;
@@ -99,10 +105,8 @@ public class RoundScreen implements Screen {
 
     @Override
     public void show() {
-        if (round.getCharacters().players.size() < 2) {
-            topLeftText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.3f));
-            stage.addActor(topLeftText);
-        }
+        topLeftText.setColor(new Color(0.75f, 0.75f, 0.75f, 0.3f));
+        stage.addActor(topLeftText);
         Gdx.input.setInputProcessor(stage);
         game.getMusicManager().playRoundMusic();
     }
