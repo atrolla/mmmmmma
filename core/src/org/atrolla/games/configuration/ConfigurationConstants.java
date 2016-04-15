@@ -45,9 +45,9 @@ public final class ConfigurationConstants {
     public static final int KNIGHT_ABILITY_COOLDOWN_DURATION = 150;
     public static final int MAGE_ABILITY_COOLDOWN_DURATION = 150;
 
-    public static final int NEUTRAL_ITEM_SPAWN_FREQUENCY_TIME = 750;
+    public static final int NEUTRAL_ITEM_SPAWN_FREQUENCY_TIME = 350;
     public static final int NEUTRAL_ITEM_SIZE = 32;
-    public static final int NEUTRAL_ITEM_PICK_SHOW_DELAY = 600;
+    public static final int NEUTRAL_ITEM_PICK_SHOW_DELAY = 300;
     public static final int NEUTRAL_ITEM_DESPAWN = 1500;
-    public static final int NEUTRAL_ITEM_LOCATOR_DELAY_BEGIN = 65;
+    public static final int NEUTRAL_ITEM_LOCATOR_DELAY_BEGIN = 30;
 }

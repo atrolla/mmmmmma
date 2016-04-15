@@ -6,7 +6,7 @@ import org.atrolla.games.desktop.game.Mmmmmma;
 
 public class DesktopLauncher {
 
-	public static final String GAME_TITLE = "Arena";
+	public static final String GAME_TITLE = "MMMMMMA For Arolla - Have Fun";
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
