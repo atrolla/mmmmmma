@@ -4,6 +4,7 @@ import org.atrolla.games.configuration.ConfigurationConstants;
 import org.atrolla.games.game.GameItems;
 import org.atrolla.games.game.Round;
 import org.atrolla.games.system.Coordinates;
+import org.atrolla.games.utils.RandomUtils;
 
 /**
  * Created by MicroOnde on 12/03/2016.
@@ -18,12 +19,10 @@ public class Locator extends NeutralItem {
 
     @Override
     public void applyEffect(Round round, GameItems gameItems) {
-        if (
-//                round.getCharacters().players.size() > 1 &&
-                !mustRegister() && isUsed() && getPicker().isPresent()) {
-            round.getCharacters().characters.stream()
-//                    .filter(c -> !c.equals(getPicker().get()) && c.isAlive())
-//                    .skip(RandomUtils.between0AndExcluded(round.getCharacters().players.size() - 1))
+        if (round.getCharacters().players.size() > 1 && !mustRegister() && isUsed() && getPicker().isPresent()) {
+            round.getCharacters().players.stream()
+                    .filter(c -> !c.equals(getPicker().get()) && c.isAlive())
+                    .skip(RandomUtils.between0AndExcluded(round.getCharacters().players.size() - 1))
                     .findFirst()
                     .ifPresent(f -> victimCoordinates = f.getCenter());
             gameItems.unregisterItem(this, round.getTime());
